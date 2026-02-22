@@ -18,4 +18,4 @@ class Version:
         return 'v0.0.0'
 
 
-version = Version().value()
+version__sg_send__qa = Version().value()

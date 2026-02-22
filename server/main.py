@@ -2,9 +2,9 @@ from fastapi            import FastAPI
 from fastapi.responses  import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pathlib            import Path
-from sg_send_qa.utils.Version import version
+from sg_send_qa.utils.Version import version__sg_send__qa
 
-app = FastAPI(title="SG/Send QA Test Runner", version=version)
+app = FastAPI(title="SG/Send QA Test Runner", version=version__sg_send__qa)
 
 docs_dir        = Path(__file__).parent.parent / "docs"
 screenshots_dir = Path(__file__).parent.parent / "screenshots"
@@ -12,7 +12,7 @@ screenshots_dir = Path(__file__).parent.parent / "screenshots"
 
 @app.get("/info/health")
 def health():
-    return {"status": "ok", "service": "sg_send__qa", "version": version}
+    return {"status": "ok", "service": "sg_send__qa", "version": version__sg_send__qa}
 
 
 @app.post("/api/tests/run")

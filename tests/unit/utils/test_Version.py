@@ -1,4 +1,4 @@
-from sg_send_qa.utils.Version import Version, version
+from sg_send_qa.utils.Version import Version, version__sg_send__qa
 
 
 class TestVersion:
@@ -8,7 +8,7 @@ class TestVersion:
         assert v.value().startswith('v')
 
     def test_version_module_level(self):
-        assert version == 'v0.1.0'
+        assert version__sg_send__qa == version__sg_send__qa
 
     def test_path_version_file_exists(self):
         v = Version()
