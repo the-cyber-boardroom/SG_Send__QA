@@ -1,0 +1,22 @@
+{
+    "targets": {
+        "local": {
+            "user_url": "http://localhost:10062",
+            "admin_url": "http://localhost:10061"
+        },
+        "production": {
+            "user_url": "https://send.sgraph.ai",
+            "admin_url": "https://admin.send.sgraph.ai"
+        }
+    },
+    "screenshots": {
+        "directory": "screenshots",
+        "viewport_width": 1280,
+        "viewport_height": 720,
+        "visual_diff_threshold": 0.01
+    },
+    "docs": {
+        "output_directory": "docs",
+        "template": "default"
+    }
+}
