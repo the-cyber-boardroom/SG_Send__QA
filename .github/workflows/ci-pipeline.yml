@@ -95,14 +95,19 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Pull latest (including screenshot commits)
-        run: git pull origin ${{ inputs.git_branch }} --rebase
-
       - name: Increment Tag
         if: inputs.should_increment_tag
+        id: tag
+        continue-on-error: true
         uses: owasp-sbot/OSBot-GitHub-Actions/.github/actions/git__increment-tag@dev
         with:
           release_type: ${{ inputs.release_type }}
+
+      - name: Rebase on latest and retry push
+        if: inputs.should_increment_tag && steps.tag.outcome == 'failure'
+        run: |
+          git pull origin ${{ inputs.git_branch }} --rebase
+          git push origin ${{ inputs.git_branch }}
 
   deploy-docs:
     name: "Deploy Documentation"
