@@ -110,7 +110,7 @@ jobs:
           git push origin ${{ inputs.git_branch }}
 
   deploy-docs:
-    name: "Deploy Documentation"
+    name: "Deploy Documentation" 
     #needs: [run-browser-tests]
     #if: inputs.git_branch == 'main'
     runs-on: ubuntu-latest
