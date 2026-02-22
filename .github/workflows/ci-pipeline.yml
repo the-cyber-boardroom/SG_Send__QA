@@ -95,11 +95,8 @@ jobs:
         with:
           fetch-depth: 0
 
-#      - name: Pull latest (including screenshot commits)
-#        run: git pull origin ${{ inputs.git_branch }} --rebase
-
-      - name: Git Update Current Branch
-        uses: owasp-sbot/OSBot-GitHub-Actions/.github/actions/git__update_branch@dev
+      - name: Pull latest (including screenshot commits)
+        run: git pull origin ${{ inputs.git_branch }} --rebase
 
       - name: Increment Tag
         if: inputs.should_increment_tag
@@ -110,7 +107,7 @@ jobs:
   deploy-docs:
     name: "Deploy Documentation"
     #needs: [run-browser-tests]
-    if: inputs.git_branch == 'main'
+    #if: inputs.git_branch == 'main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
