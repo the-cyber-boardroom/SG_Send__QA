@@ -1,0 +1,112 @@
+name: CI Pipeline (Base)
+
+on:
+  workflow_call:
+    inputs:
+      git_branch:
+        required: true
+        type: string
+      release_type:
+        required: false
+        type: string
+        default: ""
+      should_increment_tag:
+        required: false
+        type: boolean
+        default: false
+      target_url:
+        required: false
+        type: string
+        default: "https://send.sgraph.ai"
+    secrets:
+      TEST_TARGET_URL:
+        required: false
+      TEST_ACCESS_TOKEN:
+        required: false
+      ADMIN_API_KEY:
+        required: false
+
+env:
+  PACKAGE_NAME: 'sg_send_qa'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  run-unit-tests:
+    name: "Run Unit Tests"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run unit tests
+        run: python -m pytest tests/unit/ -v
+
+  increment-tag:
+    name: Increment Tag
+    runs-on: ubuntu-latest
+    needs: [run-unit-tests]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Increment Tag
+        if: inputs.should_increment_tag
+        uses: owasp-sbot/OSBot-GitHub-Actions/.github/actions/git__increment-tag@dev
+        with:
+          release_type: ${{ inputs.release_type }}
+
+  run-browser-tests:
+    name: "Run Browser Tests"
+    runs-on: ubuntu-latest
+    needs: [run-unit-tests]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Run integration tests
+        env:
+          TEST_TARGET_URL: ${{ secrets.TEST_TARGET_URL || inputs.target_url }}
+          TEST_ACCESS_TOKEN: ${{ secrets.TEST_ACCESS_TOKEN }}
+          ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
+        run: python -m pytest tests/integration/ -v
+
+      - name: Generate documentation
+        run: python cli/generate_docs.py
+
+      - name: Commit screenshot changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update QA screenshots and docs [skip ci]"
+          file_pattern: "screenshots/ docs/"
+
+  deploy-docs:
+    name: "Deploy Documentation"
+    needs: [run-browser-tests]
+    if: inputs.git_branch == 'main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v4
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+      - uses: actions/deploy-pages@v4
