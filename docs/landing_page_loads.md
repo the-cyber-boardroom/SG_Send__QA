@@ -1,8 +1,8 @@
 # Landing Page Loads
 
-*Generated: 2026-02-22 22:26*
+*Generated: 2026-02-22 22:50*
 
 ## 01 Landing
 
-![01 Landing](../screenshots/landing_page_loads/01_landing.png)
+![01 Landing](screenshots/landing_page_loads/01_landing.png)
 

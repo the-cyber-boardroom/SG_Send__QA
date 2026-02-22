@@ -31,7 +31,7 @@ def generate_docs():
 
         for shot in shots:
             desc          = shot.stem.replace("_", " ").title()
-            relative_path = f"../screenshots/{test_name}/{shot.name}"
+            relative_path = f"screenshots/{test_name}/{shot.name}"
             md += f"## {desc}\n\n"
             md += f"![{desc}]({relative_path})\n\n"
 
