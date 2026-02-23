@@ -1,0 +1,104 @@
+name       : 'Git - Increment Tag'
+description: 'Compute next semver tag, update version files, commit, tag, and push. Pulls latest before pushing to handle upstream commits from earlier CI jobs.'
+inputs:
+  release_type:
+    description: 'Type of change: major (bumps minor, resets patch) or minor (bumps patch)'
+    required: true
+runs:
+  using: 'composite'
+  steps:
+    - name: Validate release_type
+      shell: bash
+      run: |
+        if [[ "${{ inputs.release_type }}" != "major" && "${{ inputs.release_type }}" != "minor" ]]; then
+          echo "Invalid release_type: ${{ inputs.release_type }}. Only 'major' and 'minor' are supported."
+          exit 1
+        fi
+
+    - name: Checkout branch
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        ref: ${{ env.GIT__BRANCH }}
+
+    - name: Ensure on branch
+      shell: bash
+      run: |
+        git checkout ${{ env.GIT__BRANCH }} || (git checkout -b ${{ env.GIT__BRANCH }} && git push -u origin ${{ env.GIT__BRANCH }})
+
+    - name: Set up Git user
+      shell: bash
+      run: |
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+
+    - name: Fetch all tags
+      shell: bash
+      run: git fetch --tags
+
+    - name: Pull latest (handle upstream commits from earlier CI jobs)
+      shell: bash
+      run: git pull origin ${{ env.GIT__BRANCH }} --rebase
+
+    - name: Compute next tag (minor — bump patch)
+      if: ${{ inputs.release_type == 'minor' }}
+      shell: bash
+      run: |
+        LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo "v0.0.0")
+        echo "Latest tag: $LATEST_TAG"
+
+        VERSION_PART=$(echo $LATEST_TAG | sed 's/^v//')
+        MAJOR=$(echo $VERSION_PART | cut -d. -f1)
+        MINOR=$(echo $VERSION_PART | cut -d. -f2)
+        PATCH=$(echo $VERSION_PART | cut -d. -f3)
+
+        NEW_PATCH=$((PATCH + 1))
+        NEW_TAG="v$MAJOR.$MINOR.$NEW_PATCH"
+        echo "New tag: $NEW_TAG"
+
+        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+
+    - name: Compute next tag (major — bump minor, reset patch)
+      if: ${{ inputs.release_type == 'major' }}
+      shell: bash
+      run: |
+        LATEST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo "v0.0.0")
+        echo "Latest tag: $LATEST_TAG"
+
+        VERSION_PART=$(echo $LATEST_TAG | sed 's/^v//')
+        MAJOR=$(echo $VERSION_PART | cut -d. -f1)
+        MINOR=$(echo $VERSION_PART | cut -d. -f2)
+
+        NEW_MINOR=$((MINOR + 1))
+        NEW_TAG="v$MAJOR.$NEW_MINOR.0"
+        echo "New tag: $NEW_TAG"
+
+        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+
+    - name: Update README badge
+      shell: bash
+      run: |
+        sed -i "s/release-v[0-9]*\.[0-9]*\.[0-9]*/release-$NEW_TAG/" README.md
+
+    - name: Update version file
+      shell: bash
+      run: |
+        echo $NEW_TAG | sed 's/refs\/tags\///' > ./${{ env.PACKAGE_NAME }}/version
+
+    - name: Update pyproject.toml version
+      shell: bash
+      run: |
+        sed -i "s/\(version[[:space:]]*=[[:space:]]*\)\".*\"/\1\"$NEW_TAG\"/" pyproject.toml
+
+    - name: Commit and push version bump
+      shell: bash
+      run: |
+        git add README.md ./${{ env.PACKAGE_NAME }}/version pyproject.toml
+        git commit -m "Update release badge and version file to $NEW_TAG"
+        git push origin ${{ env.GIT__BRANCH }}
+
+    - name: Create and push tag
+      shell: bash
+      run: |
+        git tag $NEW_TAG
+        git push origin $NEW_TAG
