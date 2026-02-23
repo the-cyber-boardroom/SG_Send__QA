@@ -6,8 +6,9 @@ from sg_send_qa.utils.Version import version__sg_send__qa
 
 app = FastAPI(title="SG/Send QA Test Runner", version=version__sg_send__qa)
 
-docs_dir        = Path(__file__).parent.parent / "docs"
-screenshots_dir = Path(__file__).parent.parent / "screenshots"
+repo_root = Path(__file__).parent.parent.parent
+site_dir  = repo_root / "sg_send_qa__site"
+docs_dir  = site_dir / "pages"
 
 
 @app.get("/info/health")
@@ -33,13 +34,16 @@ def get_results():
 @app.get("/api/docs")
 def get_docs_index():
     pages = []
-    if docs_dir.exists():
-        for md_file in sorted(docs_dir.glob("*.md")):
-            pages.append({"name": md_file.stem, "path": str(md_file.relative_to(docs_dir))})
+    use_cases_dir = docs_dir / "use-cases"
+    if use_cases_dir.exists():
+        for uc_dir in sorted(use_cases_dir.iterdir()):
+            if uc_dir.is_dir():
+                for md_file in uc_dir.glob("*.md"):
+                    pages.append({"name": uc_dir.name, "path": str(md_file.relative_to(docs_dir))})
     return {"pages": pages}
 
 
+if site_dir.exists():
+    app.mount("/site", StaticFiles(directory=str(site_dir), html=True), name="site")
 if docs_dir.exists():
     app.mount("/docs", StaticFiles(directory=str(docs_dir)), name="docs")
-if screenshots_dir.exists():
-    app.mount("/screenshots", StaticFiles(directory=str(screenshots_dir)), name="screenshots")

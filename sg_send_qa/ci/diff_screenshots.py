@@ -18,7 +18,7 @@ from PIL import Image
 
 def load_threshold():
     """Read visual_diff_threshold from config/test-config.json."""
-    config_path = Path("config/test-config.json")
+    config_path = Path("tests/config/test-config.json")
     if config_path.exists():
         config = json.loads(config_path.read_text())
         return config.get("screenshots", {}).get("visual_diff_threshold", 0.01)
@@ -28,7 +28,7 @@ def load_threshold():
 def get_changed_screenshots():
     """Return list of screenshot PNGs that git considers modified."""
     result = subprocess.run(
-        ["git", "diff", "--name-only", "--", "screenshots/"],
+        ["git", "diff", "--name-only", "--", "sg_send_qa__site/"],
         capture_output=True, text=True,
     )
     return [p for p in result.stdout.strip().splitlines() if p.endswith(".png")]

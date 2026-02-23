@@ -10,13 +10,13 @@
         }
     },
     "screenshots": {
-        "directory": "screenshots",
+        "directory": "sg_send_qa__site/pages/use-cases",
         "viewport_width": 1280,
         "viewport_height": 720,
         "visual_diff_threshold": 0.01
     },
     "docs": {
-        "output_directory": "docs",
+        "output_directory": "sg_send_qa__site",
         "template": "default"
     }
 }

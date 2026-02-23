@@ -60,7 +60,7 @@ def _cdp_screenshot(page, path):
 def screenshots(request):
     """Screenshot capture fixture with descriptions."""
     test_name = request.node.name.replace("test_", "")
-    shots_dir = Path("screenshots") / test_name
+    shots_dir = Path("sg_send_qa__site/pages/use-cases") / test_name / "screenshots"
     shots_dir.mkdir(parents=True, exist_ok=True)
 
     captured = []
@@ -79,4 +79,17 @@ def screenshots(request):
         def all(self):
             return captured
 
-    return ScreenshotCapture()
+        def save_metadata(self):
+            """Write screenshot metadata JSON for doc generation."""
+            import json
+            meta = {
+                "test_name"  : test_name,
+                "test_doc"   : request.node.obj.__doc__ or "",
+                "screenshots": captured,
+            }
+            meta_path = shots_dir / "_metadata.json"
+            meta_path.write_text(json.dumps(meta, indent=2))
+
+    capture = ScreenshotCapture()
+    yield capture
+    capture.save_metadata()

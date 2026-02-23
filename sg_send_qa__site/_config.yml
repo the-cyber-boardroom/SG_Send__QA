@@ -1,5 +1,6 @@
-title: SG/Send QA Documentation
-description: Living documentation generated from automated browser tests
+title: SG/Send QA
+description: Living documentation and automated test results for SG/Send — the encrypted file sharing platform
+url: https://qa.send.sgraph.ai
 
 plugins:
   - jekyll-last-modified-at
@@ -7,7 +8,29 @@ plugins:
 last-modified-at:
   date-format: '%Y-%m-%d %H:%M'
 
-# Screenshots are copied into docs/screenshots/ at build time
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+navigation:
+  main:
+    - title: Home
+      url: /
+    - title: Use Cases
+      url: /pages/use-cases/
+  use_cases:
+    - title: Landing Page Loads
+      url: /pages/use-cases/landing_page_loads/
+      id: landing_page_loads
+    - title: Access Gate Present
+      url: /pages/use-cases/landing_page_has_access_gate/
+      id: landing_page_has_access_gate
+    - title: Invalid Token Rejected
+      url: /pages/use-cases/invalid_token_rejected/
+      id: invalid_token_rejected
+
 exclude:
   - Gemfile
   - Gemfile.lock

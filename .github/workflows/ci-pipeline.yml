@@ -76,16 +76,16 @@ jobs:
         run: python -m pytest tests/integration/ -v
 
       - name: Generate documentation
-        run: python cli/generate_docs.py
+        run: python -m sg_send_qa.cli.generate_docs
 
       - name: Diff screenshots and commit only real changes
-        run: python ci/diff_screenshots.py
+        run: python -m sg_send_qa.ci.diff_screenshots
 
       - name: Commit screenshot changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Update QA screenshots and docs [skip ci]"
-          file_pattern: "screenshots/ docs/"
+          file_pattern: "sg_send_qa__site/"
 
   increment-tag:
     name: Increment Tag
@@ -115,18 +115,15 @@ jobs:
 
       - uses: actions/configure-pages@v4
 
-      - name: Copy screenshots into docs for Pages
-        run: cp -r screenshots/ docs/screenshots/ 2>/dev/null || true
-
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.3'
           bundler-cache: true
-          working-directory: docs
+          working-directory: sg_send_qa__site
 
       - name: Build Jekyll site
-        working-directory: docs
+        working-directory: sg_send_qa__site
         run: bundle exec jekyll build --destination ../_site
         env:
           JEKYLL_ENV: production

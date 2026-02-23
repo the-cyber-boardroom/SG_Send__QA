@@ -2,10 +2,10 @@
 """SG/Send QA Test Runner CLI.
 
 Usage:
-    python cli/run_tests.py --target https://send.sgraph.ai
-    python cli/run_tests.py --test user.test_landing_page
-    python cli/run_tests.py --generate-docs
-    python cli/run_tests.py --docs-only
+    python -m sg_send_qa.cli.run_tests --target https://send.sgraph.ai
+    python -m sg_send_qa.cli.run_tests --test user.test_landing_page
+    python -m sg_send_qa.cli.run_tests --generate-docs
+    python -m sg_send_qa.cli.run_tests --docs-only
 """
 import argparse
 import os
@@ -27,7 +27,7 @@ def main():
 
     if args.docs_only:
         print("Regenerating documentation from existing screenshots...")
-        from cli.generate_docs import generate_docs
+        from sg_send_qa.cli.generate_docs import generate_docs
         generate_docs()
         return
 
@@ -42,7 +42,7 @@ def main():
 
     if args.generate_docs:
         print("Generating documentation...")
-        from cli.generate_docs import generate_docs
+        from sg_send_qa.cli.generate_docs import generate_docs
         generate_docs()
 
     sys.exit(result.returncode)
