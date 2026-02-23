@@ -23,9 +23,9 @@ flowchart LR
 
 | # | Use Case | Description | Screenshots |
 |:-:|----------|-------------|:-----------:|
-| 1 | [Landing Page Loads](landing_page_loads/landing_page_loads) | SG/Send loads and renders the Beta Access UI | 1 |
-| 2 | [Access Gate Present](landing_page_has_access_gate/landing_page_has_access_gate) | Token input field and Go button are visible | 1 |
-| 3 | [Invalid Token Rejected](invalid_token_rejected/invalid_token_rejected) | Invalid tokens are rejected with error feedback | 3 |
+| 1 | [Landing Page Loads](landing_page_loads/) | SG/Send loads and renders the Beta Access UI | 1 |
+| 2 | [Access Gate Present](landing_page_has_access_gate/) | Token input field and Go button are visible | 1 |
+| 3 | [Invalid Token Rejected](invalid_token_rejected/) | Invalid tokens are rejected with error feedback | 3 |
 
 ---
 

@@ -158,6 +158,8 @@
     <h3>Navigation</h3>
     <ul>
       <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' or page.url == '/pages/' %}class="active"{% endif %}>Home</a></li>
+      <li><a href="{{ '/pages/use-cases/' | relative_url }}" {% if page.url == '/pages/use-cases/' %}class="active"{% endif %}>Use Cases</a></li>
+      <li><a href="{{ '/pages/roadmap/' | relative_url }}" {% if page.url contains 'roadmap' %}class="active"{% endif %}>Roadmap</a></li>
     </ul>
 
     <h3>Use Cases</h3>
@@ -185,6 +187,15 @@
 
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    // Jekyll renders ```mermaid as <pre><code class="language-mermaid">
+    // Mermaid.js needs <pre class="mermaid"> — transform before init
+    document.querySelectorAll('code.language-mermaid').forEach(function(code) {
+      var pre = code.parentElement;
+      pre.className = 'mermaid';
+      pre.textContent = code.textContent;
+      pre.style.background = 'none';
+      pre.style.border = 'none';
+    });
     mermaid.initialize({ startOnLoad: true, theme: 'neutral' });
   </script>
 </body>
