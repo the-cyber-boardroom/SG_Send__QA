@@ -87,5 +87,5 @@ The screenshot is captured via Chrome DevTools Protocol (CDP) directly rather th
 
 | Use Case | Relationship |
 |----------|-------------|
-| [Access Gate Present](../landing_page_has_access_gate/landing_page_has_access_gate) | Checks the specific UI elements of the access gate |
-| [Invalid Token Rejected](../invalid_token_rejected/invalid_token_rejected) | Tests what happens when a user enters a bad token |
+| [Access Gate Present](../landing_page_has_access_gate/) | Checks the specific UI elements of the access gate |
+| [Invalid Token Rejected](../invalid_token_rejected/) | Tests what happens when a user enters a bad token |

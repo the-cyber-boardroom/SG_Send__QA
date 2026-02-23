@@ -47,7 +47,7 @@ The access gate implements a simple but effective pattern:
 
 1. **All routes are protected** — there is no public area behind the gate
 2. **Token is required** — the UI presents a single input field for the access token
-3. **Immediate feedback** — invalid tokens produce a visible error (see [Invalid Token Rejected](../invalid_token_rejected/invalid_token_rejected))
+3. **Immediate feedback** — invalid tokens produce a visible error (see [Invalid Token Rejected](../invalid_token_rejected/))
 4. **No enumeration** — the error message does not reveal whether a token exists or has expired
 
 ## User Flow
@@ -108,7 +108,7 @@ The gate follows a deliberate design:
 
 ## What Gets Verified
 
-This test verifies the **presence** of the access gate. It does not test token validation (that is covered by [Invalid Token Rejected](../invalid_token_rejected/invalid_token_rejected)).
+This test verifies the **presence** of the access gate. It does not test token validation (that is covered by [Invalid Token Rejected](../invalid_token_rejected/)).
 
 The assertion is deliberately minimal — checking that the page URL is valid confirms the page loaded. The **screenshot is the primary evidence** that the access gate rendered correctly.
 
@@ -127,5 +127,5 @@ Format:     PNG
 
 | Use Case | Relationship |
 |----------|-------------|
-| [Landing Page Loads](../landing_page_loads/landing_page_loads) | Prerequisite — the page must load before the gate can be checked |
-| [Invalid Token Rejected](../invalid_token_rejected/invalid_token_rejected) | Tests the gate's response to invalid authentication attempts |
+| [Landing Page Loads](../landing_page_loads/) | Prerequisite — the page must load before the gate can be checked |
+| [Invalid Token Rejected](../invalid_token_rejected/) | Tests the gate's response to invalid authentication attempts |

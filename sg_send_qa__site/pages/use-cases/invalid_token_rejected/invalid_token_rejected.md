@@ -172,5 +172,5 @@ Wait time:    3000ms per step (network + render)
 
 | Use Case | Relationship |
 |----------|-------------|
-| [Landing Page Loads](../landing_page_loads/landing_page_loads) | Prerequisite — the page must load before tokens can be entered |
-| [Access Gate Present](../landing_page_has_access_gate/landing_page_has_access_gate) | Prerequisite — the gate must be visible for interaction |
+| [Landing Page Loads](../landing_page_loads/) | Prerequisite — the page must load before tokens can be entered |
+| [Access Gate Present](../landing_page_has_access_gate/) | Prerequisite — the gate must be visible for interaction |

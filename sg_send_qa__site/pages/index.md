@@ -40,9 +40,9 @@ These are the user workflows currently tested and documented:
 
 | Use Case | What It Tests | Screenshots |
 |----------|---------------|:-----------:|
-| [Landing Page Loads](use-cases/landing_page_loads/landing_page_loads) | SG/Send loads correctly, renders the Beta Access UI | 1 |
-| [Access Gate Present](use-cases/landing_page_has_access_gate/landing_page_has_access_gate) | The access gate with token input and Go button is visible | 1 |
-| [Invalid Token Rejected](use-cases/invalid_token_rejected/invalid_token_rejected) | Invalid tokens are rejected with proper error feedback | 3 |
+| [Landing Page Loads](use-cases/landing_page_loads/) | SG/Send loads correctly, renders the Beta Access UI | 1 |
+| [Access Gate Present](use-cases/landing_page_has_access_gate/) | The access gate with token input and Go button is visible | 1 |
+| [Invalid Token Rejected](use-cases/invalid_token_rejected/) | Invalid tokens are rejected with proper error feedback | 3 |
 
 ---
 
