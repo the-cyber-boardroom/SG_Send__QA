@@ -1,0 +1,21 @@
+{
+  "test_name": "invalid_token_rejected",
+  "test_doc": "Enter an invalid token and verify the error message appears.",
+  "screenshots": [
+    {
+      "name": "01_before_token",
+      "path": "sg_send_qa__site/pages/use-cases/invalid_token_rejected/screenshots/01_before_token.png",
+      "description": "Landing page before entering token"
+    },
+    {
+      "name": "02_token_entered",
+      "path": "sg_send_qa__site/pages/use-cases/invalid_token_rejected/screenshots/02_token_entered.png",
+      "description": "An invalid token entered in the access field"
+    },
+    {
+      "name": "03_token_rejected",
+      "path": "sg_send_qa__site/pages/use-cases/invalid_token_rejected/screenshots/03_token_rejected.png",
+      "description": "Invalid token rejected with error message"
+    }
+  ]
+}
