@@ -1,6 +1,8 @@
+---
+---
 # Landing Page Has Access Gate
 
-*Generated: 2026-02-23 00:11*
+*Last updated: {{ page.last_modified_at | date: '%Y-%m-%d %H:%M' }}*
 
 ## 01 Access Gate
 

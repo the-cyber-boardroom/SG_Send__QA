@@ -26,6 +26,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # full history so jekyll-last-modified-at can read git log
 
       - uses: actions/configure-pages@v4
 
@@ -33,9 +35,21 @@ jobs:
         run: |
           cp -r screenshots/ docs/screenshots/ 2>/dev/null || true
 
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: docs
+
+      - name: Build Jekyll site
+        run: bundle exec jekyll build --source docs --destination _site
+        env:
+          JEKYLL_ENV: production
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/
+          path: _site/
 
       - id: deployment
         uses: actions/deploy-pages@v4
