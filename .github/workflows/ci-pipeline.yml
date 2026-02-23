@@ -92,6 +92,10 @@ jobs:
     needs: [run-unit-tests, run-browser-tests]
     if: inputs.should_increment_tag
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Increment Tag
         uses: ./.github/actions/git__increment-tag
         with:
