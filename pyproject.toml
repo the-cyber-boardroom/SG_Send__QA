@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sg-send-qa"
-version = "v0.1.2"
+version = "v0.2.1"
 description = "Browser automation test suite and living documentation generator for SG/Send"
 authors = ["The Cyber Boardroom"]
 readme = "README.md"
