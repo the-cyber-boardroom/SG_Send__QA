@@ -27,7 +27,8 @@ on:
         required: false
 
 env:
-  PACKAGE_NAME: 'sg_send_qa'
+  PACKAGE_NAME : 'sg_send_qa'
+  GIT__BRANCH  : ${{ inputs.git_branch }}
 
 permissions:
   contents: write
@@ -126,7 +127,8 @@ jobs:
           working-directory: docs
 
       - name: Build Jekyll site
-        run: bundle exec jekyll build --source docs --destination _site
+        working-directory: docs
+        run: bundle exec jekyll build --destination ../_site
         env:
           JEKYLL_ENV: production
 
