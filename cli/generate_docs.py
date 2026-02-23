@@ -3,9 +3,14 @@
 
 Each test directory under screenshots/ becomes a documentation page.
 Screenshots are embedded with their descriptions.
+
+Timestamps are handled by the jekyll-last-modified-at plugin at build
+time (reads git-log per file), so the generated markdown is stable and
+only produces a diff when actual content changes.
 """
-from pathlib    import Path
-from datetime   import datetime
+from pathlib import Path
+
+FRONT_MATTER = "---\n---\n"
 
 
 def generate_docs():
@@ -26,8 +31,9 @@ def generate_docs():
             continue
 
         title = test_name.replace("_", " ").title()
-        md    = f"# {title}\n\n"
-        md   += f"*Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n\n"
+        md    = FRONT_MATTER
+        md   += f"# {title}\n\n"
+        md   += "*Last updated: {{ page.last_modified_at | date: '%Y-%m-%d %H:%M' }}*\n\n"
 
         for shot in shots:
             desc          = shot.stem.replace("_", " ").title()
@@ -40,9 +46,10 @@ def generate_docs():
         index_entries.append((test_name, title, f"{test_name}.md"))
         print(f"  Generated: {doc_path}")
 
-    index_md  = "# SG/Send QA Documentation\n\n"
+    index_md  = FRONT_MATTER
+    index_md += "# SG/Send QA Documentation\n\n"
     index_md += "Living documentation generated from automated browser tests.\n\n"
-    index_md += f"*Last updated: {datetime.now().strftime('%Y-%m-%d %H:%M')}*\n\n"
+    index_md += "*Last updated: {{ page.last_modified_at | date: '%Y-%m-%d %H:%M' }}*\n\n"
 
     if index_entries:
         index_md += "## Test Pages\n\n"

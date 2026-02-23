@@ -1,0 +1,13 @@
+title: SG/Send QA Documentation
+description: Living documentation generated from automated browser tests
+
+plugins:
+  - jekyll-last-modified-at
+
+last-modified-at:
+  date-format: '%Y-%m-%d %H:%M'
+
+# Screenshots are copied into docs/screenshots/ at build time
+exclude:
+  - Gemfile
+  - Gemfile.lock
