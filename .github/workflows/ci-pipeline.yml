@@ -105,12 +105,27 @@ jobs:
       name: github-pages
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0          # full history for jekyll-last-modified-at
+
       - uses: actions/configure-pages@v4
 
       - name: Copy screenshots into docs for Pages
         run: cp -r screenshots/ docs/screenshots/ 2>/dev/null || true
 
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: docs
+
+      - name: Build Jekyll site
+        run: bundle exec jekyll build --source docs --destination _site
+        env:
+          JEKYLL_ENV: production
+
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/
+          path: _site/
       - uses: actions/deploy-pages@v4

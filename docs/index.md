@@ -1,8 +1,10 @@
+---
+---
 # SG/Send QA Documentation
 
 Living documentation generated from automated browser tests.
 
-*Last updated: 2026-02-23 00:19*
+*Last updated: {{ page.last_modified_at | date: '%Y-%m-%d %H:%M' }}*
 
 ## Test Pages
 
