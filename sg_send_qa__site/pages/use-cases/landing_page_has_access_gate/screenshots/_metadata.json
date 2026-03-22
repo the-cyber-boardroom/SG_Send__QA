@@ -1,0 +1,11 @@
+{
+  "test_name": "landing_page_has_access_gate",
+  "test_doc": "Verify the landing page shows the Beta Access gate with token input.",
+  "screenshots": [
+    {
+      "name": "01_access_gate",
+      "path": "sg_send_qa__site/pages/use-cases/landing_page_has_access_gate/screenshots/01_access_gate.png",
+      "description": "The Beta Access gate with token input and Go button"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "test_name": "landing_page_loads",
+  "test_doc": "Navigate to SG/Send and verify the landing page loads.",
+  "screenshots": [
+    {
+      "name": "01_landing",
+      "path": "sg_send_qa__site/pages/use-cases/landing_page_loads/screenshots/01_landing.png",
+      "description": "The SG/Send landing page with Beta Access gate"
+    }
+  ]
+}
