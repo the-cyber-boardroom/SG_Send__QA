@@ -214,7 +214,7 @@ class TransferHelper:
         self.api_url = api_url
         self.headers = {}
         if access_token:
-            self.headers["x-sgraph-send-access-token"] = access_token
+            self.headers["x-sgraph-access-token"] = access_token
 
     def create_and_complete(self, payload: bytes, content_type="application/octet-stream"):
         """Create → upload → complete a transfer.  Returns transfer_id."""

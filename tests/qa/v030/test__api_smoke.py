@@ -59,7 +59,7 @@ class TestCreateTransfer:
         r = httpx.post(
             f"{send_server.server_url}/api/transfers/create",
             json={"file_size_bytes": 128, "content_type_hint": "application/octet-stream"},
-            headers={"x-sgraph-send-access-token": send_server.access_token},
+            headers={"x-sgraph-access-token": send_server.access_token},
         )
         assert r.status_code == 200, f"Create failed: {r.status_code} — {r.text}"
         data = r.json()
@@ -86,7 +86,7 @@ class TestCreateTransfer:
         r = httpx.post(
             f"{send_server.server_url}/api/transfers/create",
             json={"file_size_bytes": 128, "content_type_hint": "application/octet-stream"},
-            headers={"x-sgraph-send-access-token": "definitely-wrong-token-xyz"},
+            headers={"x-sgraph-access-token": "definitely-wrong-token-xyz"},
         )
         if r.status_code == 200:
             pytest.skip("Server is configured for open uploads (no access gate)")
@@ -100,7 +100,7 @@ class TestCreateTransfer:
             r = httpx.post(
                 f"{send_server.server_url}/api/transfers/create",
                 json={"file_size_bytes": 64, "content_type_hint": "application/octet-stream"},
-                headers={"x-sgraph-send-access-token": send_server.access_token},
+                headers={"x-sgraph-access-token": send_server.access_token},
             )
             r.raise_for_status()
             return r.json()["transfer_id"]
@@ -117,7 +117,7 @@ class TestUploadTransfer:
         r = httpx.post(
             f"{send_server.server_url}/api/transfers/create",
             json={"file_size_bytes": size, "content_type_hint": "application/octet-stream"},
-            headers={"x-sgraph-send-access-token": send_server.access_token},
+            headers={"x-sgraph-access-token": send_server.access_token},
         )
         r.raise_for_status()
         return r.json()["transfer_id"]
@@ -131,7 +131,7 @@ class TestUploadTransfer:
             f"{send_server.server_url}/api/transfers/upload/{tid}",
             content=payload,
             headers={
-                "x-sgraph-send-access-token": send_server.access_token,
+                "x-sgraph-access-token": send_server.access_token,
                 "content-type": "application/octet-stream",
             },
         )
@@ -143,7 +143,7 @@ class TestUploadTransfer:
             f"{send_server.server_url}/api/transfers/upload/nonexistent-tid-00000",
             content=b"payload",
             headers={
-                "x-sgraph-send-access-token": send_server.access_token,
+                "x-sgraph-access-token": send_server.access_token,
                 "content-type": "application/octet-stream",
             },
         )
@@ -160,7 +160,7 @@ class TestCompleteTransfer:
         r = httpx.post(
             f"{send_server.server_url}/api/transfers/create",
             json={"file_size_bytes": len(payload), "content_type_hint": "application/octet-stream"},
-            headers={"x-sgraph-send-access-token": send_server.access_token},
+            headers={"x-sgraph-access-token": send_server.access_token},
         )
         r.raise_for_status()
         tid = r.json()["transfer_id"]
@@ -169,7 +169,7 @@ class TestCompleteTransfer:
             f"{send_server.server_url}/api/transfers/upload/{tid}",
             content=payload,
             headers={
-                "x-sgraph-send-access-token": send_server.access_token,
+                "x-sgraph-access-token": send_server.access_token,
                 "content-type": "application/octet-stream",
             },
         ).raise_for_status()
@@ -182,7 +182,7 @@ class TestCompleteTransfer:
 
         r = httpx.post(
             f"{send_server.server_url}/api/transfers/complete/{tid}",
-            headers={"x-sgraph-send-access-token": send_server.access_token},
+            headers={"x-sgraph-access-token": send_server.access_token},
         )
         assert r.status_code == 200, f"Complete failed: {r.status_code} — {r.text}"
 
@@ -190,7 +190,7 @@ class TestCompleteTransfer:
         """Completing a non-existent transfer ID returns 404."""
         r = httpx.post(
             f"{send_server.server_url}/api/transfers/complete/nonexistent-00000",
-            headers={"x-sgraph-send-access-token": send_server.access_token},
+            headers={"x-sgraph-access-token": send_server.access_token},
         )
         assert r.status_code == 404, (
             f"Expected 404 for unknown tid, got {r.status_code}"
@@ -292,7 +292,7 @@ class TestFullLifecycle:
     def test_full_lifecycle_small_file(self, send_server, api_url):
         """Full lifecycle with a small (1 KB) payload."""
         payload = os.urandom(1024)
-        headers = {"x-sgraph-send-access-token": send_server.access_token}
+        headers = {"x-sgraph-access-token": send_server.access_token}
 
         # Create
         r = httpx.post(
@@ -334,7 +334,7 @@ class TestFullLifecycle:
 
     def test_multiple_concurrent_transfers(self, send_server, api_url):
         """Multiple transfers can be created and downloaded independently."""
-        headers = {"x-sgraph-send-access-token": send_server.access_token}
+        headers = {"x-sgraph-access-token": send_server.access_token}
         payloads = [os.urandom(128) for _ in range(5)]
         tids = []
 
