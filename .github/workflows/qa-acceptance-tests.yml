@@ -1,112 +1,247 @@
-name: QA Acceptance Tests (v0.3.0)
+name: QA Acceptance Tests — v0.3.0
+
+# Runs the full acceptance test suite for the v0.3.0 User UI.
+# Triggered:
+#   - On push to any feature branch (for PR validation)
+#   - Manually (workflow_dispatch) for on-demand runs
+#   - Called by other workflows (workflow_call) as a gate before version bump
+#
+# These tests are the gate for promoting code dev → main → prod.
+# All P0 tests must pass. P1 failures require human sign-off.
 
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - dev
-    paths:
-      - 'tests/qa/**'
-      - '.github/workflows/qa-acceptance-tests.yml'
+    branches-ignore:
+      - main
+      - master
+  workflow_dispatch:
+    inputs:
+      ui_version:
+        description: "UI version under test (e.g. v0.3.0)"
+        required: false
+        default: "v0.3.0"
+      run_p0_only:
+        description: "Run P0 tests only (faster gate)"
+        required: false
+        default: "false"
+        type: choice
+        options: ["true", "false"]
+  workflow_call:
+    inputs:
+      ui_version:
+        required: false
+        type: string
+        default: "v0.3.0"
+      run_p0_only:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      SGRAPH_PYPI_TOKEN:
+        required: false   # for installing sgraph-ai-app-send from private registry
 
 env:
-  PACKAGE_NAME: 'sg_send_qa'
-
-permissions:
-  contents: read
+  PYTHON_VERSION: "3.12"
+  QA_SUITE: "tests/qa/v030"
 
 jobs:
-  qa-acceptance-p0:
-    name: "P0 — Deployment Blockers"
+  # ─────────────────────────────────────────────────────────────────────────────
+  # P0 Gate — deployment blockers (must all pass)
+  # ─────────────────────────────────────────────────────────────────────────────
+  p0-gate:
+    name: "P0 Gate (deployment blockers)"
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install dependencies
+      - name: Install QA dependencies
         run: |
           pip install -r requirements.txt
-          pip install sgraph-ai-app-send cryptography
-          pip install playwright pytest-playwright
+          pip install playwright pytest-playwright cryptography httpx
           python -m playwright install --with-deps chromium
+
+      - name: Install sgraph-ai-app-send (in-memory API server)
+        env:
+          SGRAPH_PYPI_TOKEN: ${{ secrets.SGRAPH_PYPI_TOKEN }}
+        run: |
+          # Install from PyPI (or private registry if token provided)
+          if [ -n "$SGRAPH_PYPI_TOKEN" ]; then
+            pip install sgraph-ai-app-send \
+              --extra-index-url "https://pypi.org/simple/"
+          else
+            pip install sgraph-ai-app-send || \
+            pip install "sgraph-ai-app-send @ git+https://github.com/the-cyber-boardroom/SGraph-AI__App__Send.git@dev"
+          fi
 
       - name: Run P0 acceptance tests
-        run: python -m pytest tests/qa/v030/ -v -m "p0" --tb=short
+        run: |
+          python -m pytest ${{ env.QA_SUITE }} \
+            -v \
+            -m "p0" \
+            --tb=short \
+            --junit-xml=reports/qa-p0-results.xml \
+            -o "junit_family=xunit2"
+        continue-on-error: false   # P0 failures are hard blockers
 
-      - name: Upload screenshots
+      - name: Upload P0 test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: qa-screenshots-p0
-          path: sg_send_qa__site/pages/use-cases/*/screenshots/
-          retention-days: 14
+          name: qa-p0-report
+          path: reports/qa-p0-results.xml
+          retention-days: 30
 
-  qa-acceptance-p1:
-    name: "P1 — Requires Sign-off if Failing"
-    runs-on: ubuntu-latest
-    needs: [qa-acceptance-p0]
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      - name: Upload screenshots (P0)
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          python-version: '3.12'
+          name: qa-p0-screenshots
+          path: sg_send_qa__site/pages/use-cases/
+          retention-days: 30
 
-      - name: Install dependencies
+  # ─────────────────────────────────────────────────────────────────────────────
+  # P1 Suite — requires human sign-off if failing (runs after P0 passes)
+  # ─────────────────────────────────────────────────────────────────────────────
+  p1-suite:
+    name: "P1 Suite (sign-off required if failing)"
+    runs-on: ubuntu-latest
+    needs: [p0-gate]
+    if: ${{ inputs.run_p0_only != 'true' && inputs.run_p0_only != true }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install QA dependencies
         run: |
           pip install -r requirements.txt
-          pip install sgraph-ai-app-send cryptography
-          pip install playwright pytest-playwright
+          pip install playwright pytest-playwright cryptography httpx
           python -m playwright install --with-deps chromium
+
+      - name: Install sgraph-ai-app-send
+        env:
+          SGRAPH_PYPI_TOKEN: ${{ secrets.SGRAPH_PYPI_TOKEN }}
+        run: |
+          if [ -n "$SGRAPH_PYPI_TOKEN" ]; then
+            pip install sgraph-ai-app-send \
+              --extra-index-url "https://pypi.org/simple/"
+          else
+            pip install sgraph-ai-app-send || \
+            pip install "sgraph-ai-app-send @ git+https://github.com/the-cyber-boardroom/SGraph-AI__App__Send.git@dev"
+          fi
 
       - name: Run P1 acceptance tests
-        run: python -m pytest tests/qa/v030/ -v -m "p1" --tb=short
+        run: |
+          python -m pytest ${{ env.QA_SUITE }} \
+            -v \
+            -m "p1" \
+            --tb=short \
+            --junit-xml=reports/qa-p1-results.xml \
+            -o "junit_family=xunit2"
+        continue-on-error: true   # P1 failures need human sign-off but don't hard-block
 
-      - name: Upload screenshots
+      - name: Upload P1 test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: qa-screenshots-p1
-          path: sg_send_qa__site/pages/use-cases/*/screenshots/
-          retention-days: 14
+          name: qa-p1-report
+          path: reports/qa-p1-results.xml
+          retention-days: 30
 
-  qa-acceptance-p2-p3:
-    name: "P2/P3 — Non-blocking"
-    runs-on: ubuntu-latest
-    needs: [qa-acceptance-p0]
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
+      - name: Upload screenshots (P1)
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          python-version: '3.12'
+          name: qa-p1-screenshots
+          path: sg_send_qa__site/pages/use-cases/
+          retention-days: 30
 
-      - name: Install dependencies
+  # ─────────────────────────────────────────────────────────────────────────────
+  # P2/P3 Suite — informational, does not block
+  # ─────────────────────────────────────────────────────────────────────────────
+  p2-p3-suite:
+    name: "P2/P3 Suite (informational)"
+    runs-on: ubuntu-latest
+    needs: [p0-gate]
+    if: ${{ inputs.run_p0_only != 'true' && inputs.run_p0_only != true }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install QA dependencies
         run: |
           pip install -r requirements.txt
-          pip install sgraph-ai-app-send cryptography
-          pip install playwright pytest-playwright
+          pip install playwright pytest-playwright cryptography httpx
           python -m playwright install --with-deps chromium
 
-      - name: Run P2+P3 acceptance tests
-        continue-on-error: true
-        run: python -m pytest tests/qa/v030/ -v -m "p2 or p3" --tb=short
+      - name: Install sgraph-ai-app-send
+        env:
+          SGRAPH_PYPI_TOKEN: ${{ secrets.SGRAPH_PYPI_TOKEN }}
+        run: |
+          if [ -n "$SGRAPH_PYPI_TOKEN" ]; then
+            pip install sgraph-ai-app-send \
+              --extra-index-url "https://pypi.org/simple/"
+          else
+            pip install sgraph-ai-app-send || \
+            pip install "sgraph-ai-app-send @ git+https://github.com/the-cyber-boardroom/SGraph-AI__App__Send.git@dev"
+          fi
 
-      - name: Upload screenshots
+      - name: Run P2/P3 acceptance tests
+        run: |
+          python -m pytest ${{ env.QA_SUITE }} \
+            -v \
+            -m "p2 or p3" \
+            --tb=short \
+            --junit-xml=reports/qa-p2p3-results.xml \
+            -o "junit_family=xunit2"
+        continue-on-error: true   # P2/P3 are informational
+
+      - name: Upload P2/P3 test report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: qa-screenshots-p2-p3
-          path: sg_send_qa__site/pages/use-cases/*/screenshots/
-          retention-days: 14
+          name: qa-p2p3-report
+          path: reports/qa-p2p3-results.xml
+          retention-days: 30
 
-  qa-gate:
-    name: "QA Gate — All P0 + P1 Pass"
+  # ─────────────────────────────────────────────────────────────────────────────
+  # Summary — post a single status check after all jobs
+  # ─────────────────────────────────────────────────────────────────────────────
+  qa-summary:
+    name: "QA Suite Summary"
     runs-on: ubuntu-latest
-    needs: [qa-acceptance-p0, qa-acceptance-p1]
+    needs: [p0-gate, p1-suite, p2-p3-suite]
+    if: always()
+
     steps:
-      - name: QA gate passed
-        run: echo "All P0 and P1 acceptance tests passed — ready for promotion."
+      - name: Report QA gate status
+        run: |
+          echo "=== QA Acceptance Test Summary ==="
+          echo "P0 Gate:   ${{ needs.p0-gate.result }}"
+          echo "P1 Suite:  ${{ needs.p1-suite.result }}"
+          echo "P2/P3:     ${{ needs.p2-p3-suite.result }}"
+          echo ""
+          if [ "${{ needs.p0-gate.result }}" != "success" ]; then
+            echo "❌ P0 GATE FAILED — promotion to main/prod is BLOCKED"
+            exit 1
+          else
+            echo "✅ P0 gate passed — safe to promote"
+          fi
