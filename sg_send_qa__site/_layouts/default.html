@@ -159,6 +159,7 @@
     <ul>
       <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' or page.url == '/pages/' %}class="active"{% endif %}>Home</a></li>
       <li><a href="{{ '/pages/use-cases/' | relative_url }}" {% if page.url == '/pages/use-cases/' %}class="active"{% endif %}>Use Cases</a></li>
+      <li><a href="{{ '/pages/pipeline/' | relative_url }}" {% if page.url contains 'pipeline' %}class="active"{% endif %}>Pipeline</a></li>
       <li><a href="{{ '/pages/roadmap/' | relative_url }}" {% if page.url contains 'roadmap' %}class="active"{% endif %}>Roadmap</a></li>
     </ul>
 

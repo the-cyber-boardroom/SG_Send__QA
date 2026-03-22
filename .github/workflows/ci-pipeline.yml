@@ -115,7 +115,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ inputs.git_branch }}
           fetch-depth: 0          # full history for jekyll-last-modified-at
+
+      - name: Pull latest (picks up auto-committed screenshots)
+        run: git pull origin ${{ inputs.git_branch }} --ff-only || true
 
       - uses: actions/configure-pages@v4
 
