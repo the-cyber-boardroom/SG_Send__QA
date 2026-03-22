@@ -1,0 +1,112 @@
+name: QA Acceptance Tests (v0.3.0)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'tests/qa/**'
+      - '.github/workflows/qa-acceptance-tests.yml'
+
+env:
+  PACKAGE_NAME: 'sg_send_qa'
+
+permissions:
+  contents: read
+
+jobs:
+  qa-acceptance-p0:
+    name: "P0 — Deployment Blockers"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install sgraph-ai-app-send cryptography
+          pip install playwright pytest-playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Run P0 acceptance tests
+        run: python -m pytest tests/qa/v030/ -v -m "p0" --tb=short
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-screenshots-p0
+          path: sg_send_qa__site/pages/use-cases/*/screenshots/
+          retention-days: 14
+
+  qa-acceptance-p1:
+    name: "P1 — Requires Sign-off if Failing"
+    runs-on: ubuntu-latest
+    needs: [qa-acceptance-p0]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install sgraph-ai-app-send cryptography
+          pip install playwright pytest-playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Run P1 acceptance tests
+        run: python -m pytest tests/qa/v030/ -v -m "p1" --tb=short
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-screenshots-p1
+          path: sg_send_qa__site/pages/use-cases/*/screenshots/
+          retention-days: 14
+
+  qa-acceptance-p2-p3:
+    name: "P2/P3 — Non-blocking"
+    runs-on: ubuntu-latest
+    needs: [qa-acceptance-p0]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install sgraph-ai-app-send cryptography
+          pip install playwright pytest-playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Run P2+P3 acceptance tests
+        continue-on-error: true
+        run: python -m pytest tests/qa/v030/ -v -m "p2 or p3" --tb=short
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-screenshots-p2-p3
+          path: sg_send_qa__site/pages/use-cases/*/screenshots/
+          retention-days: 14
+
+  qa-gate:
+    name: "QA Gate — All P0 + P1 Pass"
+    runs-on: ubuntu-latest
+    needs: [qa-acceptance-p0, qa-acceptance-p1]
+    steps:
+      - name: QA gate passed
+        run: echo "All P0 and P1 acceptance tests passed — ready for promotion."
