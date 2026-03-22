@@ -21,6 +21,7 @@ from pathlib import Path
 SITE_DIR      = Path("sg_send_qa__site")
 USE_CASES_DIR = SITE_DIR / "pages" / "use-cases"
 INDEX_PATH    = SITE_DIR / "pages" / "index.md"
+TESTS_DIR     = Path("tests/qa/v030")
 
 FRONT_MATTER = '---\ntitle: "Use Case: {title}"\npermalink: /pages/use-cases/{name}/\n---\n'
 
@@ -37,18 +38,42 @@ def _read_metadata(use_case_dir):
     return None
 
 
+def _read_test_source(use_case_name):
+    """Read the test source file for a use case, if it exists."""
+    test_path = TESTS_DIR / f"test__{use_case_name}.py"
+    if test_path.exists():
+        return test_path.read_text()
+    return None
+
+
 def _scaffold_page(use_case_dir, name, metadata):
     """Generate a starter markdown page for a new use case."""
     title = _title_from_name(name)
     md    = FRONT_MATTER.format(title=title, name=name)
     md   += f"\n# {title}\n\n"
 
-    if metadata and metadata.get("test_doc"):
+    # Use module docstring if available (v030 metadata format)
+    if metadata and metadata.get("module_doc"):
+        md += f"{metadata['module_doc'].strip()}\n\n"
+    elif metadata and metadata.get("test_doc"):
         md += f"{metadata['test_doc'].strip()}\n\n"
     else:
         md += f"Automated browser test for the **{title.lower()}** workflow.\n\n"
 
     md += "---\n\n"
+
+    # Test methods section (v030 metadata has per-method docs)
+    tests = metadata.get("tests", []) if metadata else []
+    if tests:
+        md += "## Test Methods\n\n"
+        md += "| Method | Description | Screenshots |\n"
+        md += "|--------|-------------|:-----------:|\n"
+        for t in tests:
+            method = t["method"].replace("test_", "")
+            doc    = t.get("doc", "").split("\n")[0]  # first line only
+            count  = len(t.get("screenshots", []))
+            md += f"| `{method}` | {doc} | {count} |\n"
+        md += "\n"
 
     # Add screenshots
     screenshots = []
@@ -71,6 +96,16 @@ def _scaffold_page(use_case_dir, name, metadata):
             if shot.get("description"):
                 md += f"{shot['description']}\n\n"
             md += f"![{label}](screenshots/{shot['name']}.png)\n\n"
+
+    # Include test source code
+    source = _read_test_source(name)
+    if source:
+        md += "---\n\n"
+        md += "## Test Source\n\n"
+        md += f"**File:** `tests/qa/v030/test__{name}.py`\n\n"
+        md += "```python\n"
+        md += source
+        md += "```\n\n"
 
     return md
 

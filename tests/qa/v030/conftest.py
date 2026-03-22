@@ -166,9 +166,21 @@ def _cdp_screenshot(page, path):
 
 @pytest.fixture
 def screenshots(request):
-    """Screenshot capture fixture — saves PNGs + metadata JSON."""
-    test_name = request.node.name.replace("test_", "")
-    shots_dir = Path("sg_send_qa__site/pages/use-cases") / test_name / "screenshots"
+    """Screenshot capture fixture — saves PNGs + metadata JSON.
+
+    Groups screenshots by **module** (use case), not by method.
+    test__access_gate.py  → access_gate/screenshots/
+    test__navigation.py   → navigation/screenshots/
+
+    Multiple test methods in the same module accumulate into one
+    _metadata.json (appended per method, not overwritten).
+    """
+    # Derive use-case name from module: test__access_gate → access_gate
+    module_name = request.node.module.__name__.split(".")[-1]
+    use_case    = module_name.replace("test__", "")
+    method_name = request.node.name
+
+    shots_dir = Path("sg_send_qa__site/pages/use-cases") / use_case / "screenshots"
     shots_dir.mkdir(parents=True, exist_ok=True)
 
     captured = []
@@ -184,12 +196,29 @@ def screenshots(request):
             return captured
 
         def save_metadata(self):
-            meta = {
-                "test_name"  : test_name,
-                "test_doc"   : request.node.obj.__doc__ or "",
-                "screenshots": captured,
-            }
-            (shots_dir / "_metadata.json").write_text(json.dumps(meta, indent=2))
+            meta_path = shots_dir / "_metadata.json"
+
+            # Load existing metadata (from prior test methods in same module)
+            if meta_path.exists():
+                existing = json.loads(meta_path.read_text())
+            else:
+                existing = {
+                    "use_case"   : use_case,
+                    "module"     : module_name,
+                    "module_doc" : request.node.module.__doc__ or "",
+                    "tests"      : [],
+                    "screenshots": [],
+                }
+
+            # Append this test method's data
+            existing["tests"].append({
+                "method"      : method_name,
+                "doc"         : request.node.obj.__doc__ or "",
+                "screenshots" : [s["name"] for s in captured],
+            })
+            existing["screenshots"].extend(captured)
+
+            meta_path.write_text(json.dumps(existing, indent=2))
 
     capture = ScreenshotCapture()
     yield capture
