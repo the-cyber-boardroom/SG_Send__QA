@@ -29,12 +29,39 @@ flowchart LR
 
 ---
 
+## v0.3.0 — Local Stack Tests
+
+These tests run against a **fully local stack** (in-memory API + static UI server) for deterministic, fast results. They use real encryption matching the browser's Web Crypto implementation.
+
+```mermaid
+flowchart LR
+    A["Access Gate\n(UC-10)"] --> B["Route Handling\n(UC-11)"]
+    B --> C["Gallery View"]
+    B --> D["Browse View"]
+    B --> E["Single File View"]
+    B --> F["Auto-detect"]
+```
+
+| # | Use Case | Description | Priority |
+|:-:|----------|-------------|:--------:|
+| 10 | [Access Token Gate](access_gate/) | Full gate lifecycle: valid token, wrong token, ungated fallback | P1 |
+| 11 | [Route Handling & Mode Switching](route_handling/) | All download routes, hash preservation, mode switching | P1 |
+
+> These are the first two v0.3.0 use cases wired into the QA site. More will follow as tests are validated.
+
+---
+
 ## Coming Next
 
-Future use cases planned for the test suite:
+Remaining v0.3.0 tests to integrate:
 
-- **Valid token accepted** — enter a real token, verify access is granted
-- **File upload flow** — upload a file through the sharing UI
-- **File download flow** — retrieve a shared file via link
-- **Token expiry handling** — verify expired tokens are rejected
-- **Admin panel access** — admin login and dashboard
+- **Single file upload** (UC-01) — upload a file through the UI
+- **Folder upload** (UC-02) — upload a folder/zip
+- **Download: Browse** (UC-03) — browse view for multi-file transfers
+- **Download: Gallery** (UC-04) — image gallery view
+- **Download: Viewer** (UC-05) — single file viewer
+- **Manual entry** (UC-06) — enter transfer ID + key manually
+- **Separate key** (UC-07) — key delivered separately from link
+- **Combined link** (UC-08) — link with embedded key
+- **Friendly token** (UC-09) — human-readable token format
+- **Zero knowledge** (UC-12) — verify server never sees plaintext

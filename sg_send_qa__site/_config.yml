@@ -20,6 +20,8 @@ navigation:
       url: /
     - title: Use Cases
       url: /pages/use-cases/
+    - title: Pipeline
+      url: /pages/pipeline/
     - title: Roadmap
       url: /pages/roadmap/
   use_cases:
@@ -32,6 +34,12 @@ navigation:
     - title: Invalid Token Rejected
       url: /pages/use-cases/invalid_token_rejected/
       id: invalid_token_rejected
+    - title: "Access Token Gate (UC-10)"
+      url: /pages/use-cases/access_gate/
+      id: access_gate
+    - title: "Route Handling (UC-11)"
+      url: /pages/use-cases/route_handling/
+      id: route_handling
 
 exclude:
   - Gemfile
