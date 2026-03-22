@@ -1,3 +1,8 @@
+# sgraph-ai-app-send is NOT installed via pip here.
+# Install from the dev branch before running tests:
+#   git clone --depth 1 --branch dev https://github.com/the-cyber-boardroom/SGraph-AI__App__Send.git /tmp/sgraph-send-dev
+#   pip install /tmp/sgraph-send-dev
+cryptography>=42.0
 playwright==1.56.0
 fastapi>=0.115
 uvicorn>=0.34

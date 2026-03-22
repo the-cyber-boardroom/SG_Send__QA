@@ -53,9 +53,7 @@ class TestGalleryViewFeatures:
         screenshots.capture(page, "01_gallery_loaded", "Gallery view loaded")
 
         page_text = page.text_content("body") or ""
-        assert "error" not in page_text.lower() or any(
-            kw in page_text.lower() for kw in ["gallery", "photo", "image"]
-        ), "Gallery page shows error"
+        assert "error" not in page_text.lower(), "Gallery page shows error"
 
     def test_view_mode_buttons_present(self, page, ui_url, transfer_helper, screenshots):
         """View mode buttons (compact/grid/large) are present in gallery."""
