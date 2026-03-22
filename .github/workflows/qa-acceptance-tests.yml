@@ -36,9 +36,7 @@ on:
         required: false
         type: boolean
         default: false
-    secrets:
-      SGRAPH_PYPI_TOKEN:
-        required: false   # for installing sgraph-ai-app-send from private registry
+    # No secrets needed — sgraph-ai-app-send installed from public GitHub dev branch
 
 env:
   PYTHON_VERSION: "3.12"
@@ -67,18 +65,12 @@ jobs:
           pip install playwright pytest-playwright cryptography httpx
           python -m playwright install --with-deps chromium
 
-      - name: Install sgraph-ai-app-send (in-memory API server)
-        env:
-          SGRAPH_PYPI_TOKEN: ${{ secrets.SGRAPH_PYPI_TOKEN }}
+      - name: Install sgraph-ai-app-send (dev branch — in-memory API server)
         run: |
-          # Install from PyPI (or private registry if token provided)
-          if [ -n "$SGRAPH_PYPI_TOKEN" ]; then
-            pip install sgraph-ai-app-send \
-              --extra-index-url "https://pypi.org/simple/"
-          else
-            pip install sgraph-ai-app-send || \
-            pip install "sgraph-ai-app-send @ git+https://github.com/the-cyber-boardroom/SGraph-AI__App__Send.git@dev"
-          fi
+          git clone --depth 1 --branch dev \
+            https://github.com/the-cyber-boardroom/SGraph-AI__App__Send.git \
+            /tmp/sgraph-send-dev
+          pip install /tmp/sgraph-send-dev
 
       - name: Run P0 acceptance tests
         run: |
@@ -130,17 +122,12 @@ jobs:
           pip install playwright pytest-playwright cryptography httpx
           python -m playwright install --with-deps chromium
 
-      - name: Install sgraph-ai-app-send
-        env:
-          SGRAPH_PYPI_TOKEN: ${{ secrets.SGRAPH_PYPI_TOKEN }}
+      - name: Install sgraph-ai-app-send (dev branch)
         run: |
-          if [ -n "$SGRAPH_PYPI_TOKEN" ]; then
-            pip install sgraph-ai-app-send \
-              --extra-index-url "https://pypi.org/simple/"
-          else
-            pip install sgraph-ai-app-send || \
-            pip install "sgraph-ai-app-send @ git+https://github.com/the-cyber-boardroom/SGraph-AI__App__Send.git@dev"
-          fi
+          git clone --depth 1 --branch dev \
+            https://github.com/the-cyber-boardroom/SGraph-AI__App__Send.git \
+            /tmp/sgraph-send-dev
+          pip install /tmp/sgraph-send-dev
 
       - name: Run P1 acceptance tests
         run: |
@@ -192,17 +179,12 @@ jobs:
           pip install playwright pytest-playwright cryptography httpx
           python -m playwright install --with-deps chromium
 
-      - name: Install sgraph-ai-app-send
-        env:
-          SGRAPH_PYPI_TOKEN: ${{ secrets.SGRAPH_PYPI_TOKEN }}
+      - name: Install sgraph-ai-app-send (dev branch)
         run: |
-          if [ -n "$SGRAPH_PYPI_TOKEN" ]; then
-            pip install sgraph-ai-app-send \
-              --extra-index-url "https://pypi.org/simple/"
-          else
-            pip install sgraph-ai-app-send || \
-            pip install "sgraph-ai-app-send @ git+https://github.com/the-cyber-boardroom/SGraph-AI__App__Send.git@dev"
-          fi
+          git clone --depth 1 --branch dev \
+            https://github.com/the-cyber-boardroom/SGraph-AI__App__Send.git \
+            /tmp/sgraph-send-dev
+          pip install /tmp/sgraph-send-dev
 
       - name: Run P2/P3 acceptance tests
         run: |
