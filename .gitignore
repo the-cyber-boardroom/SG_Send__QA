@@ -209,6 +209,3 @@ __marimo__/
 # Project-specific
 config/.env
 node_modules/
-
-# Generated test-run artefacts (screenshots, site output)
-sg_send_qa__site/
