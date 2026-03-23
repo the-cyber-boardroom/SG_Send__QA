@@ -1,0 +1,16 @@
+{
+  "test_name": "upload_accessible_with_token",
+  "test_doc": "Providing the correct access token grants access to the upload zone.",
+  "screenshots": [
+    {
+      "name": "01_landing",
+      "path": "sg_send_qa__site/pages/use-cases/upload_accessible_with_token/screenshots/01_landing.png",
+      "description": "Landing page (may show gate or upload zone)"
+    },
+    {
+      "name": "02_after_token",
+      "path": "sg_send_qa__site/pages/use-cases/upload_accessible_with_token/screenshots/02_after_token.png",
+      "description": "After entering access token"
+    }
+  ]
+}

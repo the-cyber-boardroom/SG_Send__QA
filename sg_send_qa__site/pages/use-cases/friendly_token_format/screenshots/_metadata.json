@@ -1,0 +1,21 @@
+{
+  "test_name": "friendly_token_format",
+  "test_doc": "Verify the friendly token matches the word-word-NNNN pattern.",
+  "screenshots": [
+    {
+      "name": "01_file_selected",
+      "path": "sg_send_qa__site/pages/use-cases/friendly_token_format/screenshots/01_file_selected.png",
+      "description": "File selected (delivery step active)"
+    },
+    {
+      "name": "02_simple_token_selected",
+      "path": "sg_send_qa__site/pages/use-cases/friendly_token_format/screenshots/02_simple_token_selected.png",
+      "description": "Simple Token selected"
+    },
+    {
+      "name": "03_upload_complete",
+      "path": "sg_send_qa__site/pages/use-cases/friendly_token_format/screenshots/03_upload_complete.png",
+      "description": "Upload complete"
+    }
+  ]
+}

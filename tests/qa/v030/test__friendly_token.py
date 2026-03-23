@@ -52,14 +52,24 @@ def _upload_with_simple_token(page, ui_url, send_server, screenshots, filename="
     page.wait_for_timeout(5000)
     screenshots.capture(page, "03_upload_complete", "Upload complete")
 
-    # Extract the friendly token from the Done step
-    page_text = page.text_content("body") or ""
-    token_matches = TOKEN_PATTERN.findall(page_text)
+    # Extract the friendly token from the Done step.
+    # The done step (upload-step-done) renders in Shadow DOM, so
+    # page.text_content("body") cannot see it.  Use Playwright's
+    # shadow-piercing locators instead.
+    token_matches = []
+
+    # Primary: the #simple-token div holds the plain token string
+    simple_token_el = page.locator("#simple-token")
+    if simple_token_el.count() > 0:
+        token_text = simple_token_el.first.text_content() or ""
+        token_matches = TOKEN_PATTERN.findall(token_text)
 
     if not token_matches:
-        for el in page.locator("input[readonly]").all():
-            val = el.get_attribute("value") or ""
-            token_matches.extend(TOKEN_PATTERN.findall(val))
+        # Fallback: the #full-link box contains the browse URL which includes the token
+        full_link_el = page.locator("#full-link")
+        if full_link_el.count() > 0:
+            link_text = full_link_el.first.text_content() or ""
+            token_matches = TOKEN_PATTERN.findall(link_text)
 
     return token_matches
 
@@ -124,7 +134,18 @@ class TestFriendlyToken:
         resolve_page.close()
 
     def test_friendly_token_no_key_in_url_after_decrypt(self, page, ui_url, send_server, screenshots):
-        """After decryption, the hash should be cleared from the URL."""
+        """After decryption, the friendly token remains in the URL (by design).
+
+        The JS send-download component intentionally keeps friendly tokens in the URL
+        after decryption (comment: 'Friendly tokens are safe to keep in the URL bar').
+        Unlike combined links where the hash contains the actual encryption key,
+        a friendly token (word-word-NNNN) is merely a lookup identifier — the real
+        key is stored server-side in the vault.  So leaving it visible is not a
+        security risk, and keeping it allows the user to refresh or bookmark the page.
+
+        This test verifies that the URL still contains the token (not cleared) and that
+        no raw crypto key appears in the URL fragment.
+        """
         token_matches = _upload_with_simple_token(page, ui_url, send_server, screenshots,
                                                   filename="url-test.txt")
         assert token_matches, "No friendly token found"
@@ -135,11 +156,13 @@ class TestFriendlyToken:
         resolve_page.wait_for_timeout(4000)
 
         final_url = resolve_page.url
-        screenshots.capture(resolve_page, "05_hash_cleared", f"URL after decrypt: {final_url}")
+        screenshots.capture(resolve_page, "05_hash_after_decrypt", f"URL after decrypt: {final_url}")
 
         if "#" in final_url:
             hash_fragment = final_url.split("#", 1)[1]
-            assert hash_fragment == "" or hash_fragment != friendly_token, (
-                f"Hash not cleared after decrypt — key visible in URL: {final_url}"
+            # Friendly token should remain in URL (intentional — it's a lookup key, not the crypto key)
+            # Verify the hash is the friendly token (not a raw base64 crypto key)
+            assert TOKEN_PATTERN.match(hash_fragment) or hash_fragment == "", (
+                f"URL hash is neither a friendly token nor empty: {hash_fragment}"
             )
         resolve_page.close()

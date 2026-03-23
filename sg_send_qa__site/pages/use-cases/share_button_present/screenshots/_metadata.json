@@ -1,0 +1,16 @@
+{
+  "test_name": "share_button_present",
+  "test_doc": "Share button is present and toggles the share panel.",
+  "screenshots": [
+    {
+      "name": "03_before_share",
+      "path": "sg_send_qa__site/pages/use-cases/share_button_present/screenshots/03_before_share.png",
+      "description": "Before share panel"
+    },
+    {
+      "name": "04_share_panel",
+      "path": "sg_send_qa__site/pages/use-cases/share_button_present/screenshots/04_share_panel.png",
+      "description": "Share panel opened"
+    }
+  ]
+}

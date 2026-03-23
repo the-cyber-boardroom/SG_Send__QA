@@ -1,0 +1,11 @@
+{
+  "test_name": "entry_form_has_decrypt_button",
+  "test_doc": "Entry form has a Decrypt & Download (or similar) button.",
+  "screenshots": [
+    {
+      "name": "02_decrypt_button",
+      "path": "sg_send_qa__site/pages/use-cases/entry_form_has_decrypt_button/screenshots/02_decrypt_button.png",
+      "description": "Entry form with decrypt button"
+    }
+  ]
+}

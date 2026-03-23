@@ -1,0 +1,16 @@
+{
+  "test_name": "keyboard_navigation_j_k",
+  "test_doc": "Keyboard j/k navigate through files in browse view (P2).",
+  "screenshots": [
+    {
+      "name": "07_keyboard_j",
+      "path": "sg_send_qa__site/pages/use-cases/keyboard_navigation_j_k/screenshots/07_keyboard_j.png",
+      "description": "After pressing j"
+    },
+    {
+      "name": "08_keyboard_k",
+      "path": "sg_send_qa__site/pages/use-cases/keyboard_navigation_j_k/screenshots/08_keyboard_k.png",
+      "description": "After pressing k"
+    }
+  ]
+}

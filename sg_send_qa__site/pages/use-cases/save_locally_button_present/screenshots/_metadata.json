@@ -1,0 +1,11 @@
+{
+  "test_name": "save_locally_button_present",
+  "test_doc": "Save locally button is present in the viewer.",
+  "screenshots": [
+    {
+      "name": "06_save_button",
+      "path": "sg_send_qa__site/pages/use-cases/save_locally_button_present/screenshots/06_save_button.png",
+      "description": "Save locally button"
+    }
+  ]
+}

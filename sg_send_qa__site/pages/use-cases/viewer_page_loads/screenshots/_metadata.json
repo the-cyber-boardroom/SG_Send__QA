@@ -1,0 +1,11 @@
+{
+  "test_name": "viewer_page_loads",
+  "test_doc": "Single-file viewer loads without errors.",
+  "screenshots": [
+    {
+      "name": "01_viewer_loaded",
+      "path": "sg_send_qa__site/pages/use-cases/viewer_page_loads/screenshots/01_viewer_loaded.png",
+      "description": "Single file viewer loaded"
+    }
+  ]
+}

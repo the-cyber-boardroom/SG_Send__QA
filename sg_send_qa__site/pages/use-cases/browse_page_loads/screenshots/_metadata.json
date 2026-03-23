@@ -1,0 +1,11 @@
+{
+  "test_name": "browse_page_loads",
+  "test_doc": "Browse page loads without errors.",
+  "screenshots": [
+    {
+      "name": "01_browse_loaded",
+      "path": "sg_send_qa__site/pages/use-cases/browse_page_loads/screenshots/01_browse_loaded.png",
+      "description": "Browse view loaded"
+    }
+  ]
+}

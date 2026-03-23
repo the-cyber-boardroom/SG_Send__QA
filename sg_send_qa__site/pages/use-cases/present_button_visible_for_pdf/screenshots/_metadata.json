@@ -1,0 +1,5 @@
+{
+  "test_name": "present_button_visible_for_pdf",
+  "test_doc": "A 'Present' button appears in the lightbox when viewing a PDF.",
+  "screenshots": []
+}

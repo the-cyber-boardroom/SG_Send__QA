@@ -1,0 +1,5 @@
+{
+  "test_name": "lightbox_arrow_navigation",
+  "test_doc": "Arrow buttons navigate between images in the lightbox.",
+  "screenshots": []
+}

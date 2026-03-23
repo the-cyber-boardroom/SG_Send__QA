@@ -1,0 +1,11 @@
+{
+  "test_name": "view_mode_buttons_present",
+  "test_doc": "View mode buttons (compact/grid/large) are present in gallery.",
+  "screenshots": [
+    {
+      "name": "02_view_controls",
+      "path": "sg_send_qa__site/pages/use-cases/view_mode_buttons_present/screenshots/02_view_controls.png",
+      "description": "View mode controls"
+    }
+  ]
+}

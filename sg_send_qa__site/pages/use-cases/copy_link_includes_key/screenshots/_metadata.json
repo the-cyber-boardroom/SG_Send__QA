@@ -1,0 +1,5 @@
+{
+  "test_name": "copy_link_includes_key",
+  "test_doc": "Copy Link button in gallery/browse includes the key in the URL (P1).",
+  "screenshots": []
+}

@@ -106,7 +106,7 @@ class TestCombinedLink:
             plaintext=SAMPLE_CONTENT.encode(),
             filename="api-combined-test.txt",
         )
-        combined_url = f"{ui_url}/en-gb/download/#{tid}/{key_b64}"
+        combined_url = f"{ui_url}/en-gb/browse/#{tid}/{key_b64}"
 
         goto(page, combined_url)
         page.wait_for_timeout(4000)   # allow JS decrypt

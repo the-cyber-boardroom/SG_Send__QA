@@ -306,7 +306,7 @@ class TransferHelper:
       - SGMETA envelope: magic(7) + length(4) + JSON metadata + content
     """
 
-    SGMETA_MAGIC = bytes([0x53, 0x47, 0x4D, 0x45, 0x54, 0x41, 0x00])  # "SGMETA\0"
+    SGMETA_MAGIC = bytes([0x53, 0x47, 0x4D, 0x45, 0x54, 0x41])  # "SGMETA" — 6 bytes, matches JS upload-constants.js
 
     def __init__(self, api_url, access_token=None):
         self.api_url = api_url
@@ -337,8 +337,16 @@ class TransferHelper:
 
         return tid
 
-    def upload_encrypted(self, plaintext: bytes, filename="test.txt"):
-        """Encrypt client-side (matching browser Web Crypto), upload, return (transfer_id, base64url_key)."""
+    def upload_encrypted(self, plaintext: bytes, filename="test.txt",
+                          content_type="text/plain"):
+        """Encrypt client-side (matching browser Web Crypto), upload, return (transfer_id, base64url_key).
+
+        content_type is the ORIGINAL file type (before encryption) stored as
+        content_type_hint on the transfer.  The download page uses this to decide
+        whether to display the file inline (text/plain, image/*, application/pdf)
+        or trigger a browser auto-download (application/octet-stream).
+        Default is text/plain since most test payloads are plain text.
+        """
         from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
         key_bytes = os.urandom(32)
@@ -353,7 +361,7 @@ class TransferHelper:
         # Encrypt: IV prepended to ciphertext (matches browser format)
         ciphertext = iv + aesgcm.encrypt(iv, envelope, None)
 
-        tid = self.create_and_complete(ciphertext)
+        tid = self.create_and_complete(ciphertext, content_type=content_type)
 
         # base64url key (no padding) — matches SendCrypto.exportKey
         key_b64 = base64.urlsafe_b64encode(key_bytes).rstrip(b"=").decode()

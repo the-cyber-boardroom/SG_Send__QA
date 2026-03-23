@@ -1,0 +1,11 @@
+{
+  "test_name": "view_route",
+  "test_doc": "GET /en-gb/view/#hash loads single-file viewer.",
+  "screenshots": [
+    {
+      "name": "03_view_route",
+      "path": "sg_send_qa__site/pages/use-cases/view_route/screenshots/03_view_route.png",
+      "description": "View route loaded"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "test_name": "action_buttons_present",
+  "test_doc": "Copy Link, Email, Save locally, Print buttons are present.",
+  "screenshots": [
+    {
+      "name": "03_action_buttons",
+      "path": "sg_send_qa__site/pages/use-cases/action_buttons_present/screenshots/03_action_buttons.png",
+      "description": "Gallery action buttons"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "test_name": "short_v_route",
+  "test_doc": "/en-gb/v/#hash is equivalent to /en-gb/view/#hash.",
+  "screenshots": [
+    {
+      "name": "04_short_v_route",
+      "path": "sg_send_qa__site/pages/use-cases/short_v_route/screenshots/04_short_v_route.png",
+      "description": "Short /v/ route loaded"
+    }
+  ]
+}

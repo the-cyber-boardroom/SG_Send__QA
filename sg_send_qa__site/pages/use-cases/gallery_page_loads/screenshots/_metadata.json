@@ -1,0 +1,11 @@
+{
+  "test_name": "gallery_page_loads",
+  "test_doc": "Gallery page loads without errors for an image-heavy zip.",
+  "screenshots": [
+    {
+      "name": "01_gallery_loaded",
+      "path": "sg_send_qa__site/pages/use-cases/gallery_page_loads/screenshots/01_gallery_loaded.png",
+      "description": "Gallery view loaded"
+    }
+  ]
+}

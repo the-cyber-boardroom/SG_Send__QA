@@ -1,0 +1,5 @@
+{
+  "test_name": "upload_zone_visible_without_gate",
+  "test_doc": "If no gate is configured, upload zone is immediately visible.",
+  "screenshots": []
+}
