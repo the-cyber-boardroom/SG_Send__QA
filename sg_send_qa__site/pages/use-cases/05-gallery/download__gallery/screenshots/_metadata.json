@@ -1,0 +1,75 @@
+{
+  "use_case": "download__gallery",
+  "module": "test__download__gallery",
+  "module_doc": "UC-06: Gallery view features (P1).\n\nTest flow:\n  - Verify view mode buttons work (compact / grid / large)\n  - Verify Copy Link, Email, Print, Save locally buttons are present\n  - Verify Info panel toggles\n  - Verify lightbox opens on thumbnail click\n  - Verify lightbox navigation (arrows)\n  - Verify SG/Send branding in lightbox\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_gallery_page_loads",
+      "doc": "Gallery page loads without errors for an image-heavy zip.",
+      "screenshots": [
+        "01_gallery_loaded"
+      ]
+    },
+    {
+      "method": "test_view_mode_buttons_present",
+      "doc": "View mode buttons (compact/grid/large) are present in gallery.",
+      "screenshots": [
+        "02_view_controls"
+      ]
+    },
+    {
+      "method": "test_action_buttons_present",
+      "doc": "Copy Link, Email, Save locally, Print buttons are present.",
+      "screenshots": [
+        "03_action_buttons"
+      ]
+    },
+    {
+      "method": "test_info_panel_toggle",
+      "doc": "Info button toggles the info panel showing transfer metadata.",
+      "screenshots": [
+        "04_before_info"
+      ]
+    },
+    {
+      "method": "test_lightbox_opens_on_thumbnail",
+      "doc": "Clicking a thumbnail opens the lightbox.",
+      "screenshots": [
+        "06_before_lightbox"
+      ]
+    },
+    {
+      "method": "test_lightbox_arrow_navigation",
+      "doc": "Arrow buttons navigate between images in the lightbox.",
+      "screenshots": []
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01_gallery_loaded",
+      "path": "sg_send_qa__site/pages/use-cases/05-gallery/download__gallery/screenshots/01_gallery_loaded.png",
+      "description": "Gallery view loaded"
+    },
+    {
+      "name": "02_view_controls",
+      "path": "sg_send_qa__site/pages/use-cases/05-gallery/download__gallery/screenshots/02_view_controls.png",
+      "description": "View mode controls"
+    },
+    {
+      "name": "03_action_buttons",
+      "path": "sg_send_qa__site/pages/use-cases/05-gallery/download__gallery/screenshots/03_action_buttons.png",
+      "description": "Gallery action buttons"
+    },
+    {
+      "name": "04_before_info",
+      "path": "sg_send_qa__site/pages/use-cases/05-gallery/download__gallery/screenshots/04_before_info.png",
+      "description": "Before info panel toggle"
+    },
+    {
+      "name": "06_before_lightbox",
+      "path": "sg_send_qa__site/pages/use-cases/05-gallery/download__gallery/screenshots/06_before_lightbox.png",
+      "description": "Gallery before lightbox"
+    }
+  ]
+}

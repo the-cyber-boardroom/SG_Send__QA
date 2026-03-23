@@ -1,0 +1,92 @@
+{
+  "use_case": "upload__single_file",
+  "module": "test__upload__single_file",
+  "module_doc": "UC-01: Single file upload \u2192 download \u2192 content matches (P0).\n\nHappy-path end-to-end test:\n  1. Navigate to the upload page\n  2. Drop a text file onto the upload zone\n  3. Walk through the 6-step wizard\n  4. Capture the download link\n  5. Open the download link in a new page\n  6. Verify decrypted content matches the original\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_upload_page_loads",
+      "doc": "Navigate to /en-gb/ and verify the upload zone is visible.",
+      "screenshots": [
+        "01_upload_page"
+      ]
+    },
+    {
+      "method": "test_single_file_upload_flow",
+      "doc": "Upload a text file through the wizard and verify the download link works.",
+      "screenshots": [
+        "01_file_selected",
+        "02_share_step",
+        "03_mode_selected",
+        "04_upload_done",
+        "05_download_page",
+        "06_decrypted"
+      ]
+    },
+    {
+      "method": "test_download_link_format",
+      "doc": "Verify the download link contains transfer ID and key in the hash.",
+      "screenshots": [
+        "01_file_selected",
+        "02_share_step",
+        "03_mode_selected",
+        "04_upload_done",
+        "07_link_format"
+      ]
+    },
+    {
+      "method": "test_footer_version",
+      "doc": "Verify the footer shows v0.3.0.",
+      "screenshots": [
+        "01_footer"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01_upload_page",
+      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_upload_page.png",
+      "description": "Upload page loaded"
+    },
+    {
+      "name": "05_download_page",
+      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/05_download_page.png",
+      "description": "Download page \u2014 awaiting decrypt"
+    },
+    {
+      "name": "06_decrypted",
+      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/06_decrypted.png",
+      "description": "Content decrypted and visible"
+    },
+    {
+      "name": "01_file_selected",
+      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_file_selected.png",
+      "description": "File selected \u2014 delivery step"
+    },
+    {
+      "name": "02_share_step",
+      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/02_share_step.png",
+      "description": "Share mode step"
+    },
+    {
+      "name": "03_mode_selected",
+      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/03_mode_selected.png",
+      "description": "Combined link selected"
+    },
+    {
+      "name": "04_upload_done",
+      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/04_upload_done.png",
+      "description": "Upload complete \u2014 link shown"
+    },
+    {
+      "name": "07_link_format",
+      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/07_link_format.png",
+      "description": "Link verified: http://localhost:10062/en-gb/browse/#f69783b2da6d/7kEprSUHirzPEUfzXb_QARPW6hU8hB"
+    },
+    {
+      "name": "01_footer",
+      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_footer.png",
+      "description": "Footer showing version"
+    }
+  ]
+}

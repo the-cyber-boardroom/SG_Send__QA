@@ -1,0 +1,88 @@
+{
+  "use_case": "download__viewer",
+  "module": "test__download__viewer",
+  "module_doc": "UC-08: Single file viewer (P1).\n\nTest flow:\n  - Upload a markdown file via API, open the download/view link\n  - Verify markdown renders (or content displays)\n  - Verify Share button toggles share panel with download link\n  - Verify Copy copies the URL with key intact\n  - Verify Print button is present\n  - Verify Save locally downloads the file\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_viewer_page_loads",
+      "doc": "Single-file viewer loads without errors.",
+      "screenshots": [
+        "01_viewer_loaded"
+      ]
+    },
+    {
+      "method": "test_markdown_content_displayed",
+      "doc": "Markdown file content is decrypted and displayed.",
+      "screenshots": [
+        "02_content"
+      ]
+    },
+    {
+      "method": "test_share_button_present",
+      "doc": "Share button is present and toggles the share panel.",
+      "screenshots": [
+        "03_before_share",
+        "04_share_panel"
+      ]
+    },
+    {
+      "method": "test_copy_url_contains_key",
+      "doc": "The share URL shown in the panel contains the key (hash fragment).",
+      "screenshots": [
+        "05_url_with_key"
+      ]
+    },
+    {
+      "method": "test_save_locally_button_present",
+      "doc": "Save locally button is present in the viewer.",
+      "screenshots": [
+        "06_save_button"
+      ]
+    },
+    {
+      "method": "test_short_url_v_route",
+      "doc": "Short URL /en-gb/v/ works the same as /en-gb/view/.",
+      "screenshots": [
+        "07_short_url_v"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01_viewer_loaded",
+      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/01_viewer_loaded.png",
+      "description": "Single file viewer loaded"
+    },
+    {
+      "name": "02_content",
+      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/02_content.png",
+      "description": "Decrypted markdown content"
+    },
+    {
+      "name": "03_before_share",
+      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/03_before_share.png",
+      "description": "Before share panel"
+    },
+    {
+      "name": "04_share_panel",
+      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/04_share_panel.png",
+      "description": "Share panel opened"
+    },
+    {
+      "name": "05_url_with_key",
+      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/05_url_with_key.png",
+      "description": "URL input with key"
+    },
+    {
+      "name": "06_save_button",
+      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/06_save_button.png",
+      "description": "Save locally button"
+    },
+    {
+      "name": "07_short_url_v",
+      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/07_short_url_v.png",
+      "description": "Short /v/ route loads viewer"
+    }
+  ]
+}

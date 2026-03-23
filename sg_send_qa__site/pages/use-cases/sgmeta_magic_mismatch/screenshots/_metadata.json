@@ -1,0 +1,22 @@
+{
+  "use_case": "sgmeta_magic_mismatch",
+  "module": "test__sgmeta_magic_mismatch",
+  "module_doc": "BUG: SGMETA magic bytes mismatch between Python helper and JS upload component.\n\nSeverity: Medium (affects TransferHelper.upload_encrypted in QA test helpers only,\n          not production uploads which go browser \u2192 JS \u2192 server \u2192 JS).\n\nRoot cause:\n  The Python TransferHelper in conftest.py originally used a 7-byte SGMETA magic\n  sequence (SGMETA + null terminator = 0x53 0x47 0x4D 0x45 0x54 0x41 0x00) while\n  the JS upload component (upload-constants.js) and JS download component\n  (send-download.js) both use a 6-byte sequence (0x53 0x47 0x4D 0x45 0x54 0x41).\n\n  Effect: when downloading a TransferHelper-created transfer, the JS _extractMetadata()\n  reads the length field from the wrong offset, parses an empty JSON string, throws,\n  and falls back to { metadata: null, content: full_buffer }.  This means:\n    - filename is not extracted from metadata \u2192 generic filename used\n    - content bytes include the SGMETA header garbage when displayed inline\n\nStatus: FIXED in conftest.py \u2014 SGMETA_MAGIC changed to 6 bytes (no null terminator).\n\nThis file documents the bug and verifies the fix with a regression test.\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_api_created_transfer_decrypts_with_correct_filename",
+      "doc": "API-created transfer should display with correct filename after decryption.\n\n        With the 7-byte magic bug, metadata extraction failed and filename was lost.\n        With the 6-byte fix, the filename 'sgmeta-regression.txt' is correctly\n        extracted from the SGMETA envelope and displayed in the viewer.\n        ",
+      "screenshots": [
+        "01_sgmeta_regression"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01_sgmeta_regression",
+      "path": "sg_send_qa__site/pages/use-cases/sgmeta_magic_mismatch/screenshots/01_sgmeta_regression.png",
+      "description": "SGMETA regression test \u2014 filename check"
+    }
+  ]
+}

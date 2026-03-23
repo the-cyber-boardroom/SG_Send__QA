@@ -1,0 +1,82 @@
+{
+  "use_case": "upload__folder",
+  "module": "test__upload__folder",
+  "module_doc": "UC-02: Folder upload \u2192 gallery + browse view (P1).\n\nTest flow:\n  1. Upload a folder containing 3+ images and a markdown file\n  2. Verify gallery mode is auto-selected (3+ images triggers gallery)\n  3. Verify thumbnail grid renders with correct file count\n  4. Click a thumbnail \u2192 verify lightbox opens\n  5. Close lightbox \u2192 click \"Folder view\" link\n  6. Verify browse view loads with folder tree\n  7. Click a file in the tree \u2192 verify it opens in preview\n  8. Click \"Gallery view\" \u2192 verify it switches back\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_upload_zip_and_gallery_view",
+      "doc": "Upload a zip with 3+ images; verify gallery mode is shown.",
+      "screenshots": [
+        "01_upload_page",
+        "02_file_selected",
+        "03_share_step",
+        "04_upload_done",
+        "05_download_gallery"
+      ]
+    },
+    {
+      "method": "test_gallery_thumbnail_grid",
+      "doc": "Create a zip upload via API, open gallery, verify thumbnail grid.",
+      "screenshots": [
+        "06_gallery_thumbnails"
+      ]
+    },
+    {
+      "method": "test_browse_view_folder_tree",
+      "doc": "Open browse view for the zip; verify folder tree is present.",
+      "screenshots": [
+        "07_browse_view"
+      ]
+    },
+    {
+      "method": "test_mode_switch_preserves_hash",
+      "doc": "Gallery \u2194 browse mode switching preserves the hash fragment.",
+      "screenshots": [
+        "08_switched_to_browse"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01_upload_page",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/01_upload_page.png",
+      "description": "Upload page loaded"
+    },
+    {
+      "name": "02_file_selected",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/02_file_selected.png",
+      "description": "Zip file selected \u2014 delivery step"
+    },
+    {
+      "name": "03_share_step",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/03_share_step.png",
+      "description": "Share mode step"
+    },
+    {
+      "name": "04_upload_done",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/04_upload_done.png",
+      "description": "Upload complete \u2014 link shown"
+    },
+    {
+      "name": "05_download_gallery",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/05_download_gallery.png",
+      "description": "Gallery view after zip download"
+    },
+    {
+      "name": "06_gallery_thumbnails",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/06_gallery_thumbnails.png",
+      "description": "Gallery thumbnail grid"
+    },
+    {
+      "name": "07_browse_view",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/07_browse_view.png",
+      "description": "Browse view with folder tree"
+    },
+    {
+      "name": "08_switched_to_browse",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/08_switched_to_browse.png",
+      "description": "Switched to browse view"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "use_case": "navigation",
+  "module": "test__navigation",
+  "module_doc": "UC-11: Route handling + mode switching (P1).\n\nTest flow:\n  - Upload a zip with images via API\n  - Navigate to /gallery/#hash \u2192 verify gallery view\n  - Navigate to /browse/#hash \u2192 verify browse view\n  - Navigate to /view/#hash \u2192 verify single file view\n  - Navigate to /v/#hash \u2192 verify same as /view/ (short URL)\n  - Navigate to /download/#hash \u2192 verify auto-detect mode\n  - Verify gallery \"Folder view\" link \u2192 navigates to /browse/ preserving hash\n  - Verify browse \"Gallery view\" link \u2192 navigates to /gallery/ preserving hash\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_gallery_route",
+      "doc": "GET /en-gb/gallery/#hash loads gallery view.",
+      "screenshots": [
+        "01_gallery_route"
+      ]
+    },
+    {
+      "method": "test_browse_route",
+      "doc": "GET /en-gb/browse/#hash loads browse view.",
+      "screenshots": [
+        "02_browse_route"
+      ]
+    },
+    {
+      "method": "test_view_route",
+      "doc": "GET /en-gb/view/#hash loads single-file viewer.",
+      "screenshots": [
+        "03_view_route"
+      ]
+    },
+    {
+      "method": "test_short_v_route",
+      "doc": "/en-gb/v/#hash is equivalent to /en-gb/view/#hash.",
+      "screenshots": [
+        "04_short_v_route"
+      ]
+    },
+    {
+      "method": "test_download_route_auto_detect",
+      "doc": "/en-gb/download/#hash auto-detects mode and decrypts.",
+      "screenshots": [
+        "05_download_auto"
+      ]
+    },
+    {
+      "method": "test_gallery_to_browse_hash_preserved",
+      "doc": "Gallery 'Folder view' link navigates to /browse/ (hash preserved if supported).",
+      "screenshots": [
+        "06_gallery_to_browse"
+      ]
+    },
+    {
+      "method": "test_browse_to_gallery_hash_preserved",
+      "doc": "Browse 'Gallery view' link navigates to /gallery/ (hash preserved if supported).",
+      "screenshots": [
+        "07_browse_to_gallery"
+      ]
+    },
+    {
+      "method": "test_copy_link_includes_key",
+      "doc": "Copy Link button in gallery/browse includes the key in the URL (P1).",
+      "screenshots": []
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "08_copy_link",
+      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/08_copy_link.png",
+      "description": "Copy Link button clicked"
+    },
+    {
+      "name": "01_gallery_route",
+      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/01_gallery_route.png",
+      "description": "Gallery route loaded"
+    },
+    {
+      "name": "02_browse_route",
+      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/02_browse_route.png",
+      "description": "Browse route loaded"
+    },
+    {
+      "name": "03_view_route",
+      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/03_view_route.png",
+      "description": "View route loaded"
+    },
+    {
+      "name": "04_short_v_route",
+      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/04_short_v_route.png",
+      "description": "Short /v/ route loaded"
+    },
+    {
+      "name": "05_download_auto",
+      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/05_download_auto.png",
+      "description": "Download route auto-detect"
+    },
+    {
+      "name": "06_gallery_to_browse",
+      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/06_gallery_to_browse.png",
+      "description": "Gallery \u2192 browse"
+    },
+    {
+      "name": "07_browse_to_gallery",
+      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/07_browse_to_gallery.png",
+      "description": "Browse \u2192 gallery"
+    }
+  ]
+}
