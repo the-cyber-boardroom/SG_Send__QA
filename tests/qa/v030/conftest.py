@@ -192,11 +192,18 @@ def browser(playwright_instance):
 
 @pytest.fixture(scope="session")
 def browser_context(browser, ui_server):
-    """Shared browser context with base_url set to the local UI."""
+    """Shared browser context with base_url set to the local UI.
+
+    Default Playwright timeout is 30s — designed for slow production sites.
+    Against a local in-memory server 5s is plenty, and makes failures fast
+    rather than silently eating the CI budget.
+    """
     context = browser.new_context(
         viewport={"width": 1280, "height": 800},
         base_url=ui_server,
     )
+    context.set_default_timeout(5_000)         # 5s — local server is fast
+    context.set_default_navigation_timeout(10_000)  # 10s — allows for slow CI startup
     yield context
     context.close()
 
