@@ -56,49 +56,51 @@
     {
       "method": "test_copy_link_includes_key",
       "doc": "Copy Link button in gallery/browse includes the key in the URL (P1).",
-      "screenshots": []
+      "screenshots": [
+        "08_copy_link"
+      ]
     }
   ],
   "screenshots": [
     {
-      "name": "08_copy_link",
-      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/08_copy_link.png",
-      "description": "Copy Link button clicked"
-    },
-    {
       "name": "01_gallery_route",
-      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/01_gallery_route.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/01_gallery_route.png",
       "description": "Gallery route loaded"
     },
     {
       "name": "02_browse_route",
-      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/02_browse_route.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/02_browse_route.png",
       "description": "Browse route loaded"
     },
     {
       "name": "03_view_route",
-      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/03_view_route.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/03_view_route.png",
       "description": "View route loaded"
     },
     {
       "name": "04_short_v_route",
-      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/04_short_v_route.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/04_short_v_route.png",
       "description": "Short /v/ route loaded"
     },
     {
       "name": "05_download_auto",
-      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/05_download_auto.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/05_download_auto.png",
       "description": "Download route auto-detect"
     },
     {
       "name": "06_gallery_to_browse",
-      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/06_gallery_to_browse.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/06_gallery_to_browse.png",
       "description": "Gallery \u2192 browse"
     },
     {
       "name": "07_browse_to_gallery",
-      "path": "sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/07_browse_to_gallery.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/07_browse_to_gallery.png",
       "description": "Browse \u2192 gallery"
+    },
+    {
+      "name": "08_copy_link",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/08_copy_link.png",
+      "description": "Copy Link button clicked"
     }
   ]
 }
