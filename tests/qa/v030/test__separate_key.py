@@ -119,7 +119,7 @@ class TestSeparateKey:
             page.wait_for_load_state("networkidle")
 
         # Upload file
-        file_input = page.locator("input[type='file']")
+        file_input = page.locator("#file-input")
         file_input.set_input_files({
             "name"    : "separate-key-ui.txt",
             "mimeType": "text/plain",
