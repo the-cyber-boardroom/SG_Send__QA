@@ -1,0 +1,1 @@
+# so that PyCharm recognises this folder as a tests folder
