@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""SG/Send QA Test Runner CLI.
+"""Thin wrapper — implementation lives in QA_Run_Tests.
 
 Usage:
     python -m sg_send_qa.cli.run_tests --target https://send.sgraph.ai
@@ -8,9 +8,9 @@ Usage:
     python -m sg_send_qa.cli.run_tests --docs-only
 """
 import argparse
-import os
-import subprocess
 import sys
+
+from sg_send_qa.cli.QA_Run_Tests import QA_Run_Tests
 
 
 def main():
@@ -25,27 +25,8 @@ def main():
                         help="Regenerate docs from existing screenshots")
     args = parser.parse_args()
 
-    if args.docs_only:
-        print("Regenerating documentation from existing screenshots...")
-        from sg_send_qa.cli.generate_docs import generate_docs
-        generate_docs()
-        return
-
-    os.environ["TEST_TARGET_URL"] = args.target
-
-    cmd = [sys.executable, "-m", "pytest", "tests/integration/", "-v"]
-    if args.test:
-        cmd.extend(["-k", args.test])
-
-    print(f"Running tests against: {args.target}")
-    result = subprocess.run(cmd)
-
-    if args.generate_docs:
-        print("Generating documentation...")
-        from sg_send_qa.cli.generate_docs import generate_docs
-        generate_docs()
-
-    sys.exit(result.returncode)
+    runner = QA_Run_Tests.from_args(args)
+    sys.exit(runner.run())
 
 
 if __name__ == "__main__":
