@@ -17,9 +17,12 @@ import httpx
 from pathlib            import Path
 from playwright.sync_api import sync_playwright
 
-from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import (
-    setup__send_user_lambda__test_server,
-)
+try:
+    from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import (
+        setup__send_user_lambda__test_server,
+    )
+except ImportError:
+    setup__send_user_lambda__test_server = None
 
 
 UI_PORT = 10062
@@ -49,6 +52,8 @@ def send_server():
         .access_token   — pre-generated random GUID
         .write_key      — pre-generated random GUID
     """
+    if setup__send_user_lambda__test_server is None:
+        pytest.skip("sgraph_ai_app_send not installed — skipping v030 tests")
     with setup__send_user_lambda__test_server() as test_objs:
         yield test_objs
 
