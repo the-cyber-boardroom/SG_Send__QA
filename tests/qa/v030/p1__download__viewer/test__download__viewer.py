@@ -11,6 +11,9 @@ Test flow:
 
 import pytest
 
+from playwright.sync_api import expect
+from tests.qa.v030.browser_helpers import goto
+
 pytestmark = pytest.mark.p1
 
 MARKDOWN_CONTENT = b"""# UC-08 Test Document
@@ -35,9 +38,9 @@ class TestSingleFileViewer:
     def _open_viewer(self, page, ui_url, transfer_helper, route="view"):
         tid, key_b64 = transfer_helper.upload_encrypted(MARKDOWN_CONTENT, "test-doc.md")
         view_url = f"{ui_url}/en-gb/{route}/#{tid}/{key_b64}"
-        page.goto(view_url)
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(3000)
+        goto(page, view_url)
+        # Wait for page content to be present — JS decryption takes a moment
+        expect(page.locator("body")).not_to_be_empty(timeout=10_000)
         return tid, key_b64
 
     def test_viewer_page_loads(self, page, ui_url, transfer_helper, screenshots):
@@ -69,7 +72,8 @@ class TestSingleFileViewer:
         ).first
         if share_btn.is_visible(timeout=5000):
             share_btn.click()
-            page.wait_for_timeout(500)
+            # Wait for share panel content to appear
+            page.locator("body").wait_for(state="visible")
             screenshots.capture(page, "04_share_panel", "Share panel opened")
 
             page_text = page.text_content("body") or ""
@@ -85,7 +89,7 @@ class TestSingleFileViewer:
         ).first
         if share_btn.is_visible(timeout=5000):
             share_btn.click()
-            page.wait_for_timeout(500)
+            page.locator("body").wait_for(state="visible")
 
         # URL input in share panel
         url_input = page.locator("input[readonly], input[value*='#']").first
