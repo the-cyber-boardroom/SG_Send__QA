@@ -29,7 +29,7 @@ class TestSingleFileUpload:
         screenshots.capture(page, "01_upload_page", "Upload page loaded")
 
         # The upload zone should be visible (drop zone or browse button)
-        upload_zone = page.locator("[class*='upload'], [class*='drop'], input[type='file']").first
+        upload_zone = page.locator("[class*='upload'], [class*='drop'], #file-input").first
         assert upload_zone.count() > 0 or page.locator("text=upload").first.count() > 0, \
             "Upload zone not found on landing page"
 
@@ -47,7 +47,7 @@ class TestSingleFileUpload:
             screenshots.capture(page, "02_access_gate_passed", "Access gate passed")
 
         # --- Feed the file to the file input ---
-        file_input = page.locator("input[type='file']")
+        file_input = page.locator("#file-input")
         file_input.set_input_files({
             "name"    : SAMPLE_FILENAME,
             "mimeType": "text/plain",
@@ -137,7 +137,7 @@ class TestSingleFileUpload:
             page.wait_for_load_state("networkidle")
 
         # Upload a file
-        file_input = page.locator("input[type='file']")
+        file_input = page.locator("#file-input")
         file_input.set_input_files({
             "name"    : "format-test.txt",
             "mimeType": "text/plain",

@@ -58,7 +58,7 @@ class TestFolderUpload:
 
         # Feed the zip file
         zip_bytes = _make_folder_zip()
-        file_input = page.locator("input[type='file']")
+        file_input = page.locator("#file-input")
         file_input.set_input_files({
             "name"    : "my-folder.zip",
             "mimeType": "application/zip",

@@ -24,6 +24,8 @@ navigation:
       url: /pages/pipeline/
     - title: Roadmap
       url: /pages/roadmap/
+    - title: Known Bugs
+      url: /pages/known-bugs/
     - title: Change Requests
       url: /pages/change-requests/
   use_cases:

@@ -37,7 +37,7 @@ class TestAccessGate:
             screenshots.capture(page, "02_after_token", "After entering access token")
 
         # Upload zone should now be visible
-        file_input  = page.locator("input[type='file']")
+        file_input  = page.locator("#file-input")
         page_text   = page.text_content("body") or ""
         has_upload  = file_input.count() > 0
         has_keyword = any(kw in page_text.lower() for kw in ["upload", "drop", "browse", "choose"])
@@ -74,7 +74,7 @@ class TestAccessGate:
         if gate_input.is_visible(timeout=2000):
             pytest.skip("Access gate is active; testing gated flow in other tests")
 
-        file_input = page.locator("input[type='file']")
+        file_input = page.locator("#file-input")
         screenshots.capture(page, "04_no_gate", "Upload zone without gate")
         page_text = page.text_content("body") or ""
         assert file_input.count() > 0 or any(kw in page_text.lower() for kw in [
