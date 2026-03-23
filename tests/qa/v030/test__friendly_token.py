@@ -12,7 +12,7 @@ Flow:
 import pytest
 import re
 
-from .browser_helpers import goto, handle_access_gate
+from tests.qa.v030.browser_helpers import goto, handle_access_gate
 
 pytestmark = pytest.mark.p0
 
