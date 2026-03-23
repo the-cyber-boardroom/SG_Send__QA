@@ -158,17 +158,27 @@
     <h3>Navigation</h3>
     <ul>
       <li><a href="{{ '/' | relative_url }}" {% if page.url == '/' or page.url == '/pages/' %}class="active"{% endif %}>Home</a></li>
-      <li><a href="{{ '/pages/use-cases/' | relative_url }}" {% if page.url == '/pages/use-cases/' %}class="active"{% endif %}>Use Cases</a></li>
+      <li><a href="{{ '/pages/dashboard/' | relative_url }}" {% if page.url contains 'dashboard' %}class="active"{% endif %}>Dashboard</a></li>
       <li><a href="{{ '/pages/pipeline/' | relative_url }}" {% if page.url contains 'pipeline' %}class="active"{% endif %}>Pipeline</a></li>
       <li><a href="{{ '/pages/roadmap/' | relative_url }}" {% if page.url contains 'roadmap' %}class="active"{% endif %}>Roadmap</a></li>
+      <li><a href="{{ '/pages/known-bugs/' | relative_url }}" {% if page.url contains 'known-bugs' %}class="active"{% endif %}>Known Bugs</a></li>
     </ul>
 
-    <h3>Use Cases</h3>
-    <ul>
-      {% for uc in site.navigation.use_cases %}
-      <li><a href="{{ uc.url | relative_url }}" {% if page.url contains uc.id %}class="active"{% endif %}>{{ uc.title }}</a></li>
+    {% if site.data.qa_sidebar %}
+      {% for group in site.data.qa_sidebar.groups %}
+      <h3>{{ group.icon }} {{ group.name }}</h3>
+      <ul>
+        {% for member in group.members %}
+        <li>
+          <a href="{{ '/pages/use-cases/' | append: member.group_id | append: '/' | append: member.id | append: '/' | relative_url }}"
+             {% if page.url contains member.id %}class="active"{% endif %}>
+            {{ member.title }}{% if member.composite %} <span style="color:var(--accent)">★</span>{% endif %}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
       {% endfor %}
-    </ul>
+    {% endif %}
 
     <h3>Links</h3>
     <ul>

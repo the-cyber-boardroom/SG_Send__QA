@@ -1,0 +1,13 @@
+{
+  "name"        : "Upload & Share",
+  "icon"        : "📤",
+  "description" : "Upload a file, get a shareable link with embedded key.",
+  "duplicates"  : {
+    "combined_link_upload_and_auto_decrypt"      : "combined_link",
+    "combined_link_via_api_helper"               : "combined_link",
+    "friendly_token_upload_and_resolve"          : "friendly_token",
+    "friendly_token_format"                      : "friendly_token",
+    "friendly_token_resolves_in_new_tab"         : "friendly_token",
+    "friendly_token_no_key_in_url_after_decrypt" : "friendly_token"
+  }
+}

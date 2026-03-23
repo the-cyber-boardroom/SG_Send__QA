@@ -1,0 +1,288 @@
+{
+  "groups": [
+    {
+      "id": "01-access-gate",
+      "name": "Access Gate",
+      "icon": "🔐",
+      "members": [
+        {
+          "id": "access_gate",
+          "title": "Access Gate",
+          "group_id": "01-access-gate",
+          "composite": true
+        },
+        {
+          "id": "bogus_token_shows_error",
+          "title": "Bogus Token Shows Error",
+          "group_id": "01-access-gate",
+          "composite": false
+        }
+      ]
+    },
+    {
+      "id": "02-upload-share",
+      "name": "Upload & Share",
+      "icon": "📤",
+      "members": [
+        {
+          "id": "combined_link",
+          "title": "Combined Link",
+          "group_id": "02-upload-share",
+          "composite": true
+        },
+        {
+          "id": "friendly_token",
+          "title": "Friendly Token",
+          "group_id": "02-upload-share",
+          "composite": true
+        }
+      ]
+    },
+    {
+      "id": "03-separate-key",
+      "name": "Separate Key",
+      "icon": "🗝️",
+      "members": [
+        {
+          "id": "entry_form_has_decrypt_button",
+          "title": "Entry Form Has Decrypt Button",
+          "group_id": "03-separate-key",
+          "composite": false
+        },
+        {
+          "id": "entry_form_shown_without_hash",
+          "title": "Entry Form Shown Without Hash",
+          "group_id": "03-separate-key",
+          "composite": false
+        },
+        {
+          "id": "valid_transfer_id_resolves",
+          "title": "Valid Transfer Id Resolves",
+          "group_id": "03-separate-key",
+          "composite": false
+        }
+      ]
+    },
+    {
+      "id": "04-navigation",
+      "name": "Navigation",
+      "icon": "🧭",
+      "members": [
+        {
+          "id": "browse_route",
+          "title": "Browse Route",
+          "group_id": "04-navigation",
+          "composite": false
+        },
+        {
+          "id": "browse_to_gallery_hash_preserved",
+          "title": "Browse To Gallery Hash Preserved",
+          "group_id": "04-navigation",
+          "composite": false
+        },
+        {
+          "id": "copy_link_includes_key",
+          "title": "Copy Link Includes Key",
+          "group_id": "04-navigation",
+          "composite": false
+        },
+        {
+          "id": "download_route_auto_detect",
+          "title": "Download Route Auto Detect",
+          "group_id": "04-navigation",
+          "composite": false
+        },
+        {
+          "id": "gallery_route",
+          "title": "Gallery Route",
+          "group_id": "04-navigation",
+          "composite": false
+        },
+        {
+          "id": "gallery_to_browse_hash_preserved",
+          "title": "Gallery To Browse Hash Preserved",
+          "group_id": "04-navigation",
+          "composite": false
+        },
+        {
+          "id": "hash_navigation_to_download",
+          "title": "Hash Navigation To Download",
+          "group_id": "04-navigation",
+          "composite": false
+        },
+        {
+          "id": "route_handling",
+          "title": "Route Handling",
+          "group_id": "04-navigation",
+          "composite": false
+        },
+        {
+          "id": "short_v_route",
+          "title": "Short V Route",
+          "group_id": "04-navigation",
+          "composite": false
+        },
+        {
+          "id": "view_route",
+          "title": "View Route",
+          "group_id": "04-navigation",
+          "composite": false
+        }
+      ]
+    },
+    {
+      "id": "05-gallery",
+      "name": "Gallery",
+      "icon": "🖼️",
+      "members": [
+        {
+          "id": "action_buttons_present",
+          "title": "Action Buttons Present",
+          "group_id": "05-gallery",
+          "composite": false
+        },
+        {
+          "id": "gallery_page_loads",
+          "title": "Gallery Page Loads",
+          "group_id": "05-gallery",
+          "composite": false
+        },
+        {
+          "id": "info_panel_toggle",
+          "title": "Info Panel Toggle",
+          "group_id": "05-gallery",
+          "composite": false
+        },
+        {
+          "id": "lightbox_arrow_navigation",
+          "title": "Lightbox Arrow Navigation",
+          "group_id": "05-gallery",
+          "composite": false
+        },
+        {
+          "id": "lightbox_opens_on_thumbnail",
+          "title": "Lightbox Opens On Thumbnail",
+          "group_id": "05-gallery",
+          "composite": false
+        },
+        {
+          "id": "view_mode_buttons_present",
+          "title": "View Mode Buttons Present",
+          "group_id": "05-gallery",
+          "composite": false
+        }
+      ]
+    },
+    {
+      "id": "06-browse",
+      "name": "Browse",
+      "icon": "📂",
+      "members": [
+        {
+          "id": "browse_page_loads",
+          "title": "Browse Page Loads",
+          "group_id": "06-browse",
+          "composite": false
+        },
+        {
+          "id": "file_click_opens_preview",
+          "title": "File Click Opens Preview",
+          "group_id": "06-browse",
+          "composite": false
+        },
+        {
+          "id": "folder_tree_present",
+          "title": "Folder Tree Present",
+          "group_id": "06-browse",
+          "composite": false
+        },
+        {
+          "id": "keyboard_navigation_j_k",
+          "title": "Keyboard Navigation J K",
+          "group_id": "06-browse",
+          "composite": false
+        }
+      ]
+    },
+    {
+      "id": "07-viewer",
+      "name": "Viewer",
+      "icon": "👁️",
+      "members": [
+        {
+          "id": "copy_url_contains_key",
+          "title": "Copy Url Contains Key",
+          "group_id": "07-viewer",
+          "composite": false
+        },
+        {
+          "id": "info_tab_present",
+          "title": "Info Tab Present",
+          "group_id": "07-viewer",
+          "composite": false
+        },
+        {
+          "id": "markdown_content_displayed",
+          "title": "Markdown Content Displayed",
+          "group_id": "07-viewer",
+          "composite": false
+        },
+        {
+          "id": "save_locally_button_present",
+          "title": "Save Locally Button Present",
+          "group_id": "07-viewer",
+          "composite": false
+        },
+        {
+          "id": "share_button_present",
+          "title": "Share Button Present",
+          "group_id": "07-viewer",
+          "composite": false
+        },
+        {
+          "id": "share_tab_present",
+          "title": "Share Tab Present",
+          "group_id": "07-viewer",
+          "composite": false
+        },
+        {
+          "id": "short_url_v_route",
+          "title": "Short Url V Route",
+          "group_id": "07-viewer",
+          "composite": false
+        },
+        {
+          "id": "viewer_page_loads",
+          "title": "Viewer Page Loads",
+          "group_id": "07-viewer",
+          "composite": false
+        }
+      ]
+    },
+    {
+      "id": "08-pdf",
+      "name": "PDF",
+      "icon": "📄",
+      "members": [
+        {
+          "id": "pdf_lightbox_opens",
+          "title": "Pdf Lightbox Opens",
+          "group_id": "08-pdf",
+          "composite": false
+        },
+        {
+          "id": "present_button_click_enters_fullscreen",
+          "title": "Present Button Click Enters Fullscreen",
+          "group_id": "08-pdf",
+          "composite": false
+        },
+        {
+          "id": "present_button_visible_for_pdf",
+          "title": "Present Button Visible For Pdf",
+          "group_id": "08-pdf",
+          "composite": false
+        }
+      ]
+    }
+  ]
+}

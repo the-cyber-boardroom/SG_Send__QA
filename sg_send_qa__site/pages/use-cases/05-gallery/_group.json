@@ -1,0 +1,6 @@
+{
+  "name"        : "Gallery",
+  "icon"        : "🖼️",
+  "description" : "Grid view of uploaded files with lightbox and controls.",
+  "duplicates"  : {}
+}

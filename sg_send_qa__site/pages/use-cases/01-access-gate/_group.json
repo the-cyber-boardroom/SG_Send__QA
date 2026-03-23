@@ -1,0 +1,10 @@
+{
+  "name"        : "Access Gate",
+  "icon"        : "🔐",
+  "description" : "Can the user get in? Token authentication boundary.",
+  "duplicates"  : {
+    "upload_accessible_with_token"   : "access_gate",
+    "wrong_token_shows_error"        : "access_gate",
+    "upload_zone_visible_without_gate": "access_gate"
+  }
+}

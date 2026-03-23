@@ -1,0 +1,6 @@
+{
+  "name"        : "Navigation",
+  "icon"        : "🧭",
+  "description" : "Route handling, hash preservation, and URL behaviour.",
+  "duplicates"  : {}
+}

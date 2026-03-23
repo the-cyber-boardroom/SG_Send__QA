@@ -1,20 +1,15 @@
-"""Standalone test: Access Token Gate (UC-10).
+"""Standalone access gate test: UC-10 (P1).
 
-Self-contained browser test for the access gate use case.
-Independent of the v030 test suite (which is under active refactoring).
-
-Run with:
-    source /tmp/venv312/bin/activate
-    python -m pytest tests/standalone/test__access_gate_standalone.py -v --tb=short
+Merged from tests/standalone/ into v030 as part of Phase 2 refactoring.
+Uses the shared v030 fixtures (QA server, UI server, screenshots).
 
 Screenshots are saved to:
-    sg_send_qa__site/pages/use-cases/access_gate/screenshots/
-
-These screenshots are auto-committed by CI and deployed to:
-    https://qa.send.sgraph.ai/pages/use-cases/access_gate/
+    sg_send_qa__site/pages/use-cases/access_gate_standalone/screenshots/
 """
 
 import pytest
+
+pytestmark = pytest.mark.p1
 
 
 class TestAccessGate:

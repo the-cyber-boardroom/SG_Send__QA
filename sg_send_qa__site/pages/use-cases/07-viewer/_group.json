@@ -1,0 +1,6 @@
+{
+  "name"        : "Viewer",
+  "icon"        : "👁️",
+  "description" : "Single-file viewer with share, copy, and download actions.",
+  "duplicates"  : {}
+}

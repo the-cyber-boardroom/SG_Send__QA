@@ -1,0 +1,6 @@
+{
+  "name"        : "Browse",
+  "icon"        : "📂",
+  "description" : "Folder-tree view with keyboard navigation and file preview.",
+  "duplicates"  : {}
+}
