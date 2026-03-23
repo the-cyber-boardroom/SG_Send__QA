@@ -1,0 +1,85 @@
+{
+  "use_case": "pdf_present",
+  "module": "test__pdf_present",
+  "module_doc": "UC-06 (P2): PDF lightbox \u2014 Present mode and 'f' fullscreen shortcut.\n\nTest flow:\n  - Upload a minimal valid PDF as part of a zip\n  - Open the gallery view\n  - Click the PDF thumbnail to open it in the lightbox\n  - Verify a \"Present\" button appears (PDF-specific control)\n  - Click Present and verify the viewer enters present/fullscreen mode\n  - Verify the 'f' keyboard shortcut also triggers the present mode\n  - Verify the 's' keyboard shortcut saves / downloads the current file\n\nThese tests are P2 \u2014 they verify progressive-enhancement behaviour and do not\nblock deployment if failing.\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_pdf_lightbox_opens",
+      "doc": "Clicking the PDF thumbnail opens the lightbox without error.",
+      "screenshots": [
+        "01_pdf_lightbox"
+      ]
+    },
+    {
+      "method": "test_present_button_visible_for_pdf",
+      "doc": "A 'Present' button appears in the lightbox when viewing a PDF.",
+      "screenshots": [
+        "02_present_button"
+      ]
+    },
+    {
+      "method": "test_present_button_click_enters_fullscreen",
+      "doc": "Clicking the Present button enters full-screen / presentation mode.",
+      "screenshots": []
+    },
+    {
+      "method": "test_f_shortcut_triggers_present",
+      "doc": "The 'f' keyboard shortcut triggers present / fullscreen mode.",
+      "screenshots": [
+        "05_before_f_shortcut",
+        "06_after_f_shortcut"
+      ]
+    },
+    {
+      "method": "test_s_key_triggers_save",
+      "doc": "Pressing 's' when a file is selected triggers save/download.",
+      "screenshots": [
+        "01_file_selected",
+        "02_s_key_pressed"
+      ]
+    },
+    {
+      "method": "test_j_key_moves_selection_down",
+      "doc": "'j' key moves file selection down in browse view.",
+      "screenshots": []
+    },
+    {
+      "method": "test_k_key_moves_selection_up",
+      "doc": "'k' key moves file selection up in browse view.",
+      "screenshots": []
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01_pdf_lightbox",
+      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/01_pdf_lightbox.png",
+      "description": "PDF opened in lightbox"
+    },
+    {
+      "name": "02_present_button",
+      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/02_present_button.png",
+      "description": "Present button in PDF lightbox"
+    },
+    {
+      "name": "05_before_f_shortcut",
+      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/05_before_f_shortcut.png",
+      "description": "Before 'f' shortcut"
+    },
+    {
+      "name": "06_after_f_shortcut",
+      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/06_after_f_shortcut.png",
+      "description": "After 'f' shortcut"
+    },
+    {
+      "name": "01_file_selected",
+      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/01_file_selected.png",
+      "description": "File selected in browse"
+    },
+    {
+      "name": "02_s_key_pressed",
+      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/02_s_key_pressed.png",
+      "description": "'s' key pressed (no download dialog)"
+    }
+  ]
+}

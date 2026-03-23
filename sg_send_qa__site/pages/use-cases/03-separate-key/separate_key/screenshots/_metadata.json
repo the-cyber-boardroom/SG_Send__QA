@@ -1,0 +1,70 @@
+{
+  "use_case": "separate_key",
+  "module": "test__separate_key",
+  "module_doc": "UC-05: Separate Key share mode (P0).\n\nFlow:\n  1. Upload a file with Separate Key share mode\n  2. Get a link (no key in hash) and the key separately\n  3. Open the link \u2192 verify \"ready\" state with key input\n  4. Paste the key, click Decrypt\n  5. Verify content displays\n  6. Try a wrong key \u2192 verify error message\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_separate_key_decrypt_via_api",
+      "doc": "Create a transfer via API, open link without key, enter key manually.",
+      "screenshots": [
+        "01_ready_state",
+        "02_transfer_info",
+        "03_key_entered",
+        "04_decrypted"
+      ]
+    },
+    {
+      "method": "test_wrong_key_shows_error",
+      "doc": "Enter an incorrect key and verify an error message appears.",
+      "screenshots": [
+        "05_wrong_key_error"
+      ]
+    },
+    {
+      "method": "test_separate_key_ui_flow",
+      "doc": "Full UI flow: upload with Separate Key mode, extract link + key, verify.",
+      "screenshots": [
+        "06_separate_key_selected",
+        "07_separate_key_done"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01_ready_state",
+      "path": "sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/01_ready_state.png",
+      "description": "Download page \u2014 ready state, key input visible"
+    },
+    {
+      "name": "02_transfer_info",
+      "path": "sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/02_transfer_info.png",
+      "description": "Transfer info displayed before key entry"
+    },
+    {
+      "name": "03_key_entered",
+      "path": "sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/03_key_entered.png",
+      "description": "Encryption key entered"
+    },
+    {
+      "name": "04_decrypted",
+      "path": "sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/04_decrypted.png",
+      "description": "Content decrypted with separate key"
+    },
+    {
+      "name": "05_wrong_key_error",
+      "path": "sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/05_wrong_key_error.png",
+      "description": "Error message after wrong key"
+    },
+    {
+      "name": "06_separate_key_selected",
+      "path": "sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/06_separate_key_selected.png",
+      "description": "Separate Key mode selected"
+    },
+    {
+      "name": "07_separate_key_done",
+      "path": "sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/07_separate_key_done.png",
+      "description": "Upload complete \u2014 link and key shown separately"
+    }
+  ]
+}

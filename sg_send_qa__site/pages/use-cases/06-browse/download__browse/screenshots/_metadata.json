@@ -1,0 +1,79 @@
+{
+  "use_case": "download__browse",
+  "module": "test__download__browse",
+  "module_doc": "UC-07: Browse view features (P1).\n\nTest flow:\n  - Verify folder tree renders with expand/collapse controls\n  - Verify file click opens preview tab in right panel\n  - Verify keyboard navigation: j/k moves through files, s saves\n  - Verify Share tab shows URL + copy + email\n  - Verify Info tab shows file counts by type, encryption info\n  - Verify \"Save locally\" downloads the zip\n  - Verify print button is present\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_browse_page_loads",
+      "doc": "Browse page loads without errors.",
+      "screenshots": [
+        "01_browse_loaded"
+      ]
+    },
+    {
+      "method": "test_folder_tree_present",
+      "doc": "Folder tree is rendered in the left panel.",
+      "screenshots": [
+        "02_folder_tree"
+      ]
+    },
+    {
+      "method": "test_file_click_opens_preview",
+      "doc": "Clicking a file in the tree opens a preview in the right panel.",
+      "screenshots": []
+    },
+    {
+      "method": "test_share_tab_present",
+      "doc": "Share tab shows URL, copy, and email actions.",
+      "screenshots": []
+    },
+    {
+      "method": "test_info_tab_present",
+      "doc": "Info tab shows file counts and encryption info.",
+      "screenshots": []
+    },
+    {
+      "method": "test_save_locally_button_present",
+      "doc": "Save locally button is present in browse view.",
+      "screenshots": [
+        "06_save_button"
+      ]
+    },
+    {
+      "method": "test_keyboard_navigation_j_k",
+      "doc": "Keyboard j/k navigate through files in browse view (P2).",
+      "screenshots": [
+        "07_keyboard_j",
+        "08_keyboard_k"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01_browse_loaded",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/01_browse_loaded.png",
+      "description": "Browse view loaded"
+    },
+    {
+      "name": "02_folder_tree",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/02_folder_tree.png",
+      "description": "Folder tree in browse view"
+    },
+    {
+      "name": "06_save_button",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/06_save_button.png",
+      "description": "Save locally button"
+    },
+    {
+      "name": "07_keyboard_j",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/07_keyboard_j.png",
+      "description": "After pressing j"
+    },
+    {
+      "name": "08_keyboard_k",
+      "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/08_keyboard_k.png",
+      "description": "After pressing k"
+    }
+  ]
+}
