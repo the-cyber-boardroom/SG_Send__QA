@@ -24,6 +24,8 @@ navigation:
       url: /pages/pipeline/
     - title: Roadmap
       url: /pages/roadmap/
+    - title: Change Requests
+      url: /pages/change-requests/
   use_cases:
     - title: Landing Page Loads
       url: /pages/use-cases/landing_page_loads/
@@ -40,6 +42,9 @@ navigation:
     - title: "Route Handling (UC-11)"
       url: /pages/use-cases/route_handling/
       id: route_handling
+    - title: "Known Bugs"
+      url: /pages/use-cases/bugs/
+      id: bugs
 
 exclude:
   - Gemfile
