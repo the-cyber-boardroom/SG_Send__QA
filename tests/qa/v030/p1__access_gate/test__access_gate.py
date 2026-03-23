@@ -25,26 +25,32 @@ class TestAccessGate:
         screenshots.capture(page, "01_landing", "Landing page (may show gate or upload zone)")
 
         # Check if access gate is present
-        gate_input = page.locator("input[type='text'], input[type='password']").first
+        gate_input = page.locator("#access-token-input")
         if gate_input.is_visible(timeout=3000):
-            # Gate is active — enter the token
             gate_input.fill(send_server.access_token)
-            page.locator("button").first.click()
+            page.locator("#access-token-submit").click()
             page.wait_for_load_state("networkidle")
             page.wait_for_timeout(1000)
+
+            # Verify no unexpected UI is overlaying the page (e.g. language dropdown)
+            page_text = page.text_content("body") or ""
+            unexpected_dropdown = any(lang in page_text for lang in [
+                "Deutsch", "Italiano", "Polski",
+            ])
+            assert not unexpected_dropdown, \
+                "Language dropdown is open — see bugs/test__bug__generic_button_opens_language_dropdown.py"
+
             screenshots.capture(page, "02_after_token", "After entering access token")
 
         # Upload zone should now be visible
-        file_input = page.locator("#file-input")
-        upload_visible = file_input.count() > 0
-
-        # Or check for upload-related text
-        page_text = page.text_content("body") or ""
-        upload_text_present = any(kw in page_text.lower() for kw in [
+        file_input  = page.locator("#file-input")
+        page_text   = page.text_content("body") or ""
+        has_upload  = file_input.count() > 0
+        has_keyword = any(kw in page_text.lower() for kw in [
             "upload", "drop", "browse", "choose"
         ])
 
-        assert upload_visible or upload_text_present, \
+        assert has_upload or has_keyword, \
             "Upload zone not visible after providing valid access token"
 
     def test_wrong_token_shows_error(self, page, ui_url, send_server, screenshots):
@@ -53,10 +59,10 @@ class TestAccessGate:
         page.wait_for_load_state("networkidle")
         page.wait_for_timeout(1000)
 
-        gate_input = page.locator("input[type='text'], input[type='password']").first
+        gate_input = page.locator("#access-token-input")
         if gate_input.is_visible(timeout=3000):
             gate_input.fill("wrong-token-12345-xxxxx")
-            page.locator("button").first.click()
+            page.locator("#access-token-submit").click()
             page.wait_for_timeout(1000)
             screenshots.capture(page, "03_wrong_token", "Wrong token response")
 
@@ -73,7 +79,7 @@ class TestAccessGate:
         page.wait_for_load_state("networkidle")
         page.wait_for_timeout(1000)
 
-        gate_input = page.locator("input[type='text'], input[type='password']").first
+        gate_input = page.locator("#access-token-input")
         if gate_input.is_visible(timeout=2000):
             # Gate is active — skip this test variant
             pytest.skip("Access gate is active; testing gated flow in other tests")
