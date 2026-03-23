@@ -135,6 +135,7 @@ SG_Send__QA/
 6. **Every test captures screenshots** — tests produce pass/fail AND documentation
 7. **Integration tests** live in `tests/integration/` (browser tests against running SG/Send)
 8. **Unit tests** live in `tests/unit/` (tests for the QA project's own code)
+9. **No `__init__.py` in test folders** — it breaks PyCharm test discovery. pytest finds tests without it.
 
 ### Git
 
