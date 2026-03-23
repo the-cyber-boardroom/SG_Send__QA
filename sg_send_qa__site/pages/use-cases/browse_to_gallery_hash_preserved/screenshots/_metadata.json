@@ -1,0 +1,5 @@
+{
+  "test_name": "browse_to_gallery_hash_preserved",
+  "test_doc": "Browse 'Gallery view' link navigates to /gallery/ preserving the hash.",
+  "screenshots": []
+}

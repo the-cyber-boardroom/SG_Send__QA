@@ -1,0 +1,11 @@
+{
+  "test_name": "entry_form_shown_without_hash",
+  "test_doc": "Navigating to /en-gb/download/ with no hash shows the entry form.",
+  "screenshots": [
+    {
+      "name": "01_entry_form",
+      "path": "sg_send_qa__site/pages/use-cases/entry_form_shown_without_hash/screenshots/01_entry_form.png",
+      "description": "Manual entry form without hash"
+    }
+  ]
+}

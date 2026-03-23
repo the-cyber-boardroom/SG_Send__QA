@@ -1,0 +1,11 @@
+{
+  "test_name": "info_panel_toggle",
+  "test_doc": "Info button toggles the info panel showing transfer metadata.",
+  "screenshots": [
+    {
+      "name": "04_before_info",
+      "path": "sg_send_qa__site/pages/use-cases/info_panel_toggle/screenshots/04_before_info.png",
+      "description": "Before info panel toggle"
+    }
+  ]
+}

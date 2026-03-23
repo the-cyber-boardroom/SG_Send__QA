@@ -1,0 +1,11 @@
+{
+  "test_name": "gallery_route",
+  "test_doc": "GET /en-gb/gallery/#hash loads gallery view.",
+  "screenshots": [
+    {
+      "name": "01_gallery_route",
+      "path": "sg_send_qa__site/pages/use-cases/gallery_route/screenshots/01_gallery_route.png",
+      "description": "Gallery route loaded"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "test_name": "pdf_lightbox_opens",
+  "test_doc": "Clicking the PDF thumbnail opens the lightbox without error.",
+  "screenshots": []
+}

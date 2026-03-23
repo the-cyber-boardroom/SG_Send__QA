@@ -1,0 +1,11 @@
+{
+  "test_name": "valid_transfer_id_resolves",
+  "test_doc": "Entering a valid transfer ID resolves and shows the file.",
+  "screenshots": [
+    {
+      "name": "04_valid_id_resolved",
+      "path": "sg_send_qa__site/pages/use-cases/valid_transfer_id_resolves/screenshots/04_valid_id_resolved.png",
+      "description": "Valid transfer ID resolved"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "test_name": "lightbox_opens_on_thumbnail",
+  "test_doc": "Clicking a thumbnail opens the lightbox.",
+  "screenshots": [
+    {
+      "name": "06_before_lightbox",
+      "path": "sg_send_qa__site/pages/use-cases/lightbox_opens_on_thumbnail/screenshots/06_before_lightbox.png",
+      "description": "Gallery before lightbox"
+    }
+  ]
+}

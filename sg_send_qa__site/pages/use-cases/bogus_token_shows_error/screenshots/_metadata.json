@@ -1,0 +1,11 @@
+{
+  "test_name": "bogus_token_shows_error",
+  "test_doc": "Entering a bogus token shows an error (not a crash).",
+  "screenshots": [
+    {
+      "name": "03_bogus_token_error",
+      "path": "sg_send_qa__site/pages/use-cases/bogus_token_shows_error/screenshots/03_bogus_token_error.png",
+      "description": "Error after bogus token"
+    }
+  ]
+}

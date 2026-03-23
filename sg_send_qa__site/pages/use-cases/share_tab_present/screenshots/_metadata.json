@@ -1,0 +1,11 @@
+{
+  "test_name": "share_tab_present",
+  "test_doc": "Share tab shows URL, copy, and email actions.",
+  "screenshots": [
+    {
+      "name": "04_share_tab",
+      "path": "sg_send_qa__site/pages/use-cases/share_tab_present/screenshots/04_share_tab.png",
+      "description": "Share tab content"
+    }
+  ]
+}

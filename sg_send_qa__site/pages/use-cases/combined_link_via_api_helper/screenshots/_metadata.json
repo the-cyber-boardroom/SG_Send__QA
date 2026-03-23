@@ -1,0 +1,11 @@
+{
+  "test_name": "combined_link_via_api_helper",
+  "test_doc": "Create an encrypted transfer via API helper, then open the combined link in browser.",
+  "screenshots": [
+    {
+      "name": "01_api_created_decrypt",
+      "path": "sg_send_qa__site/pages/use-cases/combined_link_via_api_helper/screenshots/01_api_created_decrypt.png",
+      "description": "Decrypted content from API-created transfer"
+    }
+  ]
+}

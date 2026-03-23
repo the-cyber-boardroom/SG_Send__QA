@@ -1,0 +1,21 @@
+{
+  "test_name": "friendly_token_resolves_in_new_tab",
+  "test_doc": "Upload with Simple Token, then open the token in a new browser tab.",
+  "screenshots": [
+    {
+      "name": "01_file_selected",
+      "path": "sg_send_qa__site/pages/use-cases/friendly_token_resolves_in_new_tab/screenshots/01_file_selected.png",
+      "description": "File selected (delivery step active)"
+    },
+    {
+      "name": "02_simple_token_selected",
+      "path": "sg_send_qa__site/pages/use-cases/friendly_token_resolves_in_new_tab/screenshots/02_simple_token_selected.png",
+      "description": "Simple Token selected"
+    },
+    {
+      "name": "03_upload_complete",
+      "path": "sg_send_qa__site/pages/use-cases/friendly_token_resolves_in_new_tab/screenshots/03_upload_complete.png",
+      "description": "Upload complete"
+    }
+  ]
+}

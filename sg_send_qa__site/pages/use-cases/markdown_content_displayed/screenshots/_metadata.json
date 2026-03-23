@@ -1,0 +1,11 @@
+{
+  "test_name": "markdown_content_displayed",
+  "test_doc": "Markdown file content is decrypted and displayed.",
+  "screenshots": [
+    {
+      "name": "02_content",
+      "path": "sg_send_qa__site/pages/use-cases/markdown_content_displayed/screenshots/02_content.png",
+      "description": "Decrypted markdown content"
+    }
+  ]
+}

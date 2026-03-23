@@ -1,0 +1,11 @@
+{
+  "test_name": "browse_route",
+  "test_doc": "GET /en-gb/browse/#hash loads browse view.",
+  "screenshots": [
+    {
+      "name": "02_browse_route",
+      "path": "sg_send_qa__site/pages/use-cases/browse_route/screenshots/02_browse_route.png",
+      "description": "Browse route loaded"
+    }
+  ]
+}

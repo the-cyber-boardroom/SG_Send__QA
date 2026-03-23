@@ -1,0 +1,11 @@
+{
+  "test_name": "short_url_v_route",
+  "test_doc": "Short URL /en-gb/v/ works the same as /en-gb/view/.",
+  "screenshots": [
+    {
+      "name": "07_short_url_v",
+      "path": "sg_send_qa__site/pages/use-cases/short_url_v_route/screenshots/07_short_url_v.png",
+      "description": "Short /v/ route loads viewer"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "test_name": "file_click_opens_preview",
+  "test_doc": "Clicking a file in the tree opens a preview in the right panel.",
+  "screenshots": []
+}

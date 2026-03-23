@@ -1,0 +1,11 @@
+{
+  "test_name": "download_route_auto_detect",
+  "test_doc": "/en-gb/download/#hash auto-detects mode and decrypts.",
+  "screenshots": [
+    {
+      "name": "05_download_auto",
+      "path": "sg_send_qa__site/pages/use-cases/download_route_auto_detect/screenshots/05_download_auto.png",
+      "description": "Download route auto-detect"
+    }
+  ]
+}

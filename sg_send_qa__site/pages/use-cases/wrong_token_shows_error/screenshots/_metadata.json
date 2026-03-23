@@ -1,0 +1,11 @@
+{
+  "test_name": "wrong_token_shows_error",
+  "test_doc": "Providing a wrong access token shows an error.",
+  "screenshots": [
+    {
+      "name": "03_wrong_token",
+      "path": "sg_send_qa__site/pages/use-cases/wrong_token_shows_error/screenshots/03_wrong_token.png",
+      "description": "Wrong token response"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "test_name": "folder_tree_present",
+  "test_doc": "Folder tree is rendered in the left panel.",
+  "screenshots": [
+    {
+      "name": "02_folder_tree",
+      "path": "sg_send_qa__site/pages/use-cases/folder_tree_present/screenshots/02_folder_tree.png",
+      "description": "Folder tree in browse view"
+    }
+  ]
+}
