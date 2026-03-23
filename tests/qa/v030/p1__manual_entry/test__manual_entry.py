@@ -99,16 +99,12 @@ class TestManualEntryForm:
         """Navigating directly to /en-gb/download/#id/key auto-decrypts (P1)."""
         tid, key_b64 = transfer_helper.upload_encrypted(SAMPLE_CONTENT, "uc09-direct.txt")
 
-        goto(page, f"{ui_url}/en-gb/download/#{tid}/{key_b64}")
-        # Wait for decryption to complete
-        try:
-            expect(page.locator("body")).to_contain_text(
-                SAMPLE_CONTENT.decode(), timeout=10_000
-            )
-        except Exception:
-            pass  # content might render differently; assertion below handles it
+        page.goto(f"{ui_url}/en-gb/download/#{tid}/{key_b64}")
+        page.wait_for_load_state("networkidle")
+        page.wait_for_timeout(2000)
         screenshots.capture(page, "05_direct_hash_nav", "Direct hash navigation to download")
 
-        page_text = page.text_content("body") or ""
+        # inner_text avoids false positive from inline JS scripts containing "error"
+        page_text = page.inner_text("body") or ""
         assert "error" not in page_text.lower() or len(page_text) > 200, \
             "Direct hash navigation failed"

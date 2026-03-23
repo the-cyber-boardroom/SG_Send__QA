@@ -25,6 +25,12 @@ from pathlib import Path
 
 from sg_send_qa.utils.QA_Screenshot import cdp_screenshot
 
+# Absolute path to the sg_send_qa__site directory, anchored to the repo root.
+# Using __file__ means screenshots always land in the right place regardless of
+# the working directory — fixes PyCharm runs where CWD is a subdirectory.
+_REPO_ROOT      = Path(__file__).parent.parent.parent
+_DEFAULT_BASE   = str(_REPO_ROOT / "sg_send_qa__site" / "pages" / "use-cases")
+
 
 class ScreenshotCapture:
     """Captures screenshots for one test method and persists metadata.
@@ -50,7 +56,7 @@ class ScreenshotCapture:
 
     @classmethod
     def _resolve_group(cls, test_dir_name: str,
-                        base_dir: str = "sg_send_qa__site/pages/use-cases") -> str:
+                        base_dir: str = _DEFAULT_BASE) -> str:
         """Return the site group subfolder for a test directory, or '' if unmapped."""
         groups_path = Path(base_dir) / "_groups.json"
         if groups_path.exists():
@@ -59,7 +65,7 @@ class ScreenshotCapture:
         return ""
 
     @classmethod
-    def from_request(cls, request, base_dir: str = "sg_send_qa__site/pages/use-cases",
+    def from_request(cls, request, base_dir: str = _DEFAULT_BASE,
                      test_target: str = "qa_server") -> "ScreenshotCapture":
         """Build a ScreenshotCapture from a pytest request object.
 
