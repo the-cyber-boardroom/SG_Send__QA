@@ -96,6 +96,31 @@
 - Every test MUST have a clear description of what it verifies
 - No test may be committed without QA Lead review (or self-review if acting as QA Lead)
 - Flaky tests must be fixed or removed, never ignored
+- No `page.wait_for_timeout()` — use Playwright's built-in waiting instead
+
+---
+
+## Bug Documentation Pattern
+
+When a test discovers a bug in SG/Send:
+
+1. **Keep the normal test** — it asserts expected behaviour and will FAIL while the bug exists
+2. **Create a bug test** in `tests/qa/v030/bugs/` — it asserts the buggy behaviour and PASSES while the bug exists, capturing screenshots
+3. **File a Change Request** on the QA site at `/pages/change-requests/` — documents the problem, impact, workaround, and proposed fix for the Send UI team
+4. **Add to the Known Bugs page** at `/pages/use-cases/bugs/`
+
+When the bug is fixed: the bug test starts failing → remove the bug test, close the CR.
+
+---
+
+## Change Requests to Send UI Team
+
+The QA team maintains a formal change request page at `sg_send_qa__site/pages/change-requests/`. Use this to request changes to SG/Send that improve test resilience:
+
+- **`data-testid` attributes** — stable selectors for automation
+- **DOM readiness signals** — e.g. `data-ready` attribute so tests can avoid `networkidle`
+- **Button ordering** — predictable element order in the DOM
+- **Documented API behaviour** — clear contracts for edge cases (token counters, expiry)
 
 ---
 

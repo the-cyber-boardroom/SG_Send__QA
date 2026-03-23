@@ -74,14 +74,46 @@
 # Test pattern — always capture screenshots
 def test_user_flow(page, target_url, screenshots):
     page.goto(f"{target_url}/send/", wait_until="domcontentloaded")
-    page.wait_for_timeout(3000)
     screenshots.capture(page, "01_step_name", description="What this shows")
     assert page.locator("selector").is_visible()
 
 # Use domcontentloaded, not networkidle (fonts may block in CI)
 # Use CDP screenshots via the screenshots fixture (bypasses font-wait)
-# Wait with page.wait_for_timeout() for dynamic content
 ```
+
+---
+
+## Playwright Rules
+
+1. **No arbitrary timeouts** — never use `page.wait_for_timeout()`. The local UI is fast and deterministic. Use Playwright's built-in waiting: `expect(locator).to_be_visible()`, `page.wait_for_selector()`, `locator.click()` (auto-waits). A timeout is a sign the test needs a better wait strategy.
+2. **Use specific selectors** — prefer `data-testid`, element IDs (`#access-token-submit`), or `role` attributes. Never use `page.locator("button").first` — button ordering is fragile and hits the wrong element (see BUG-001).
+3. **Use `domcontentloaded`** — the SG/Send UI makes background API calls that prevent `networkidle` from resolving (see CR-001 in the change-requests page).
+4. **Verify clean UI state before screenshots** — assert no unexpected overlays (dropdowns, modals) are visible before capturing.
+
+---
+
+## Bug Test Pattern
+
+When a test reveals a bug in SG/Send (not in our test code):
+
+```
+tests/qa/v030/
+├── test__access_gate.py              ← asserts EXPECTED behaviour (FAILS while bug exists)
+└── bugs/
+    └── test__bug__description.py     ← asserts BUGGY behaviour (PASSES while bug exists)
+```
+
+| State | Normal test | Bug test | Action |
+|-------|:-----------:|:--------:|--------|
+| Bug exists | FAIL | PASS | Bug documented with screenshots |
+| Bug fixed | PASS | FAIL | Remove the bug test |
+
+**Rules:**
+- Normal test stays in its original location, asserts what SHOULD happen
+- Bug test goes in `tests/qa/v030/bugs/`, asserts what ACTUALLY happens (the bug)
+- Bug test captures screenshots of the buggy behaviour → published to the QA site
+- Bug test docstring references the related CR number
+- When the bug test starts failing → the bug is fixed → delete the bug test
 
 ---
 

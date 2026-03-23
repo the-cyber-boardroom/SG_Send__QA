@@ -136,6 +136,8 @@ SG_Send__QA/
 7. **Integration tests** live in `tests/integration/` (browser tests against running SG/Send)
 8. **Unit tests** live in `tests/unit/` (tests for the QA project's own code)
 9. **No `__init__.py` in test folders** — it breaks PyCharm test discovery. pytest finds tests without it.
+10. **Bug test pattern** — see `team/roles/dev/ROLE.md` and `team/roles/qa-lead/ROLE.md` for full details
+11. **No arbitrary timeouts** — see `team/roles/dev/ROLE.md` → Playwright Rules
 
 ### Git
 
@@ -148,14 +150,16 @@ SG_Send__QA/
 
 ## Roles (6 roles)
 
-| Role | Responsibility |
-|------|---------------|
-| **QA Lead** | Drives priorities, defines test strategy, reviews test coverage |
-| **Architect** | System design, tool decisions, API contracts |
-| **Developer** | Implementation, test writing, doc generation |
-| **DevOps** | CI/CD, GitHub Actions, deployment, Lambda |
-| **Librarian** | Knowledge management, indexing, cross-references |
-| **Sherpa** | Onboarding guidance, best practices, troubleshooting |
+| Role | Role File | Responsibility |
+|------|-----------|---------------|
+| **QA Lead** | `team/roles/qa-lead/ROLE.md` | Drives priorities, defines test strategy, reviews test coverage |
+| **Architect** | `team/roles/architect/ROLE.md` | System design, tool decisions, API contracts |
+| **Developer** | `team/roles/dev/ROLE.md` | Implementation, test writing, doc generation |
+| **DevOps** | `team/roles/devops/ROLE.md` | CI/CD, GitHub Actions, deployment, Lambda |
+| **Librarian** | `team/roles/librarian/ROLE.md` | Knowledge management, indexing, cross-references |
+| **Sherpa** | `team/roles/sherpa/ROLE.md` | Onboarding guidance, best practices, troubleshooting |
+
+**On session start:** Read the ROLE.md file for your active role(s). Role files contain the detailed rules, patterns, and conventions for that role. This CLAUDE.md provides the project-wide overview; the role files provide the operational detail.
 
 ---
 
