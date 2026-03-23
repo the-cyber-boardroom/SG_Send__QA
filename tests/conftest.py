@@ -1,13 +1,19 @@
-import pytest
+"""Root conftest — Playwright setup for production-targeted integration tests.
+
+Thin wrapper: all implementation lives in sg_send_qa/.
+"""
+
 import os
-import base64
 import urllib.request
-from pathlib            import Path
+
+import pytest
 from playwright.sync_api import sync_playwright
 
+from sg_send_qa.utils.QA_Screenshot_Capture import ScreenshotCapture
 
-def _check_target_reachable(url):
-    """Check if the target URL is reachable (may be blocked by proxy in sandboxed environments)."""
+
+def _check_target_reachable(url: str) -> bool:
+    """Return True if url responds within 5 s (False in sandboxed environments)."""
     try:
         urllib.request.urlopen(url, timeout=5)
         return True
@@ -19,8 +25,8 @@ def _check_target_reachable(url):
 def browser():
     with sync_playwright() as p:
         browser = p.chromium.launch(
-            headless = True,
-            args     = ["--font-render-hinting=none"],
+            headless=True,
+            args=["--font-render-hinting=none"],
         )
         yield browser
         browser.close()
@@ -41,55 +47,15 @@ def target_url():
 
 @pytest.fixture(autouse=True)
 def skip_if_unreachable(request, target_url):
-    """Skip browser tests if the target URL is unreachable (e.g., sandboxed environment)."""
+    """Skip browser tests if the target URL is unreachable (sandboxed env)."""
     if "integration" in str(request.fspath):
         if not _check_target_reachable(target_url):
             pytest.skip(f"Target {target_url} is unreachable (sandboxed environment)")
 
 
-def _cdp_screenshot(page, path):
-    """Take screenshot via CDP, bypassing Playwright's font-wait logic."""
-    cdp    = page.context.new_cdp_session(page)
-    result = cdp.send("Page.captureScreenshot", {"format": "png"})
-    cdp.detach()
-    png_data = base64.b64decode(result["data"])
-    Path(path).write_bytes(png_data)
-
-
 @pytest.fixture
 def screenshots(request):
-    """Screenshot capture fixture with descriptions."""
-    test_name = request.node.name.replace("test_", "")
-    shots_dir = Path("sg_send_qa__site/pages/use-cases") / test_name / "screenshots"
-    shots_dir.mkdir(parents=True, exist_ok=True)
-
-    captured = []
-
-    class ScreenshotCapture:
-        def capture(self, page, name, description=""):
-            path = shots_dir / f"{name}.png"
-            _cdp_screenshot(page, str(path))
-            captured.append({
-                "name"       : name,
-                "path"       : str(path),
-                "description": description,
-            })
-
-        @property
-        def all(self):
-            return captured
-
-        def save_metadata(self):
-            """Write screenshot metadata JSON for doc generation."""
-            import json
-            meta = {
-                "test_name"  : test_name,
-                "test_doc"   : request.node.obj.__doc__ or "",
-                "screenshots": captured,
-            }
-            meta_path = shots_dir / "_metadata.json"
-            meta_path.write_text(json.dumps(meta, indent=2))
-
-    capture = ScreenshotCapture()
+    """Screenshot capture fixture for production-targeted tests."""
+    capture = ScreenshotCapture.from_request(request, test_target="production")
     yield capture
     capture.save_metadata()

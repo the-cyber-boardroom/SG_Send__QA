@@ -35,11 +35,13 @@ class ScreenshotCapture:
     """
 
     def __init__(self, use_case: str, module_name: str, module_doc: str,
-                 method_name: str, shots_dir: Path, test_target: str = "qa_server"):
+                 method_name: str, shots_dir: Path, test_target: str = "qa_server",
+                 method_doc: str = ""):
         self.use_case    = use_case
         self.module_name = module_name
         self.module_doc  = module_doc
         self.method_name = method_name
+        self.method_doc  = method_doc
         self.shots_dir   = shots_dir
         self.test_target = test_target
         self._captured: list = []
@@ -54,6 +56,7 @@ class ScreenshotCapture:
         use_case    = module_name.replace("test__", "")
         method_name = request.node.name
         module_doc  = request.node.module.__doc__ or ""
+        method_doc  = request.node.obj.__doc__    or ""
 
         shots_dir = Path(base_dir) / use_case / "screenshots"
         return cls(
@@ -61,6 +64,7 @@ class ScreenshotCapture:
             module_name = module_name,
             module_doc  = module_doc,
             method_name = method_name,
+            method_doc  = method_doc,
             shots_dir   = shots_dir,
             test_target = test_target,
         )
@@ -107,7 +111,7 @@ class ScreenshotCapture:
         ]
         existing["tests"].append({
             "method"     : self.method_name,
-            "doc"        : "",                         # filled by conftest from request
+            "doc"        : self.method_doc,
             "screenshots": [s["name"] for s in self._captured],
         })
 
