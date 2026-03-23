@@ -28,10 +28,10 @@ class TestAccessGate:
         screenshots.capture(page, "01_landing", "Landing page (may show gate or upload zone)")
 
         # Check if access gate is present
-        gate_input = page.locator("input[type='text'], input[type='password']").first
+        gate_input = page.locator("#access-token-input")
         if gate_input.is_visible(timeout=3000):
             gate_input.fill(send_server.access_token)
-            page.locator("button").first.click()
+            page.locator("#access-token-submit").click()
             page.wait_for_load_state("networkidle")
             page.wait_for_timeout(1000)
             screenshots.capture(page, "02_after_token", "After entering access token")
@@ -51,10 +51,10 @@ class TestAccessGate:
         page.wait_for_load_state("networkidle")
         page.wait_for_timeout(1000)
 
-        gate_input = page.locator("input[type='text'], input[type='password']").first
+        gate_input = page.locator("#access-token-input")
         if gate_input.is_visible(timeout=3000):
             gate_input.fill("wrong-token-12345-xxxxx")
-            page.locator("button").first.click()
+            page.locator("#access-token-submit").click()
             page.wait_for_timeout(1000)
             screenshots.capture(page, "03_wrong_token", "Wrong token response")
 
@@ -70,7 +70,7 @@ class TestAccessGate:
         page.wait_for_load_state("networkidle")
         page.wait_for_timeout(1000)
 
-        gate_input = page.locator("input[type='text'], input[type='password']").first
+        gate_input = page.locator("#access-token-input")
         if gate_input.is_visible(timeout=2000):
             pytest.skip("Access gate is active; testing gated flow in other tests")
 
