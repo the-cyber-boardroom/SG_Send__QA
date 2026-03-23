@@ -55,7 +55,9 @@ class TestGalleryViewFeatures:
         tid, key_b64 = self._open_gallery(page, ui_url, transfer_helper)
         screenshots.capture(page, "01_gallery_loaded", "Gallery view loaded")
 
-        page_text = page.text_content("body") or ""
+        # inner_text() only returns visible text — text_content() also picks up
+        # inline script bodies (e.g. service worker mocks with {"error":"blocked"})
+        page_text = page.inner_text("body") or ""
         assert "error" not in page_text.lower(), "Gallery page shows error"
 
     def test_view_mode_buttons_present(self, page, ui_url, transfer_helper, screenshots):

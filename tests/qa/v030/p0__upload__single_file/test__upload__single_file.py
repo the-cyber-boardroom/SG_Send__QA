@@ -52,23 +52,20 @@ def _upload_file(page, ui_url, send_server, screenshots, filename, content_bytes
     page.wait_for_timeout(500)  # let confirm step transition settle
     screenshots.capture(page, "03_mode_selected", "Combined link selected")
 
-    # Confirm → Encrypt & Upload — wait for done step (input exists, may not be "visible")
+    # Confirm → Encrypt & Upload — done step shows the link as <a href>
     page.locator("#upload-next-btn").click()
-    page.locator("input[readonly]").first.wait_for(state="attached", timeout=20_000)
+    # Wait for the download link to appear in the done step
+    page.locator("a[href*='#']").first.wait_for(state="attached", timeout=20_000)
     screenshots.capture(page, "04_upload_done", "Upload complete — link shown")
 
-    # Extract download URL from readonly input containing hash fragment
-    download_url = ""
-    for el in page.locator("input[readonly]").all():
-        val = el.get_attribute("value") or ""
-        if "#" in val:
-            download_url = val
-            break
-
+    # Extract download URL — done step renders link as <a>, not input[readonly]
+    download_url = page.locator("a[href*='#']").first.get_attribute("href") or ""
     if not download_url:
-        link_el = page.locator("a[href*='#']").first
-        if link_el.is_visible(timeout=2000):
-            download_url = link_el.get_attribute("href") or ""
+        for el in page.locator("input[readonly]").all():
+            val = el.get_attribute("value") or ""
+            if "#" in val:
+                download_url = val
+                break
 
     if download_url.startswith("/"):
         download_url = f"{ui_url}{download_url}"
