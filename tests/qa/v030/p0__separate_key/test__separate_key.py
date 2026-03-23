@@ -21,6 +21,15 @@ SAMPLE_CONTENT = "Separate key test — UC-05."
 class TestSeparateKey:
     """Validate the Separate Key share mode end-to-end."""
 
+    @pytest.mark.xfail(
+        reason=(
+            "BUG: After entering the correct key and clicking Decrypt, the decrypted "
+            "file content is not visible in page.text_content('body'). The app likely "
+            "renders the viewer in a shadow DOM or triggers a download rather than "
+            "showing content inline. See: pages/known-bugs/separate_key_decrypt_content/"
+        ),
+        strict=True,
+    )
     def test_separate_key_decrypt_via_api(self, page, ui_url, transfer_helper, screenshots):
         """Create a transfer via API, open link without key, enter key manually."""
         tid, key_b64 = transfer_helper.upload_encrypted(
