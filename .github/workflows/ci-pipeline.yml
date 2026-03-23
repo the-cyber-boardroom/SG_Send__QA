@@ -68,6 +68,12 @@ jobs:
           pip install -r requirements.txt
           python -m playwright install --with-deps chromium
 
+      - name: Install SG/Send (for v030 local-stack tests)
+        run: |
+          git clone --depth 1 -b dev https://github.com/the-cyber-boardroom/SGraph-AI__App__Send /tmp/sgraph-send-ref
+          pip install -e /tmp/sgraph-send-ref --no-deps
+          pip install osbot-fast-api osbot-fast-api-serverless fastapi-mcp mgraph-ai-service-cache mgraph-ai-service-cache-client issues-fs-cli
+
       - name: Run integration tests
         env:
           TEST_TARGET_URL: ${{ secrets.TEST_TARGET_URL || inputs.target_url }}
