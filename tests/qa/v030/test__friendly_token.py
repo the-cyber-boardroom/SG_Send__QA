@@ -21,7 +21,13 @@ TOKEN_PATTERN  = re.compile(r"\b[a-z]+-[a-z]+-\d{4}\b")
 
 
 def _upload_with_simple_token(page, ui_url, send_server, screenshots, filename="token-test.txt"):
-    """Shared: gate → file → wizard → select Simple Token → upload → return token."""
+    """Shared: file (auto-advances to delivery) → Next → Simple Token card → upload → return token.
+
+    Wizard behaviour (send-upload.js):
+      - set_input_files triggers _setFile() → _advanceToDelivery() automatically.
+      - Clicking a share card emits step-share-selected → auto-advances to confirm.
+    Sequence: [Next] → <token card click> → [Encrypt & Upload].
+    """
     goto(page, f"{ui_url}/en-gb/")
     handle_access_gate(page, send_server.access_token)
 
@@ -30,30 +36,21 @@ def _upload_with_simple_token(page, ui_url, send_server, screenshots, filename="
         "buffer": SAMPLE_CONTENT.encode(),
     })
     page.wait_for_timeout(800)
-    screenshots.capture(page, "01_file_selected", "File selected")
+    screenshots.capture(page, "01_file_selected", "File selected (delivery step active)")
 
-    # Step 1 → 2 (Delivery)
+    # Delivery → Share mode
     page.locator("#upload-next-btn").click()
     page.wait_for_timeout(800)
 
-    # Step 2 → 3 (Share mode)
-    page.locator("#upload-next-btn").click()
-    page.wait_for_timeout(800)
-
-    # Select Simple Token (data-mode="token")
+    # Select Simple Token — click auto-advances to confirm step
     page.locator('[data-mode="token"]').click()
     page.wait_for_timeout(500)
-    screenshots.capture(page, "02_simple_token_selected", "Simple Token share mode selected")
+    screenshots.capture(page, "02_simple_token_selected", "Simple Token selected")
 
-    # Step 3 → 4 (Confirm)
-    page.locator("#upload-next-btn").click()
-    page.wait_for_timeout(800)
-    screenshots.capture(page, "03_confirm_step", "Confirm step")
-
-    # Step 4 → 5 (Encrypt & Upload)
+    # Confirm → Encrypt & Upload
     page.locator("#upload-next-btn").click()
     page.wait_for_timeout(5000)
-    screenshots.capture(page, "04_upload_complete", "Upload complete")
+    screenshots.capture(page, "03_upload_complete", "Upload complete")
 
     # Extract the friendly token from the Done step
     page_text = page.text_content("body") or ""

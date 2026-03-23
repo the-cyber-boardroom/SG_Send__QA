@@ -18,41 +18,40 @@ SAMPLE_CONTENT = "Combined link test — UC-04."
 
 
 def _upload_and_select_mode(page, ui_url, send_server, screenshots, mode_data_attr, step2_label):
-    """Shared wizard flow: gate → file → Next → pick share mode → upload."""
+    """Shared wizard flow: file → (auto delivery) → Next → pick share mode → upload.
+
+    Wizard behaviour (send-upload.js):
+      - set_input_files triggers _setFile() → _advanceToDelivery() automatically.
+        No extra Next click needed to reach the delivery step.
+      - Clicking a share card emits step-share-selected → wizard auto-advances to
+        confirm.  No extra Next click needed after card selection.
+    So the minimal button sequence is: [Next] → <card click> → [Encrypt & Upload].
+    """
     goto(page, f"{ui_url}/en-gb/")
     handle_access_gate(page, send_server.access_token)
 
-    # Attach file
+    # Attach file — _setFile() auto-advances wizard to delivery step
     page.locator("#file-input").set_input_files({
         "name": "combined-link-test.txt", "mimeType": "text/plain",
         "buffer": SAMPLE_CONTENT.encode(),
     })
     page.wait_for_timeout(800)
-    screenshots.capture(page, "01_file_selected", "File selected")
+    screenshots.capture(page, "01_file_selected", "File selected (delivery step active)")
 
-    # Step 1 → 2 (Delivery): click Next
-    page.locator("#upload-next-btn").click()
-    page.wait_for_timeout(800)
-
-    # Step 2 → 3 (Share mode): click Next
+    # Delivery → Share mode
     page.locator("#upload-next-btn").click()
     page.wait_for_timeout(800)
     screenshots.capture(page, "02_share_step", "Share mode step")
 
-    # Select the share mode card by data-mode attribute
+    # Select share mode card — click auto-advances to confirm step
     page.locator(f'[data-mode="{mode_data_attr}"]').click()
     page.wait_for_timeout(500)
     screenshots.capture(page, "03_mode_selected", f"{step2_label} selected")
 
-    # Step 3 → 4 (Confirm): click Next
-    page.locator("#upload-next-btn").click()
-    page.wait_for_timeout(800)
-    screenshots.capture(page, "04_confirm_step", "Confirm step")
-
-    # Step 4 → 5 (Encrypt & Upload)
+    # Confirm → Encrypt & Upload
     page.locator("#upload-next-btn").click()
     page.wait_for_timeout(5000)   # wait for encrypt + upload
-    screenshots.capture(page, "05_upload_complete", "Upload complete")
+    screenshots.capture(page, "04_upload_complete", "Upload complete")
 
 
 class TestCombinedLink:
