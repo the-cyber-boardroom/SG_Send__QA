@@ -15,6 +15,9 @@ import pytest
 import zipfile
 import io
 
+from playwright.sync_api import expect
+from tests.qa.v030.browser_helpers import goto, handle_access_gate
+
 pytestmark = pytest.mark.p1
 
 # Minimal 1×1 PNG bytes (valid PNG, tiny file)
@@ -44,52 +47,42 @@ class TestFolderUpload:
 
     def test_upload_zip_and_gallery_view(self, page, ui_url, send_server, screenshots):
         """Upload a zip with 3+ images; verify gallery mode is shown."""
-        page.goto(f"{ui_url}/en-gb/")
-        page.wait_for_load_state("networkidle")
-
-        # Handle access gate if present
-        access_input = page.locator("input[type='text'], input[type='password']").first
-        if access_input.is_visible(timeout=2000):
-            access_input.fill(send_server.access_token)
-            page.locator("button").first.click()
-            page.wait_for_load_state("networkidle")
-
+        goto(page, f"{ui_url}/en-gb/")
+        handle_access_gate(page, send_server.access_token)
         screenshots.capture(page, "01_upload_page", "Upload page loaded")
 
         # Feed the zip file
         zip_bytes = _make_folder_zip()
-        file_input = page.locator("#file-input")
-        file_input.set_input_files({
+        page.locator("#file-input").set_input_files({
             "name"    : "my-folder.zip",
             "mimeType": "application/zip",
             "buffer"  : zip_bytes,
         })
-        page.wait_for_timeout(1000)
-        screenshots.capture(page, "02_file_selected", "Zip file selected")
+        # Wait for wizard to auto-advance to delivery step
+        page.locator("#upload-next-btn").wait_for(state="visible")
+        screenshots.capture(page, "02_file_selected", "Zip file selected — delivery step")
 
-        # Walk through wizard
-        for _ in range(6):
-            btn = page.locator(
-                "button:has-text('Next'), button:has-text('Continue'), "
-                "button:has-text('Upload'), button:has-text('Encrypt'), "
-                "button:has-text('Confirm')"
-            ).first
-            if btn.is_visible(timeout=2000):
-                btn.click()
-                page.wait_for_timeout(800)
+        # Delivery → Share mode
+        page.locator("#upload-next-btn").click()
+        page.locator("[data-mode]").first.wait_for(state="visible")
+        screenshots.capture(page, "03_share_step", "Share mode step")
 
-        page.wait_for_timeout(5000)
-        screenshots.capture(page, "03_upload_done", "Upload complete — download link shown")
+        # Select combined link and advance to confirm
+        page.locator('[data-mode="combined"]').click()
+        page.locator("#upload-next-btn").wait_for(state="visible")
 
-        # Get download link
+        # Confirm → Encrypt & Upload → wait for readonly input (done step)
+        page.locator("#upload-next-btn").click()
+        page.locator("input[readonly]").first.wait_for(state="visible", timeout=15_000)
+        screenshots.capture(page, "04_upload_done", "Upload complete — link shown")
+
+        # Extract download URL
         download_url = ""
-        link_el = page.locator("a[href*='gallery'], a[href*='browse'], a[href*='download']").first
-        if link_el.is_visible(timeout=5000):
-            download_url = link_el.get_attribute("href") or ""
-        else:
-            input_el = page.locator("input[readonly]").first
-            if input_el.is_visible(timeout=3000):
-                download_url = input_el.get_attribute("value") or ""
+        for el in page.locator("input[readonly]").all():
+            val = el.get_attribute("value") or ""
+            if "#" in val:
+                download_url = val
+                break
 
         assert download_url, "No download link found after folder upload"
 
@@ -98,17 +91,15 @@ class TestFolderUpload:
 
         # Open the download page — expect gallery view (3 images auto-select gallery)
         dl_page = page.context.new_page()
-        dl_page.goto(download_url)
-        dl_page.wait_for_load_state("networkidle")
-        dl_page.wait_for_timeout(3000)
-        screenshots.capture(dl_page, "04_download_gallery", "Gallery view after zip download")
+        try:
+            goto(dl_page, download_url)
+            screenshots.capture(dl_page, "05_download_gallery", "Gallery view after zip download")
 
-        page_text = dl_page.text_content("body") or ""
-        # Should show some gallery-like content (thumbnails, image count, gallery indicator)
-        assert any(kw in page_text.lower() for kw in ["gallery", "image", "thumbnail", "photo"]), \
-            "Gallery view not detected for image-heavy zip"
-
-        dl_page.close()
+            page_text = dl_page.text_content("body") or ""
+            assert any(kw in page_text.lower() for kw in ["gallery", "image", "thumbnail", "photo"]), \
+                "Gallery view not detected for image-heavy zip"
+        finally:
+            dl_page.close()
 
     def test_gallery_thumbnail_grid(self, page, ui_url, transfer_helper, screenshots):
         """Create a zip upload via API, open gallery, verify thumbnail grid."""
@@ -116,13 +107,12 @@ class TestFolderUpload:
         tid, key_b64 = transfer_helper.upload_encrypted(zip_bytes, "my-folder.zip")
 
         gallery_url = f"{ui_url}/en-gb/gallery/#{tid}/{key_b64}"
-        page.goto(gallery_url)
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(3000)
-        screenshots.capture(page, "05_gallery_thumbnails", "Gallery thumbnail grid")
+        goto(page, gallery_url)
+        # Wait for the body to contain meaningful content
+        expect(page.locator("body")).not_to_be_empty(timeout=10_000)
+        screenshots.capture(page, "06_gallery_thumbnails", "Gallery thumbnail grid")
 
         page_text = page.text_content("body") or ""
-        # The gallery page should load without a fatal error
         assert "error" not in page_text.lower() or "gallery" in page_text.lower(), \
             "Gallery page shows error instead of content"
 
@@ -132,10 +122,9 @@ class TestFolderUpload:
         tid, key_b64 = transfer_helper.upload_encrypted(zip_bytes, "my-folder.zip")
 
         browse_url = f"{ui_url}/en-gb/browse/#{tid}/{key_b64}"
-        page.goto(browse_url)
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(3000)
-        screenshots.capture(page, "06_browse_view", "Browse view with folder tree")
+        goto(page, browse_url)
+        expect(page.locator("body")).not_to_be_empty(timeout=10_000)
+        screenshots.capture(page, "07_browse_view", "Browse view with folder tree")
 
         page_text = page.text_content("body") or ""
         assert "error" not in page_text.lower() or "browse" in page_text.lower(), \
@@ -149,19 +138,18 @@ class TestFolderUpload:
 
         # Start at gallery
         gallery_url = f"{ui_url}/en-gb/gallery/{expected_hash}"
-        page.goto(gallery_url)
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(2000)
+        goto(page, gallery_url)
+        expect(page.locator("body")).not_to_be_empty(timeout=10_000)
 
         # Look for "Folder view" / "Browse" link and click it
         browse_link = page.locator(
             "a:has-text('Folder view'), a:has-text('Browse'), a[href*='browse']"
         ).first
-        if browse_link.is_visible(timeout=5000):
+        if browse_link.is_visible(timeout=5_000):
             browse_link.click()
-            page.wait_for_load_state("networkidle")
-            page.wait_for_timeout(1000)
-            screenshots.capture(page, "07_switched_to_browse", "Switched to browse view")
+            # Wait for navigation to settle
+            page.locator("body").wait_for(state="visible")
+            screenshots.capture(page, "08_switched_to_browse", "Switched to browse view")
 
             # Hash should be preserved in the new URL
             current_url = page.url
