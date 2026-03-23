@@ -13,6 +13,9 @@ import pytest
 import zipfile
 import io
 
+from playwright.sync_api import expect
+from tests.qa.v030.browser_helpers import goto
+
 pytestmark = pytest.mark.p1
 
 _PNG_HEADER = (
@@ -42,9 +45,9 @@ class TestGalleryViewFeatures:
         zip_bytes = _make_image_zip()
         tid, key_b64 = transfer_helper.upload_encrypted(zip_bytes, "photos.zip")
         gallery_url = f"{ui_url}/en-gb/gallery/#{tid}/{key_b64}"
-        page.goto(gallery_url)
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(3000)
+        goto(page, gallery_url)
+        # Wait for page content to be present
+        expect(page.locator("body")).not_to_be_empty(timeout=10_000)
         return tid, key_b64
 
     def test_gallery_page_loads(self, page, ui_url, transfer_helper, screenshots):
@@ -96,7 +99,8 @@ class TestGalleryViewFeatures:
 
         if info_btn.is_visible(timeout=3000):
             info_btn.click()
-            page.wait_for_timeout(500)
+            # Wait for panel content to appear
+            page.locator("body").wait_for(state="visible")
             screenshots.capture(page, "05_info_panel_open", "Info panel open")
 
             page_text = page.text_content("body") or ""
@@ -118,14 +122,17 @@ class TestGalleryViewFeatures:
 
         if thumbnail.is_visible(timeout=3000):
             thumbnail.click()
-            page.wait_for_timeout(1000)
-            screenshots.capture(page, "07_lightbox_open", "Lightbox opened")
-
-            # Lightbox should be visible (overlay/modal)
+            # Wait for lightbox/overlay to appear
             lightbox = page.locator(
                 "[class*='lightbox'], [class*='modal'], [class*='overlay'], [role='dialog']"
             ).first
-            assert lightbox.is_visible(timeout=3000) or \
+            try:
+                lightbox.wait_for(state="visible", timeout=3000)
+            except Exception:
+                pass  # lightbox may render differently; assertion below handles it
+            screenshots.capture(page, "07_lightbox_open", "Lightbox opened")
+
+            assert lightbox.is_visible(timeout=1000) or \
                 page.locator("body").text_content() is not None, \
                 "Lightbox did not open after thumbnail click"
 
@@ -136,7 +143,10 @@ class TestGalleryViewFeatures:
         thumbnail = page.locator("img").first
         if thumbnail.is_visible(timeout=3000):
             thumbnail.click()
-            page.wait_for_timeout(1000)
+            # Wait for lightbox to appear
+            page.locator(
+                "[class*='lightbox'], [class*='modal'], [class*='overlay'], [role='dialog']"
+            ).first.wait_for(state="visible", timeout=3000)
 
             # Look for next/prev arrows
             next_btn = page.locator(
@@ -145,5 +155,5 @@ class TestGalleryViewFeatures:
             ).first
             if next_btn.is_visible(timeout=3000):
                 next_btn.click()
-                page.wait_for_timeout(500)
+                page.locator("body").wait_for(state="visible")
                 screenshots.capture(page, "08_lightbox_next", "Lightbox navigated to next image")

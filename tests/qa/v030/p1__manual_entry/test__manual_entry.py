@@ -11,6 +11,9 @@ Test flow:
 import pytest
 import re
 
+from playwright.sync_api import expect
+from tests.qa.v030.browser_helpers import goto
+
 pytestmark = pytest.mark.p1
 
 SAMPLE_CONTENT = b"UC-09 manual entry test content."
@@ -21,21 +24,19 @@ class TestManualEntryForm:
 
     def test_entry_form_shown_without_hash(self, page, ui_url, screenshots):
         """Navigating to /en-gb/download/ with no hash shows the entry form."""
-        page.goto(f"{ui_url}/en-gb/download/")
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(1000)
+        goto(page, f"{ui_url}/en-gb/download/")
+        # Wait for form to render
+        entry_input = page.locator("input[type='text'], input[type='search'], input").first
+        entry_input.wait_for(state="visible", timeout=5000)
         screenshots.capture(page, "01_entry_form", "Manual entry form without hash")
 
-        # Should show an input field and button
-        entry_input = page.locator("input[type='text'], input[type='search'], input").first
-        assert entry_input.is_visible(timeout=5000), \
+        assert entry_input.is_visible(), \
             "Entry form input not visible at /en-gb/download/ without hash"
 
     def test_entry_form_has_decrypt_button(self, page, ui_url, screenshots):
         """Entry form has a Decrypt & Download (or similar) button."""
-        page.goto(f"{ui_url}/en-gb/download/")
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(1000)
+        goto(page, f"{ui_url}/en-gb/download/")
+        page.locator("body").wait_for(state="visible")
         screenshots.capture(page, "02_decrypt_button", "Entry form with decrypt button")
 
         page_text = page.text_content("body") or ""
@@ -44,15 +45,21 @@ class TestManualEntryForm:
 
     def test_bogus_token_shows_error(self, page, ui_url, screenshots):
         """Entering a bogus token shows an error (not a crash)."""
-        page.goto(f"{ui_url}/en-gb/download/")
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(1000)
+        goto(page, f"{ui_url}/en-gb/download/")
 
         entry_input = page.locator("input[type='text'], input").first
         if entry_input.is_visible(timeout=5000):
             entry_input.fill("bogus-token-9999")
             entry_input.press("Enter")
-            page.wait_for_timeout(2000)
+            # Wait for error feedback to appear
+            error_locator = page.locator(
+                "[class*='error'], [class*='alert'], [role='alert'], "
+                "p:has-text('error'), p:has-text('not found'), p:has-text('invalid')"
+            ).first
+            try:
+                error_locator.wait_for(state="visible", timeout=5000)
+            except Exception:
+                pass  # fallback: check body text below
             screenshots.capture(page, "03_bogus_token_error", "Error after bogus token")
 
             page_text = page.text_content("body") or ""
@@ -67,16 +74,20 @@ class TestManualEntryForm:
         tid, key_b64 = transfer_helper.upload_encrypted(SAMPLE_CONTENT, "uc09-test.txt")
 
         # Navigate to entry form and type the transfer ID
-        page.goto(f"{ui_url}/en-gb/download/")
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(1000)
+        goto(page, f"{ui_url}/en-gb/download/")
 
         entry_input = page.locator("input[type='text'], input").first
         if entry_input.is_visible(timeout=5000):
             # Try the combined hash format (id/key) — what the user would paste
             entry_input.fill(f"{tid}/{key_b64}")
             entry_input.press("Enter")
-            page.wait_for_timeout(3000)
+            # Wait for page to advance past the entry form
+            try:
+                expect(page.locator("body")).to_contain_text(
+                    SAMPLE_CONTENT.decode(), timeout=10_000
+                )
+            except Exception:
+                pass  # content might render differently; assertion below handles it
             screenshots.capture(page, "04_valid_id_resolved", "Valid transfer ID resolved")
 
             page_text = page.text_content("body") or ""
@@ -88,9 +99,14 @@ class TestManualEntryForm:
         """Navigating directly to /en-gb/download/#id/key auto-decrypts (P1)."""
         tid, key_b64 = transfer_helper.upload_encrypted(SAMPLE_CONTENT, "uc09-direct.txt")
 
-        page.goto(f"{ui_url}/en-gb/download/#{tid}/{key_b64}")
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(3000)
+        goto(page, f"{ui_url}/en-gb/download/#{tid}/{key_b64}")
+        # Wait for decryption to complete
+        try:
+            expect(page.locator("body")).to_contain_text(
+                SAMPLE_CONTENT.decode(), timeout=10_000
+            )
+        except Exception:
+            pass  # content might render differently; assertion below handles it
         screenshots.capture(page, "05_direct_hash_nav", "Direct hash navigation to download")
 
         page_text = page.text_content("body") or ""

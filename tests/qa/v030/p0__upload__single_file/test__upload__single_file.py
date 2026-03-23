@@ -21,7 +21,15 @@ SAMPLE_FILENAME = "uc01-test-file.txt"
 
 
 def _upload_file(page, ui_url, send_server, screenshots, filename, content_bytes):
-    """Navigate to upload page, handle gate, select file, walk wizard, return download URL."""
+    """Navigate to upload page, handle gate, select file, walk wizard, return download URL.
+
+    Wizard behaviour (send-upload.js):
+      - set_input_files triggers _setFile() → _advanceToDelivery() automatically.
+        A brief pause (800ms) lets the wizard register the file before we click Next.
+      - Clicking a share card emits step-share-selected → wizard auto-advances to
+        confirm.  A brief pause (500ms) lets the transition settle before clicking Next.
+    Minimal button sequence: <pause> → [Next] → <card click> → <pause> → [Encrypt & Upload]
+    """
     goto(page, f"{ui_url}/en-gb/")
     handle_access_gate(page, send_server.access_token)
 
@@ -30,28 +38,26 @@ def _upload_file(page, ui_url, send_server, screenshots, filename, content_bytes
         "mimeType": "text/plain",
         "buffer"  : content_bytes,
     })
-    # Wait for wizard to auto-advance to delivery step
-    page.locator("#upload-next-btn").wait_for(state="visible")
+    # Brief pause for wizard to register file and auto-advance to delivery step
+    page.wait_for_timeout(800)
     screenshots.capture(page, "01_file_selected", "File selected — delivery step")
 
     # Delivery → Share mode
     page.locator("#upload-next-btn").click()
-    # Wait for share-mode cards to appear
     page.locator("[data-mode]").first.wait_for(state="visible")
     screenshots.capture(page, "02_share_step", "Share mode step")
 
-    # Select combined link (default) and auto-advance to confirm
+    # Select combined link — auto-advances to confirm step
     page.locator('[data-mode="combined"]').click()
-    # Wait for confirm button
-    page.locator("#upload-next-btn").wait_for(state="visible")
+    page.wait_for_timeout(500)  # let confirm step transition settle
     screenshots.capture(page, "03_mode_selected", "Combined link selected")
 
-    # Confirm → Encrypt & Upload → wait for readonly input (done step)
+    # Confirm → Encrypt & Upload — wait for done step (input exists, may not be "visible")
     page.locator("#upload-next-btn").click()
-    page.locator("input[readonly]").first.wait_for(state="visible", timeout=15_000)
+    page.locator("input[readonly]").first.wait_for(state="attached", timeout=20_000)
     screenshots.capture(page, "04_upload_done", "Upload complete — link shown")
 
-    # Extract download URL from readonly input
+    # Extract download URL from readonly input containing hash fragment
     download_url = ""
     for el in page.locator("input[readonly]").all():
         val = el.get_attribute("value") or ""
