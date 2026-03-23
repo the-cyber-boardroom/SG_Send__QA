@@ -15,6 +15,7 @@ time (reads git-log per file), so the generated markdown is stable and
 only produces a diff when actual content changes.
 """
 import json
+from datetime import datetime, timezone
 from pathlib import Path
 
 from osbot_utils.base_classes.Kwargs_To_Self import Kwargs_To_Self as Type_Safe
@@ -248,4 +249,87 @@ class QA_Generate_Docs(Type_Safe):
             groups_data.append((group_dir, manifest, members))
 
         self.generate_grouped_index(groups_data)
+        self.write_sidebar_data(groups_data)
+        self.write_summary_data(groups_data)
         return all_use_cases
+
+    # --------------------------------------------------------------- _data
+
+    @property
+    def data_dir(self) -> Path:
+        return Path(self.site_dir) / "_data"
+
+    def write_sidebar_data(self, groups_data: list) -> None:
+        """Write _data/qa_sidebar.json for Jekyll sidebar rendering."""
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+        groups = []
+        for group_dir, manifest, members in groups_data:
+            icon  = manifest.get("icon", "") if manifest else ""
+            gname = manifest.get("name", group_dir.name) if manifest else group_dir.name
+            items = []
+            for name, title, shot_count, _ in members:
+                items.append({
+                    "id"       : name,
+                    "title"    : title,
+                    "group_id" : group_dir.name,
+                    "composite": shot_count > 3,
+                })
+            groups.append({"id": group_dir.name, "name": gname, "icon": icon, "members": items})
+
+        path = self.data_dir / "qa_sidebar.json"
+        path.write_text(json.dumps({"groups": groups}, indent=2, ensure_ascii=False))
+        print(f"  Written:    {path}")
+
+    def write_summary_data(self, groups_data: list) -> None:
+        """Write _data/qa_summary.json for Jekyll dashboard rendering."""
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+        from sg_send_qa.utils.Version import version__sg_send__qa
+
+        total_tests       = 0
+        total_screenshots = 0
+        zero_evidence     = 0
+        group_summaries   = []
+        needs_attention   = []
+
+        for group_dir, manifest, members in groups_data:
+            icon  = manifest.get("icon", "") if manifest else ""
+            gname = manifest.get("name", group_dir.name) if manifest else group_dir.name
+            g_total = len(members)
+            g_with  = 0
+
+            for name, title, shot_count, _ in members:
+                total_screenshots += shot_count
+                meta = self.read_metadata(group_dir / name)
+                if meta:
+                    total_tests += len(meta.get("tests", []))
+                    if shot_count > 0:
+                        g_with += 1
+                    else:
+                        zero_evidence += 1
+                        needs_attention.append({"group": group_dir.name, "use_case": name})
+                else:
+                    zero_evidence += 1
+                    needs_attention.append({"group": group_dir.name, "use_case": name})
+
+            pct = round(g_with / g_total * 100) if g_total else 0
+            group_summaries.append({
+                "id"          : group_dir.name,
+                "name"        : gname,
+                "icon"        : icon,
+                "total"       : g_total,
+                "with_evidence": g_with,
+                "coverage_pct": pct,
+            })
+
+        summary = {
+            "generated_at"     : datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "version"          : version__sg_send__qa,
+            "total_tests"      : total_tests,
+            "total_screenshots": total_screenshots,
+            "zero_evidence"    : zero_evidence,
+            "groups"           : group_summaries,
+            "needs_attention"  : needs_attention,
+        }
+        path = self.data_dir / "qa_summary.json"
+        path.write_text(json.dumps(summary, indent=2, ensure_ascii=False))
+        print(f"  Written:    {path}")
