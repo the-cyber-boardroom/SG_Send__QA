@@ -17,6 +17,9 @@ import pytest
 import zipfile
 import io
 
+from playwright.sync_api import expect
+from tests.qa.v030.browser_helpers import goto
+
 pytestmark = pytest.mark.p2
 
 # ---------------------------------------------------------------------------
@@ -61,17 +64,22 @@ class TestPDFPresentMode:
         zip_bytes = _make_pdf_zip()
         tid, key_b64 = transfer_helper.upload_encrypted(zip_bytes, "documents.zip")
         gallery_url = f"{ui_url}/en-gb/gallery/#{tid}/{key_b64}"
-        page.goto(gallery_url)
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(3000)
+        goto(page, gallery_url)
+        # Wait for page content to load
+        expect(page.locator("body")).not_to_be_empty(timeout=10_000)
 
         # Click any thumbnail to open the lightbox (PDF should be first)
         thumb = page.locator(
             "img[class*='thumb'], img[class*='gallery'], .thumbnail img, img"
         ).first
-        if thumb.is_visible(timeout=5000):
+        if thumb.is_visible(timeout=5_000):
             thumb.click()
-            page.wait_for_timeout(1500)
+            # Wait for lightbox/modal to appear
+            lightbox = page.locator(
+                "[class*='lightbox'], [class*='modal'], [class*='overlay'], "
+                "[role='dialog'], [class*='viewer'], iframe"
+            ).first
+            lightbox.wait_for(state="visible", timeout=5_000)
 
         return tid, key_b64
 
@@ -85,7 +93,7 @@ class TestPDFPresentMode:
             "[class*='lightbox'], [class*='modal'], [class*='overlay'], "
             "[role='dialog'], [class*='viewer'], iframe"
         ).first
-        assert lightbox.is_visible(timeout=5000) or \
+        assert lightbox.is_visible(timeout=5_000) or \
             "pdf" in (page.text_content("body") or "").lower() or \
             page.locator("body").text_content() is not None, \
             "Lightbox did not open for PDF thumbnail"
@@ -100,7 +108,7 @@ class TestPDFPresentMode:
         ).first
         screenshots.capture(page, "02_present_button", "Present button in PDF lightbox")
 
-        if not present_btn.is_visible(timeout=3000):
+        if not present_btn.is_visible(timeout=3_000):
             pytest.skip(
                 "Present button not found — PDF viewer may not support present mode "
                 "or this file type did not trigger it"
@@ -117,21 +125,21 @@ class TestPDFPresentMode:
             "[class*='present'], [aria-label*='resent']"
         ).first
 
-        if not present_btn.is_visible(timeout=3000):
+        if not present_btn.is_visible(timeout=3_000):
             pytest.skip("Present button not found — skipping fullscreen test")
 
         screenshots.capture(page, "03_before_present", "Before present mode")
         present_btn.click()
-        page.wait_for_timeout(1000)
-        screenshots.capture(page, "04_after_present", "After present button clicked")
 
-        # Either the page signals fullscreen mode, or a full-screen overlay appears
+        # Wait for fullscreen indicator to appear
         fullscreen_indicators = page.locator(
             "[class*='fullscreen'], [class*='present-mode'], [class*='slideshow'], "
             "[data-mode*='present'], [class*='full-screen']"
         )
-        body_classes = page.evaluate("document.body.className") or ""
+        fullscreen_indicators.first.wait_for(state="visible", timeout=5_000)
+        screenshots.capture(page, "04_after_present", "After present button clicked")
 
+        body_classes = page.evaluate("document.body.className") or ""
         assert fullscreen_indicators.count() > 0 or "full" in body_classes.lower() or \
             "present" in body_classes.lower(), \
             "No fullscreen/present-mode indicator found after clicking Present"
@@ -139,19 +147,23 @@ class TestPDFPresentMode:
     def test_f_shortcut_triggers_present(self, page, ui_url, transfer_helper, screenshots):
         """The 'f' keyboard shortcut triggers present / fullscreen mode."""
         self._open_pdf_lightbox(page, ui_url, transfer_helper)
-
         screenshots.capture(page, "05_before_f_shortcut", "Before 'f' shortcut")
 
         # Press 'f' — the brief says this should trigger present/fullscreen
         page.keyboard.press("f")
-        page.wait_for_timeout(1000)
-        screenshots.capture(page, "06_after_f_shortcut", "After 'f' shortcut")
 
-        # Check for fullscreen-like state change
+        # Wait for a fullscreen-like indicator
         fullscreen_indicators = page.locator(
             "[class*='fullscreen'], [class*='present-mode'], [class*='slideshow'], "
             "[data-mode*='present'], [class*='full-screen']"
         )
+        try:
+            fullscreen_indicators.first.wait_for(state="visible", timeout=3_000)
+        except Exception:
+            pass  # shortcut may not be implemented; assertion below handles it
+
+        screenshots.capture(page, "06_after_f_shortcut", "After 'f' shortcut")
+
         body_classes = page.evaluate("document.body.className") or ""
         is_fullscreen_api = page.evaluate("!!document.fullscreenElement")
 
@@ -178,9 +190,8 @@ class TestBrowseSKeyShortcut:
 
         tid, key_b64 = transfer_helper.upload_encrypted(zip_bytes, "docs.zip")
         browse_url = f"{ui_url}/en-gb/browse/#{tid}/{key_b64}"
-        page.goto(browse_url)
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(3000)
+        goto(page, browse_url)
+        expect(page.locator("body")).not_to_be_empty(timeout=10_000)
         return tid, key_b64
 
     def test_s_key_triggers_save(self, page, ui_url, transfer_helper, screenshots):
@@ -191,15 +202,16 @@ class TestBrowseSKeyShortcut:
         file_item = page.locator(
             "[class*='file'], [class*='tree-item'], [class*='list-item'], li"
         ).first
-        if file_item.is_visible(timeout=5000):
+        if file_item.is_visible(timeout=5_000):
             file_item.click()
-            page.wait_for_timeout(500)
+            # Wait for selection to register
+            file_item.wait_for(state="visible")
 
         screenshots.capture(page, "01_file_selected", "File selected in browse")
 
         # Set up download listener before pressing 's'
         try:
-            with page.expect_download(timeout=5000) as download_info:
+            with page.expect_download(timeout=5_000) as download_info:
                 page.keyboard.press("s")
 
             download = download_info.value
@@ -216,20 +228,16 @@ class TestBrowseSKeyShortcut:
         """'j' key moves file selection down in browse view."""
         self._open_browse_with_files(page, ui_url, transfer_helper)
 
-        # Select the first item, note the selected state
         file_items = page.locator("[class*='file'], [class*='tree-item'], [class*='list-item'], li")
         if file_items.count() < 2:
             pytest.skip("Not enough files to test j/k navigation")
 
         file_items.first.click()
-        page.wait_for_timeout(300)
         screenshots.capture(page, "03_first_selected", "First file selected")
 
         page.keyboard.press("j")
-        page.wait_for_timeout(500)
         screenshots.capture(page, "04_after_j", "After 'j' key — selection moved down")
 
-        # Verify some UI change happened (selection moved or preview changed)
         body_after = page.text_content("body") or ""
         assert body_after is not None, "Page is empty after 'j' keypress"
 
@@ -244,11 +252,9 @@ class TestBrowseSKeyShortcut:
         # Go to the second item first
         file_items.first.click()
         page.keyboard.press("j")
-        page.wait_for_timeout(300)
         screenshots.capture(page, "05_second_selected", "Second file selected")
 
         page.keyboard.press("k")
-        page.wait_for_timeout(500)
         screenshots.capture(page, "06_after_k", "After 'k' key — selection moved up")
 
         body_after = page.text_content("body") or ""
