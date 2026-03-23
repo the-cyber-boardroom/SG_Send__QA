@@ -75,6 +75,9 @@ jobs:
           ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
         run: python -m pytest tests/integration/ -v
 
+      - name: Run standalone browser tests (screenshot capture)
+        run: python -m pytest tests/standalone/ -v --tb=short
+
       - name: Generate documentation
         run: python -m sg_send_qa.cli.generate_docs
 
