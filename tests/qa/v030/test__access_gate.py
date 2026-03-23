@@ -31,19 +31,26 @@ class TestAccessGate:
             page.locator("#access-token-submit").click()
             page.wait_for_load_state("networkidle")
             page.wait_for_timeout(1000)
+
+            # Verify no unexpected UI is overlaying the page (e.g. language dropdown)
+            page_text = page.text_content("body") or ""
+            unexpected_dropdown = any(lang in page_text for lang in [
+                "Deutsch", "Italiano", "Polski",
+            ])
+            assert not unexpected_dropdown, \
+                "Language dropdown is open — see bugs/test__bug__generic_button_opens_language_dropdown.py"
+
             screenshots.capture(page, "02_after_token", "After entering access token")
 
         # Upload zone should now be visible
-        file_input = page.locator("input[type='file']")
-        upload_visible = file_input.count() > 0
-
-        # Or check for upload-related text
-        page_text = page.text_content("body") or ""
-        upload_text_present = any(kw in page_text.lower() for kw in [
+        file_input  = page.locator("input[type='file']")
+        page_text   = page.text_content("body") or ""
+        has_upload  = file_input.count() > 0
+        has_keyword = any(kw in page_text.lower() for kw in [
             "upload", "drop", "browse", "choose"
         ])
 
-        assert upload_visible or upload_text_present, \
+        assert has_upload or has_keyword, \
             "Upload zone not visible after providing valid access token"
 
     def test_wrong_token_shows_error(self, page, ui_url, send_server, screenshots):

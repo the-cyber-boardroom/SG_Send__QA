@@ -42,6 +42,9 @@ navigation:
     - title: "Route Handling (UC-11)"
       url: /pages/use-cases/route_handling/
       id: route_handling
+    - title: "Known Bugs"
+      url: /pages/use-cases/bugs/
+      id: bugs
 
 exclude:
   - Gemfile

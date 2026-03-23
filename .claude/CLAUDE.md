@@ -136,6 +136,11 @@ SG_Send__QA/
 7. **Integration tests** live in `tests/integration/` (browser tests against running SG/Send)
 8. **Unit tests** live in `tests/unit/` (tests for the QA project's own code)
 9. **No `__init__.py` in test folders** — it breaks PyCharm test discovery. pytest finds tests without it.
+10. **Bug test pattern** — when a test reveals a bug in SG/Send:
+    - The **normal test** asserts expected behaviour → **fails** while bug exists
+    - A **bug test** in `tests/qa/v030/bugs/` asserts the buggy behaviour → **passes** while bug exists, with screenshots
+    - When the bug is fixed: bug test fails (remove it), normal test passes
+11. **No arbitrary timeouts** — avoid `wait_for_timeout()` in Playwright tests. The local UI is fast; use Playwright's built-in waiting (locator assertions, `wait_for_selector`, `expect`) instead. A timeout usually means the test needs a better wait strategy.
 
 ### Git
 
