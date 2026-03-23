@@ -1,0 +1,6 @@
+{
+  "name"        : "Separate Key",
+  "icon"        : "🗝️",
+  "description" : "Transfer where the decryption key is not in the URL.",
+  "duplicates"  : {}
+}

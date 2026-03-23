@@ -49,16 +49,38 @@ class ScreenshotCapture:
         shots_dir.mkdir(parents=True, exist_ok=True)
 
     @classmethod
+    def _resolve_group(cls, test_dir_name: str,
+                        base_dir: str = "sg_send_qa__site/pages/use-cases") -> str:
+        """Return the site group subfolder for a test directory, or '' if unmapped."""
+        groups_path = Path(base_dir) / "_groups.json"
+        if groups_path.exists():
+            data = json.loads(groups_path.read_text())
+            return data.get("test_dir_to_group", {}).get(test_dir_name, "")
+        return ""
+
+    @classmethod
     def from_request(cls, request, base_dir: str = "sg_send_qa__site/pages/use-cases",
                      test_target: str = "qa_server") -> "ScreenshotCapture":
-        """Build a ScreenshotCapture from a pytest request object."""
-        module_name = request.node.module.__name__.split(".")[-1]
-        use_case    = module_name.replace("test__", "")
-        method_name = request.node.name
-        module_doc  = request.node.module.__doc__ or ""
-        method_doc  = request.node.obj.__doc__    or ""
+        """Build a ScreenshotCapture from a pytest request object.
 
-        shots_dir = Path(base_dir) / use_case / "screenshots"
+        Derives the output path using group-aware resolution:
+        - reads _groups.json to map test directory → site group
+        - writes screenshots to base_dir/group/use_case/screenshots/
+        - falls back to base_dir/use_case/screenshots/ if group not found
+        """
+        module_name  = request.node.module.__name__.split(".")[-1]
+        use_case     = module_name.replace("test__", "")
+        method_name  = request.node.name
+        module_doc   = request.node.module.__doc__ or ""
+        method_doc   = request.node.obj.__doc__    or ""
+        test_dir     = Path(request.node.fspath).parent.name
+        group        = cls._resolve_group(test_dir, base_dir)
+
+        if group:
+            shots_dir = Path(base_dir) / group / use_case / "screenshots"
+        else:
+            shots_dir = Path(base_dir) / use_case / "screenshots"
+
         return cls(
             use_case    = use_case,
             module_name = module_name,

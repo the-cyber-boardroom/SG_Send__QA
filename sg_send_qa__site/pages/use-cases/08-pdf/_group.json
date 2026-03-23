@@ -1,0 +1,6 @@
+{
+  "name"        : "PDF",
+  "icon"        : "📄",
+  "description" : "PDF-specific presentation mode and lightbox viewer.",
+  "duplicates"  : {}
+}

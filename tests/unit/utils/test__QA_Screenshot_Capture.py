@@ -8,6 +8,24 @@ from unittest.mock import MagicMock
 from sg_send_qa.utils.QA_Screenshot_Capture import ScreenshotCapture
 
 
+class TestResolveGroup:
+    def test_returns_empty_when_no_groups_file(self, tmp_path):
+        result = ScreenshotCapture._resolve_group("p1__access_gate", str(tmp_path))
+        assert result == ""
+
+    def test_returns_group_for_known_dir(self, tmp_path):
+        data = {"test_dir_to_group": {"p1__access_gate": "01-access-gate"}}
+        (tmp_path / "_groups.json").write_text(json.dumps(data))
+        result = ScreenshotCapture._resolve_group("p1__access_gate", str(tmp_path))
+        assert result == "01-access-gate"
+
+    def test_returns_empty_for_unknown_dir(self, tmp_path):
+        data = {"test_dir_to_group": {"p1__access_gate": "01-access-gate"}}
+        (tmp_path / "_groups.json").write_text(json.dumps(data))
+        result = ScreenshotCapture._resolve_group("p1__api_smoke", str(tmp_path))
+        assert result == ""
+
+
 def _make_capture(tmp_path) -> ScreenshotCapture:
     return ScreenshotCapture(
         use_case    = "access_gate",

@@ -1,0 +1,25 @@
+{
+  "archived": [
+    "landing_page_loads",
+    "landing_page_has_access_gate",
+    "invalid_token_rejected"
+  ],
+  "test_dir_to_group": {
+    "p1__access_gate"            : "01-access-gate",
+    "p1__access_gate__httpx"     : "01-access-gate",
+    "p1__access_gate__standalone": "01-access-gate",
+    "p0__combined_link"          : "02-upload-share",
+    "p0__friendly_token"         : "02-upload-share",
+    "p0__upload__single_file"    : "02-upload-share",
+    "p0__zero_knowledge"         : "02-upload-share",
+    "p0__separate_key"           : "03-separate-key",
+    "p1__manual_entry"           : "03-separate-key",
+    "p1__navigation"             : "04-navigation",
+    "p1__download__gallery"      : "05-gallery",
+    "p1__download__browse"       : "06-browse",
+    "p1__upload__folder"         : "06-browse",
+    "p1__download__viewer"       : "07-viewer",
+    "p2__pdf_present"            : "08-pdf",
+    "bugs"                       : "_bugs"
+  }
+}

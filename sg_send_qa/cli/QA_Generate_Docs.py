@@ -123,8 +123,86 @@ class QA_Generate_Docs(Type_Safe):
 
     # --------------------------------------------------------------- generate
 
+    def read_group_manifest(self, group_dir: Path) -> dict | None:
+        """Read _group.json from a group directory, if present."""
+        manifest_path = group_dir / "_group.json"
+        if manifest_path.exists():
+            return json.loads(manifest_path.read_text())
+        return None
+
+    def discover_groups(self) -> list:
+        """Walk use-cases dir and return list of (group_dir, manifest) for numbered dirs."""
+        groups = []
+        for d in sorted(self.use_cases_dir.iterdir()):
+            if d.is_dir() and len(d.name) >= 2 and d.name[:2].isdigit():
+                manifest = self.read_group_manifest(d)
+                groups.append((d, manifest))
+        return groups
+
+    def discover_members(self, group_dir: Path) -> list:
+        """Return list of use-case dirs inside a group (excludes _* dirs)."""
+        members = []
+        for d in sorted(group_dir.iterdir()):
+            if d.is_dir() and not d.name.startswith("_"):
+                members.append(d)
+        return members
+
+    def process_use_case(self, uc_dir: Path, group_name: str) -> tuple:
+        """Scaffold page if missing, return (name, title, shot_count)."""
+        name     = uc_dir.name
+        title    = self.title_from_name(name)
+        metadata = self.read_metadata(uc_dir)
+
+        md_path = uc_dir / f"{name}.md"
+        if not md_path.exists():
+            content = self.scaffold_page(uc_dir, name, metadata)
+            md_path.write_text(content)
+            print(f"  Scaffolded: {md_path}")
+        else:
+            print(f"  Exists:     {md_path}")
+
+        shot_dir   = uc_dir / "screenshots"
+        shot_count = len(list(shot_dir.glob("*.png"))) if shot_dir.exists() else 0
+        return (name, title, shot_count, group_name)
+
+    def generate_grouped_index(self, groups_data: list) -> None:
+        """Regenerate the index page with groups and use cases."""
+        md  = '---\ntitle: SG/Send QA Documentation\npermalink: /\n---\n\n'
+        md += "# SG/Send QA\n\n"
+        md += "Living documentation and automated test results for "
+        md += "[SG/Send](https://send.sgraph.ai) — the encrypted file sharing platform.\n\n"
+        md += "---\n\n"
+
+        for group_dir, manifest, members in groups_data:
+            icon  = manifest.get("icon", "") if manifest else ""
+            gname = manifest.get("name", group_dir.name) if manifest else group_dir.name
+            desc  = manifest.get("description", "") if manifest else ""
+            md += f"## {icon} {gname}\n\n"
+            if desc:
+                md += f"*{desc}*\n\n"
+            if members:
+                md += "| Use Case | Screenshots |\n"
+                md += "|----------|:-----------:|\n"
+                for name, title, shot_count, _ in members:
+                    md += f"| [{title}](use-cases/{group_dir.name}/{name}/{name}) | {shot_count} |\n"
+                md += "\n"
+
+        md += "---\n\n"
+        md += "*This site is automatically generated from Playwright browser tests.*\n"
+
+        if self.index_path.exists():
+            existing = self.index_path.read_text()
+            if "## Architecture" in existing:
+                print(f"  Skipped:    {self.index_path} (hand-crafted content preserved)")
+                return
+
+        self.index_path.write_text(md)
+        total = sum(len(m) for _, _, m in groups_data)
+        print(f"  Generated:  {self.index_path} ({len(groups_data)} groups, {total} use cases)")
+
+    # kept for backward-compat (ungrouped callers)
     def generate_index(self, use_cases: list) -> None:
-        """Regenerate the index page listing all use cases."""
+        """Regenerate the index page (flat list — legacy, prefer generate_grouped_index)."""
         md  = '---\ntitle: SG/Send QA Documentation\npermalink: /\n---\n\n'
         md += "# SG/Send QA\n\n"
         md += "Living documentation and automated test results for "
@@ -153,32 +231,21 @@ class QA_Generate_Docs(Type_Safe):
         print(f"  Generated:  {self.index_path} ({len(use_cases)} use cases)")
 
     def generate(self) -> list:
-        """Walk use-cases dir, scaffold missing pages, regenerate index.
+        """Walk grouped use-cases dir, scaffold missing pages, regenerate index.
 
-        Returns list of (name, title, shot_count) tuples for all use cases found.
+        Returns flat list of (name, title, shot_count, group_name) tuples.
         """
         self.use_cases_dir.mkdir(parents=True, exist_ok=True)
-        use_cases = []
+        all_use_cases = []
+        groups_data   = []
 
-        for uc_dir in sorted(self.use_cases_dir.iterdir()):
-            if not uc_dir.is_dir():
-                continue
+        for group_dir, manifest in self.discover_groups():
+            members = []
+            for uc_dir in self.discover_members(group_dir):
+                entry = self.process_use_case(uc_dir, group_dir.name)
+                members.append(entry)
+                all_use_cases.append(entry)
+            groups_data.append((group_dir, manifest, members))
 
-            name     = uc_dir.name
-            title    = self.title_from_name(name)
-            metadata = self.read_metadata(uc_dir)
-
-            md_path = uc_dir / f"{name}.md"
-            if not md_path.exists():
-                content = self.scaffold_page(uc_dir, name, metadata)
-                md_path.write_text(content)
-                print(f"  Scaffolded: {md_path}")
-            else:
-                print(f"  Exists:     {md_path}")
-
-            shot_dir   = uc_dir / "screenshots"
-            shot_count = len(list(shot_dir.glob("*.png"))) if shot_dir.exists() else 0
-            use_cases.append((name, title, shot_count))
-
-        self.generate_index(use_cases)
-        return use_cases
+        self.generate_grouped_index(groups_data)
+        return all_use_cases
