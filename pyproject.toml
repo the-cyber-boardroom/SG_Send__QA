@@ -7,17 +7,17 @@ readme = "README.md"
 packages = [{include = "sg_send_qa"}]
 
 [tool.poetry.dependencies]
-python = "^3.12"
-playwright = "^1.40"
-fastapi = "^0.115"
-uvicorn = "^0.34"
-pillow = "^11.0"
-osbot-utils = "*"
-osbot_fast_api_serverless="*"
-osbot_playwright = "*"
-memory_fs               ="*"
-mgraph-ai-service-cache = "*"
-fastapi-mcp             = "*"
+python                      = "^3.12"
+playwright                  = "^1.40"
+fastapi                     = "^0.115"
+uvicorn                     = "^0.34"
+pillow                      = "^11.0"
+osbot-utils                 = "*"
+osbot_fast_api_serverless   = "*"
+osbot_playwright            = "*"
+memory_fs                   = "*"
+mgraph-ai-service-cache     = "*"
+fastapi-mcp                 = "*"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"

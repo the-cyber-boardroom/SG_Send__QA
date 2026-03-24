@@ -26,6 +26,7 @@ jobs:
   run-unit-tests:
     name: "Run Unit Tests"
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
@@ -33,18 +34,25 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: | 
+      - name: Install SG/Send (for test server + UI package)
+        run: |
           git clone --depth 1 -b dev https://github.com/the-cyber-boardroom/SGraph-AI__App__Send /tmp/sgraph-send-ref
           pip install -e /tmp/sgraph-send-ref --no-deps
+
+      - name: Install dependencies
+        run: |
           pip install -r requirements.txt
+          pip install pytest-timeout
+          python -m playwright install --with-deps chromium
 
       - name: Run unit tests
-        run: python -m pytest tests/unit/ -v
+        timeout-minutes: 5
+        run: python -m pytest tests/unit/ -v --timeout=30
 
   run-integration-tests:
     name: "Run Integration Tests (Browser)"
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: [run-unit-tests]
     steps:
       - uses: actions/checkout@v4
@@ -53,24 +61,25 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install osbot-playwright
-          python -m playwright install --with-deps chromium
-
-      - name: Install SG/Send (for local-stack API server)
+      - name: Install SG/Send (for test server + UI package)
         run: |
           git clone --depth 1 -b dev https://github.com/the-cyber-boardroom/SGraph-AI__App__Send /tmp/sgraph-send-ref
           pip install -e /tmp/sgraph-send-ref --no-deps
-          pip install osbot-fast-api osbot-fast-api-serverless fastapi-mcp mgraph-ai-service-cache mgraph-ai-service-cache-client issues-fs-cli
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest-timeout
+          python -m playwright install --with-deps chromium
 
       - name: Run integration tests
-        run: python -m pytest tests/integration/ -v --tb=short
+        timeout-minutes: 5
+        run: python -m pytest tests/integration/ -v --tb=short --timeout=60
 
   increment-tag:
     name: Increment Tag
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs: [run-unit-tests, run-integration-tests]
     if: inputs.should_increment_tag
     steps:
@@ -82,7 +91,6 @@ jobs:
         uses: ./.github/actions/git__increment-tag
         with:
           release_type: ${{ inputs.release_type }}
-
 
 #name: CI Pipeline (Base)
 #
