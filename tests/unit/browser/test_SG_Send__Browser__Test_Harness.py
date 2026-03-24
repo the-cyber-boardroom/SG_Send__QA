@@ -63,7 +63,7 @@ class test_SG_Send__Browser__Test_Harness__lifecycle(TestCase):
     # ── Accessors ────────────────────────────────────────────────────────────
 
     def test_sg_send__type(self):
-        assert type(self.harness.sg_send()) is SG_Send__Browser__Pages
+        assert type(self.harness.sg_send) is SG_Send__Browser__Pages
 
     def test_access_token__is_guid(self):
         token = self.harness.access_token()
@@ -114,12 +114,12 @@ class test_SG_Send__Browser__Test_Harness__lifecycle(TestCase):
     # ── Browser ──────────────────────────────────────────────────────────────
 
     def test_browser__qa_setup_page(self):
-        with self.harness.sg_send() as _:
+        with self.harness.sg_send as _:
             _.page__qa_setup()
             assert _.title() == 'QA Setup'
 
     def test_browser__set_token_bypasses_gate(self):                            # token injection → gate bypassed → upload zone visible
-        with self.harness.sg_send() as _:
+        with self.harness.sg_send as _:
             _.storage__set_token(self.harness.access_token())
             _.page__root()
             assert _.is_access_gate_visible() is False
