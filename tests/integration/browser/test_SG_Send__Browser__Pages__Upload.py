@@ -5,7 +5,7 @@ from sg_send_qa.browser.SG_Send__Browser__Test_Harness import SG_Send__Browser__
 class test_SG_Send__Browser__Pages__Upload(TestCase):                           # Upload wizard — needs full local stack with valid token
     @classmethod
     def setUpClass(cls):
-        cls.harness = SG_Send__Browser__Test_Harness().headless().setup()
+        cls.harness = SG_Send__Browser__Test_Harness().headless(True).setup()
         cls.sg_send = cls.harness.sg_send()
         cls.page_setup()
 
@@ -26,8 +26,6 @@ class test_SG_Send__Browser__Pages__Upload(TestCase):                           
     # ── Upload step-by-step ──────────────────────────────────────────────────
 
     def test_upload__set_file(self):                                            # file input works through shadow DOM
-        print('here')
-        return
         if self.sg_send.is_access_gate_visible() and self.access_token:
             self.sg_send.access_gate__enter_and_submit(self.access_token)
         self.sg_send.upload__set_file("test.txt", b"hello world")
