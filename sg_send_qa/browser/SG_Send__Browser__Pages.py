@@ -2,6 +2,7 @@
 # SG/Send QA — Browser Page Primitives (Layer 1)
 # Navigation, access gate, upload wizard, download — Shadow DOM aware
 # ═══════════════════════════════════════════════════════════════════════════════
+from osbot_playwright.playwright.api.Playwright_Page import Playwright_Page
 from osbot_utils.decorators.methods.cache_on_self                                import cache_on_self
 from osbot_utils.type_safe.Type_Safe                                             import Type_Safe
 from osbot_utils.type_safe.primitives.domains.network.safe_uint.Safe_UInt__Port  import Safe_UInt__Port
@@ -39,7 +40,7 @@ class SG_Send__Browser__Pages(Type_Safe):
     # Navigation
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def open(self, path, use_language=True):                                                       # navigate to a path under the target server
+    def open(self, path, use_language=True) -> Playwright_Page:                                                       # navigate to a path under the target server
         url  = self.url__for_path(path=path, use_language=use_language)
         page = self.qa_browser().open(url)
         return page
@@ -112,21 +113,21 @@ class SG_Send__Browser__Pages(Type_Safe):
 
     def storage__set_token(self, token):                                        # pre-populate access token via lightweight page
         self.page__qa_setup()
-        self.js(f"QA.setToken('{token}')")
+        self.js_evaluate(f"QA.setToken('{token}')")
         return self
 
     def storage__get_token(self):                                               # read token from localStorage
         self.page__qa_setup()
-        return self.js("QA.getToken()")
+        return self.js_evaluate("QA.getToken()")
 
     def storage__clear(self):                                                   # wipe localStorage (clean slate between tests)
         self.page__qa_setup()
-        self.js("QA.clear()")
+        self.js_evaluate("QA.clear()")
         return self
 
     def storage__dump(self):                                                    # return all localStorage as dict
         self.page__qa_setup()
-        return self.js("QA.dump()")
+        return self.js_evaluate("QA.dump()")
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Wait helpers
@@ -155,14 +156,17 @@ class SG_Send__Browser__Pages(Type_Safe):
     # State queries
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def js(self, expression):                                                   # run JS in page context
+    def invoke__javascript(self, expression):           # todo: add this method to the Playwright_Page class
+        return self.js_evaluate(expression)
+
+    def js_evaluate(self, expression):                                                   # run JS in page context
         return self.raw_page().evaluate(expression)
 
     def visible_text(self):                                                     # visible text only (no <script> content)
         return self.raw_page().inner_text("body")
 
     def upload_state(self):                                                     # current upload wizard state
-        return self.js("document.querySelector('send-upload')?._state")
+        return self.js_evaluate("document.querySelector('send-upload')?._state")
 
     def is_access_gate_visible(self):                                           # is the token entry form showing?
         return self.raw_page().locator("#access-token-input").is_visible(timeout=2000)

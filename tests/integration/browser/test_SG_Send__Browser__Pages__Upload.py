@@ -1,5 +1,7 @@
-from unittest                                          import TestCase
-from sg_send_qa.browser.SG_Send__Browser__Test_Harness import SG_Send__Browser__Test_Harness
+from unittest                                           import TestCase
+from osbot_playwright.playwright.api.Playwright_Page    import Playwright_Page
+from sg_send_qa.browser.SG_Send__Browser__Pages         import SG_Send__Browser__Pages
+from sg_send_qa.browser.SG_Send__Browser__Test_Harness  import SG_Send__Browser__Test_Harness
 
 
 class test_SG_Send__Browser__Pages__Upload(TestCase):                           # Upload wizard — needs full local stack with valid token
@@ -26,12 +28,17 @@ class test_SG_Send__Browser__Pages__Upload(TestCase):                           
     # ── Upload step-by-step ──────────────────────────────────────────────────
 
     def test__01__upload__set_file(self):                                            # file input works through shadow DOM
+        with self.sg_send.page() as _:
+            assert type(_) is Playwright_Page
+
         with self.sg_send as _:
+            assert type(_) is SG_Send__Browser__Pages
             _.page__root()
             _.upload__set_file("test.txt", b"hello world")
             assert _.upload_state() in ('file-ready', 'choosing-delivery')                     # wizard advanced past idle
 
     def test__02__upload__click_next__to_share_step(self):                           # Next advances to share mode selection
+        #note: we don't need this because test__01__upload__set_file will run first, and _.set_access_token() checks if the token is set on this page
         #self.sg_send.page__root()
         #self.sg_send.wait_for_page_ready()
         #self.sg_send.upload__set_file("test.txt", b"hello world")
@@ -40,12 +47,13 @@ class test_SG_Send__Browser__Pages__Upload(TestCase):                           
         assert state == 'choosing-share'
 
     def test__03__upload__select_share_mode__combined(self):                          # selecting combined auto-advances to confirm
-        self.sg_send.page__root()
-        self.sg_send.wait_for_page_ready()
-        if self.sg_send.is_access_gate_visible() and self.access_token:
-            self.sg_send.access_gate__enter_and_submit(self.access_token)
-        self.sg_send.upload__set_file("test.txt", b"hello world")
-        self.sg_send.upload__click_next()
+        # same here, we can just continue
+        # self.sg_send.page__root()
+        # self.sg_send.wait_for_page_ready()
+        # if self.sg_send.is_access_gate_visible() and self.access_token:
+        #     self.sg_send.access_gate__enter_and_submit(self.access_token)
+        # self.sg_send.upload__set_file("test.txt", b"hello world")
+        #self.sg_send.upload__click_next()
         self.sg_send.upload__select_share_mode("combined")
         state = self.sg_send.upload_state()
         assert state == 'confirming'

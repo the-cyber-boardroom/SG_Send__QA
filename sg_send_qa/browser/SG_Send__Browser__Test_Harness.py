@@ -110,8 +110,15 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     # ═══════════════════════════════════════════════════════════════════════════
 
     def set_access_token(self):                                 # todo: optimise this so that we detect if the current page has the token already (so that we don't need to open the QA page)
-        token= self.access_token()
         with self._sg_send as _:
-            _.page__qa_setup()
-            _.storage__set_token(token=token)        # make sure access token is set
-        return token
+            try:
+                current_token = _.invoke__javascript("localStorage.getItem('sgraph-send-token');")      # check if the token is already setup
+            except:             # todo: add a better way to find this (for example we could check the URL)
+                pass            #
+            if current_token:                                                                       # if it is
+                return current_token                                                                #   just return it and no need to open the QA page (which will flicker the screen
+            else:
+                valid_token= self.access_token()                                                    # if there is no token setup, get the one set on server setup
+                _.page__qa_setup()                                                                  # go to the qa-setup page
+                _.storage__set_token(token=valid_token)                                             # and set it there
+                return valid_token                                                                  # and return the token set
