@@ -14,17 +14,6 @@ on:
         required: false
         type: boolean
         default: false
-      target_url:
-        required: false
-        type: string
-        default: "https://send.sgraph.ai"
-    secrets:
-      TEST_TARGET_URL:
-        required: false
-      TEST_ACCESS_TOKEN:
-        required: false
-      ADMIN_API_KEY:
-        required: false
 
 env:
   PACKAGE_NAME : 'sg_send_qa'
@@ -32,8 +21,6 @@ env:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   run-unit-tests:
@@ -52,8 +39,8 @@ jobs:
       - name: Run unit tests
         run: python -m pytest tests/unit/ -v
 
-  run-browser-tests:
-    name: "Run Browser Tests"
+  run-integration-tests:
+    name: "Run Integration Tests (Browser)"
     runs-on: ubuntu-latest
     needs: [run-unit-tests]
     steps:
@@ -66,40 +53,22 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
+          pip install osbot-playwright
           python -m playwright install --with-deps chromium
 
-      - name: Install SG/Send (for v030 local-stack tests)
+      - name: Install SG/Send (for local-stack API server)
         run: |
           git clone --depth 1 -b dev https://github.com/the-cyber-boardroom/SGraph-AI__App__Send /tmp/sgraph-send-ref
           pip install -e /tmp/sgraph-send-ref --no-deps
           pip install osbot-fast-api osbot-fast-api-serverless fastapi-mcp mgraph-ai-service-cache mgraph-ai-service-cache-client issues-fs-cli
 
       - name: Run integration tests
-        env:
-          TEST_TARGET_URL: ${{ secrets.TEST_TARGET_URL || inputs.target_url }}
-          TEST_ACCESS_TOKEN: ${{ secrets.TEST_ACCESS_TOKEN }}
-          ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
-        run: python -m pytest tests/integration/ -v
-
-      - name: Run browser tests (screenshot capture)
-        run: python -m pytest tests/qa/v030/ -v --tb=short
-
-      - name: Generate documentation
-        run: python -m sg_send_qa.cli.generate_docs
-
-      - name: Diff screenshots and commit only real changes
-        run: python -m sg_send_qa.ci.diff_screenshots
-
-      - name: Commit screenshot changes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "Update QA screenshots and docs [skip ci]"
-          file_pattern: "sg_send_qa__site/"
+        run: python -m pytest tests/integration/ -v --tb=short
 
   increment-tag:
     name: Increment Tag
     runs-on: ubuntu-latest
-    needs: [run-unit-tests, run-browser-tests]
+    needs: [run-unit-tests, run-integration-tests]
     if: inputs.should_increment_tag
     steps:
       - uses: actions/checkout@v4
@@ -111,37 +80,151 @@ jobs:
         with:
           release_type: ${{ inputs.release_type }}
 
-  deploy-docs:
-    name: "Deploy Documentation"
-    needs: [run-browser-tests]
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.git_branch }}
-          fetch-depth: 0          # full history for jekyll-last-modified-at
 
-      - name: Pull latest (picks up auto-committed screenshots)
-        run: git pull origin ${{ inputs.git_branch }} --ff-only || true
-
-      - uses: actions/configure-pages@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.3'
-          bundler-cache: true
-          working-directory: sg_send_qa__site
-
-      - name: Build Jekyll site
-        working-directory: sg_send_qa__site
-        run: bundle exec jekyll build --destination ../_site
-        env:
-          JEKYLL_ENV: production
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site/
-      - uses: actions/deploy-pages@v4
+#name: CI Pipeline (Base)
+#
+#on:
+#  workflow_call:
+#    inputs:
+#      git_branch:
+#        required: true
+#        type: string
+#      release_type:
+#        required: false
+#        type: string
+#        default: ""
+#      should_increment_tag:
+#        required: false
+#        type: boolean
+#        default: false
+#      target_url:
+#        required: false
+#        type: string
+#        default: "https://send.sgraph.ai"
+#    secrets:
+#      TEST_TARGET_URL:
+#        required: false
+#      TEST_ACCESS_TOKEN:
+#        required: false
+#      ADMIN_API_KEY:
+#        required: false
+#
+#env:
+#  PACKAGE_NAME : 'sg_send_qa'
+#  GIT__BRANCH  : ${{ inputs.git_branch }}
+#
+#permissions:
+#  contents: write
+#  pages: write
+#  id-token: write
+#
+#jobs:
+#  run-unit-tests:
+#    name: "Run Unit Tests"
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v4
+#
+#      - uses: actions/setup-python@v5
+#        with:
+#          python-version: '3.12'
+#
+#      - name: Install dependencies
+#        run: pip install -r requirements.txt
+#
+#      - name: Run unit tests
+#        run: python -m pytest tests/unit/ -v
+#
+#  run-browser-tests:
+#    name: "Run Browser Tests"
+#    runs-on: ubuntu-latest
+#    needs: [run-unit-tests]
+#    steps:
+#      - uses: actions/checkout@v4
+#
+#      - uses: actions/setup-python@v5
+#        with:
+#          python-version: '3.12'
+#
+#      - name: Install dependencies
+#        run: |
+#          pip install -r requirements.txt
+#          python -m playwright install --with-deps chromium
+#
+#      - name: Install SG/Send (for v030 local-stack tests)
+#        run: |
+#          git clone --depth 1 -b dev https://github.com/the-cyber-boardroom/SGraph-AI__App__Send /tmp/sgraph-send-ref
+#          pip install -e /tmp/sgraph-send-ref --no-deps
+#          pip install osbot-fast-api osbot-fast-api-serverless fastapi-mcp mgraph-ai-service-cache mgraph-ai-service-cache-client issues-fs-cli
+#
+#      - name: Run integration tests
+#        env:
+#          TEST_TARGET_URL: ${{ secrets.TEST_TARGET_URL || inputs.target_url }}
+#          TEST_ACCESS_TOKEN: ${{ secrets.TEST_ACCESS_TOKEN }}
+#          ADMIN_API_KEY: ${{ secrets.ADMIN_API_KEY }}
+#        run: python -m pytest tests/integration/ -v
+#
+#      - name: Run browser tests (screenshot capture)
+#        run: python -m pytest tests/qa/v030/ -v --tb=short
+#
+#      - name: Generate documentation
+#        run: python -m sg_send_qa.cli.generate_docs
+#
+#      - name: Diff screenshots and commit only real changes
+#        run: python -m sg_send_qa.ci.diff_screenshots
+#
+#      - name: Commit screenshot changes
+#        uses: stefanzweifel/git-auto-commit-action@v5
+#        with:
+#          commit_message: "Update QA screenshots and docs [skip ci]"
+#          file_pattern: "sg_send_qa__site/"
+#
+#  increment-tag:
+#    name: Increment Tag
+#    runs-on: ubuntu-latest
+#    needs: [run-unit-tests, run-browser-tests]
+#    if: inputs.should_increment_tag
+#    steps:
+#      - uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Increment Tag
+#        uses: ./.github/actions/git__increment-tag
+#        with:
+#          release_type: ${{ inputs.release_type }}
+#
+#  deploy-docs:
+#    name: "Deploy Documentation"
+#    needs: [run-browser-tests]
+#    runs-on: ubuntu-latest
+#    environment:
+#      name: github-pages
+#    steps:
+#      - uses: actions/checkout@v4
+#        with:
+#          ref: ${{ inputs.git_branch }}
+#          fetch-depth: 0          # full history for jekyll-last-modified-at
+#
+#      - name: Pull latest (picks up auto-committed screenshots)
+#        run: git pull origin ${{ inputs.git_branch }} --ff-only || true
+#
+#      - uses: actions/configure-pages@v4
+#
+#      - name: Set up Ruby
+#        uses: ruby/setup-ruby@v1
+#        with:
+#          ruby-version: '3.3'
+#          bundler-cache: true
+#          working-directory: sg_send_qa__site
+#
+#      - name: Build Jekyll site
+#        working-directory: sg_send_qa__site
+#        run: bundle exec jekyll build --destination ../_site
+#        env:
+#          JEKYLL_ENV: production
+#
+#      - uses: actions/upload-pages-artifact@v3
+#        with:
+#          path: _site/
+#      - uses: actions/deploy-pages@v4

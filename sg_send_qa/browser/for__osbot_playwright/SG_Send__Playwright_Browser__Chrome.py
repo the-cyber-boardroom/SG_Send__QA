@@ -1,5 +1,4 @@
-from osbot_playwright.playwright.api.Playwright_Browser import Playwright_Browser
-
+from osbot_playwright.playwright.api.Playwright_Browser         import Playwright_Browser
 from osbot_playwright.playwright.api.Playwright_CLI             import Playwright_CLI
 from osbot_playwright.playwright.api.Playwright_Process         import Playwright_Process
 from osbot_utils.utils.Misc                                     import random_port
