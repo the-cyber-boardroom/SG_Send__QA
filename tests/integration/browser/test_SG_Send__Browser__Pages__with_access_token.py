@@ -13,7 +13,6 @@ from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server impo
 
 
 class test_SG_Send__Browser__Pages__State(TestCase):                            # Page state queries
-    #sg_send : SG_Send__Browser__Pages
 
     @classmethod
     def setUpClass(cls):
