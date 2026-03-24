@@ -13,3 +13,5 @@ httpx>=0.27
 #osbot-utils>=3.72.0
 osbot_playwright
 osbot_fast_api_serverless
+mgraph-ai-service-cache
+memory_fs
