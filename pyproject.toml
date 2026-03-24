@@ -13,6 +13,7 @@ fastapi = "^0.115"
 uvicorn = "^0.34"
 pillow = "^11.0"
 osbot-utils = "*"
+osbot_fast_api="*"
 osbot_playwright = "*"
 
 [tool.poetry.group.dev.dependencies]
