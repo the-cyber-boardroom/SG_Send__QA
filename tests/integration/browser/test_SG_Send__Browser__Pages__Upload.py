@@ -1,29 +1,31 @@
 from unittest                                           import TestCase
+from osbot_utils.testing.Stderr                         import Stderr
 from osbot_playwright.playwright.api.Playwright_Page    import Playwright_Page
 from sg_send_qa.browser.SG_Send__Browser__Pages         import SG_Send__Browser__Pages
 from sg_send_qa.browser.SG_Send__Browser__Test_Harness  import SG_Send__Browser__Test_Harness
 
+SAMPLE_CONTENT  = "Hello from SG/Send QA — upload wizard test."
+SAMPLE_FILENAME = "qa-upload-test.txt"
 
 class test_SG_Send__Browser__Pages__Upload(TestCase):                           # Upload wizard — needs full local stack with valid token
     @classmethod
     def setUpClass(cls):
         cls.harness = SG_Send__Browser__Test_Harness().headless(True).setup()
-        cls.sg_send = cls.harness.sg_send()
+        cls.sg_send = cls.harness.sg_send
         cls.page_setup()
 
     @classmethod
     def tearDownClass(cls):
-        cls.harness.teardown()                                       # close the browser                                   # close the browser
+        cls.harness.teardown()
 
+    def setUp(self):
+        Stderr().start()
 
     @classmethod
     def page_setup(cls):
         with cls.harness as _:
             cls.access_token = _.set_access_token()
-            cls.ui_server    = _._ui_server
-
-        # with cls.sg_send as _:
-        #     _.page__root()
+            cls.ui_server    = _.ui_server
 
     # ── Upload step-by-step ──────────────────────────────────────────────────
 
@@ -34,26 +36,56 @@ class test_SG_Send__Browser__Pages__Upload(TestCase):                           
         with self.sg_send as _:
             assert type(_) is SG_Send__Browser__Pages
             _.page__root()
-            _.upload__set_file("test.txt", b"hello world")
-            assert _.upload_state() in ('file-ready', 'choosing-delivery')                     # wizard advanced past idle
+            _.upload__set_file(SAMPLE_FILENAME, SAMPLE_CONTENT.encode())
+            assert _.upload_state() in ('file-ready', 'choosing-delivery')           # wizard advanced past idle
 
     def test__02__upload__click_next__to_share_step(self):                           # Next advances to share mode selection
-        #note: we don't need this because test__01__upload__set_file will run first, and _.set_access_token() checks if the token is set on this page
-        #self.sg_send.page__root()
-        #self.sg_send.wait_for_page_ready()
-        #self.sg_send.upload__set_file("test.txt", b"hello world")
         self.sg_send.upload__click_next()
-        state = self.sg_send.upload_state()
-        assert state == 'choosing-share'
+        assert self.sg_send.upload_state() == 'choosing-share'
 
-    def test__03__upload__select_share_mode__combined(self):                          # selecting combined auto-advances to confirm
-        # same here, we can just continue
-        # self.sg_send.page__root()
-        # self.sg_send.wait_for_page_ready()
-        # if self.sg_send.is_access_gate_visible() and self.access_token:
-        #     self.sg_send.access_gate__enter_and_submit(self.access_token)
-        # self.sg_send.upload__set_file("test.txt", b"hello world")
-        #self.sg_send.upload__click_next()
-        self.sg_send.upload__select_share_mode("combined")
-        state = self.sg_send.upload_state()
-        assert state == 'confirming'
+    def test__03__upload__select_share_mode__simple(self):                          # selecting combined auto-advances to confirm
+        self.sg_send.upload__select_share_mode("token")
+        assert self.sg_send.upload_state() == 'confirming'
+
+    # def test__03__upload__select_share_mode__combined(self):                          # selecting combined auto-advances to confirm
+    #     self.sg_send.upload__select_share_mode("combined")
+    #     assert self.sg_send.upload_state() == 'confirming'
+
+    def test__04__upload__click_encrypt_and_upload(self):                             # Encrypt & Upload starts the pipeline
+        self.sg_send.upload__click_next()                                            # in confirming state, button says "Encrypt & Upload"
+        self.sg_send.upload__wait_for_complete()                                     # wait for: encrypting → creating → uploading → completing → complete
+        assert self.sg_send.upload_state() == 'complete'
+
+    def test__05__upload__get_simple_token(self):                                   # extract combined link from done step
+        simple_token = self.sg_send.upload__get_friendly_token()                    # todo: these upload__get_friendly_token methods need to be moved to a class with logic specific to this upload page
+        assert len(simple_token.split("-")) == 3
+        # todo  add way to percist this token
+
+    # def test__05__upload__get_combined_link(self):                                   # extract combined link from done step
+    #     #link = self.sg_send.upload__get_combined_link()
+    #     simple_token = self.sg_send.upload__get_friendly_token()                    # todo: these upload__get_friendly_token methods need to be moved to a class with logic specific to this upload page
+    #     assert len(simple_token.split("-")) == 3
+
+    # the test bellow need either open in a new window, or we need a way to keep the state of this page
+    # def test__06__combined_link__format(self):                                       # verify #transferId/base64key format
+    #     link      = self.__class__.combined_link
+    #     hash_part = link.split('#', 1)[1]
+    #     parts     = hash_part.split('/', 1)
+    #     assert len(parts)    == 2                                                    # two parts: id and key
+    #     assert len(parts[0]) >= 8                                                    # transfer ID is at least 8 chars
+    #     assert len(parts[1]) >  0                                                    # key is not empty
+    #     self.__class__.transfer_id = parts[0]
+    #     self.__class__.key_b64     = parts[1]
+    #
+    # def test__07__browse__decrypted_content(self):                                   # open combined link in browse view, verify decryption
+    #     tid = self.__class__.transfer_id
+    #     key = self.__class__.key_b64
+    #     with self.sg_send as _:
+    #         _.page__browse_with_hash(tid, key)
+    #         _.wait(3000)                                                             # allow JS fetch + decrypt + render
+    #         text = _.visible_text()
+    #         assert SAMPLE_CONTENT in text                                            # decrypted content visible
+    #
+    # def test__08__browse__filename_visible(self):                                    # filename extracted from SGMETA envelope
+    #     text = self.sg_send.visible_text()
+    #     assert SAMPLE_FILENAME in text                                               # filename shown in viewer

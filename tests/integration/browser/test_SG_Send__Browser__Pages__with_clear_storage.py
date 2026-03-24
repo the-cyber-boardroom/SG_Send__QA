@@ -7,7 +7,7 @@ class test_SG_Send__Browser__Pages__State(TestCase):                            
     @classmethod
     def setUpClass(cls):
         cls.harness = SG_Send__Browser__Test_Harness().setup()
-        cls.sg_send = cls.harness.sg_send()
+        cls.sg_send = cls.harness.sg_send
         cls.page_setup()
 
     @classmethod
@@ -18,7 +18,7 @@ class test_SG_Send__Browser__Pages__State(TestCase):                            
     @classmethod
     def page_setup(cls):
         cls.access_token = cls.harness.access_token()
-        cls.ui_server    = cls.harness._ui_server
+        cls.ui_server    = cls.harness.ui_server
         with cls.sg_send as _:
             _.page__qa_setup()
             _.storage__clear()          # make sure it is clear

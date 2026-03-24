@@ -1,89 +1,126 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 # Tests for SG_Send__Browser__Test_Harness
 # ═══════════════════════════════════════════════════════════════════════════════
-import pytest
+
 import requests
 from unittest                                                                   import TestCase
 from sg_send_qa.browser.SG_Send__Browser__Test_Harness                          import SG_Send__Browser__Test_Harness
-from sg_send_qa.browser.SG_Send__Browser__Test_Harness                          import Schema__Browser_Test_Config
+from sg_send_qa.browser.Schema__Browser_Test_Config                             import Schema__Browser_Test_Config
 from sg_send_qa.browser.SG_Send__Browser__Pages                                 import SG_Send__Browser__Pages
 
 
-class test_SG_Send__Browser__Test_Harness(TestCase):                            # Unit tests — no servers needed
+# ═══════════════════════════════════════════════════════════════════════════════
+# Unit tests — no servers, no browser
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class test_SG_Send__Browser__Test_Harness(TestCase):
 
     def test__init__(self):                                                     # verify defaults before setup
         with SG_Send__Browser__Test_Harness() as _:
             assert type(_.config)  is Schema__Browser_Test_Config
-            assert _._api_server   is None
-            assert _._ui_folder    is None
-            assert _._ui_server    is None
-            assert _._sg_send      is None
-            assert _._test_objs    is None
+            assert _.api_server   is None
+            assert _.ui_folder    is None
+            assert _.ui_server    is None
+            assert _.sg_send      is None
+            assert _.test_objs    is None
 
     def test__init____with_config(self):                                        # verify config passthrough
         config = Schema__Browser_Test_Config(headless=False)
         with SG_Send__Browser__Test_Harness(config=config) as _:
             assert _.config.headless is False
 
+    def test__headless__fluent(self):                                           # headless() returns self for chaining
+        harness = SG_Send__Browser__Test_Harness()
+        result  = harness.headless(True)
+        assert result is harness
+        assert harness.config.headless is True
 
-# class test_SG_Send__Browser__Test_Harness__lifecycle(TestCase):                 # Integration — starts/stops full stack
+    def test__headless__default_is_true(self):                                  # .headless() with no arg defaults to True
+        harness = SG_Send__Browser__Test_Harness()
+        harness.headless()
+        assert harness.config.headless is True
 
-    def test_setup_and_teardown(self):                                          # full lifecycle: setup → verify → teardown
-        harness = SG_Send__Browser__Test_Harness().setup()
+    def test__headless__false(self):                                            # .headless(False) sets debug mode
+        harness = SG_Send__Browser__Test_Harness()
+        harness.headless(False)
+        assert harness.config.headless is False
 
-        # verify accessors return sensible values
-        assert type(harness.sg_send())      is SG_Send__Browser__Pages
-        assert type(harness.access_token()) is str
-        assert len(harness.access_token())  > 0                                 # random GUID, not empty
-        assert 'http://localhost:'          in harness.api_url()
-        assert 'http://localhost:'          in harness.ui_url()
 
-        # verify API server is reachable
-        api_response = requests.get(harness.api_url() + 'api/docs')
-        assert api_response.status_code == 200
+# ═══════════════════════════════════════════════════════════════════════════════
+# Integration tests — full stack (one harness shared across all tests)
+# ═══════════════════════════════════════════════════════════════════════════════
 
-        # verify UI server is reachable
-        ui_response = requests.get(harness.ui_url() + 'en-gb')
-        assert ui_response.status_code == 200
+class test_SG_Send__Browser__Test_Harness__lifecycle(TestCase):
 
-        # verify qa-setup.html is served
-        qa_response = requests.get(harness.ui_url() + '_common/qa-setup.html')
-        assert qa_response.status_code == 200
+    @classmethod
+    def setUpClass(cls):
+        cls.harness = SG_Send__Browser__Test_Harness().headless(True).setup()
 
-        # verify browser can navigate
-        with harness.sg_send() as _:
-            _.page__qa_setup()
-            assert _.title() == 'QA Setup'
+    @classmethod
+    def tearDownClass(cls):
+        cls.harness.teardown()
 
-        # teardown
-        harness.teardown()
+    # ── Accessors ────────────────────────────────────────────────────────────
 
-    def test__bug__teardown__idempotent(self):                                        # calling teardown twice currently raises error
-        harness = SG_Send__Browser__Test_Harness().setup()
-        harness.teardown()
-        with pytest.raises(IndexError, match="pop from empty list"):
-            harness.teardown()                                                      # second call is not safe
+    def test_sg_send__type(self):
+        assert type(self.harness.sg_send()) is SG_Send__Browser__Pages
 
-    def test_access_token__matches_api(self):                                   # token from harness works against the API
-        harness = SG_Send__Browser__Test_Harness().setup()
-        token   = harness.access_token()
+    def test_access_token__is_guid(self):
+        token = self.harness.access_token()
+        assert type(token) is str
+        assert len(token)  > 0
 
-        # create a transfer using the token — proves it's valid
-        response = requests.post(harness.api_url() + 'api/transfers/create'    ,
-                                 json    = {"file_size_bytes": 100}             ,
-                                 headers = {"x-sgraph-access-token": token}    )
+    def test_api_url__format(self):
+        assert 'http://localhost:' in self.harness.api_url()
+        assert self.harness.api_url().endswith('/')
+
+    def test_ui_url__format(self):
+        assert 'http://localhost:' in self.harness.ui_url()
+        assert self.harness.ui_url().endswith('/')
+
+    # ── API server ───────────────────────────────────────────────────────────
+
+    def test_api_server__docs(self):
+        response = requests.get(self.harness.api_url() + 'api/docs')
+        assert response.status_code == 200
+
+    def test_api_server__openapi(self):
+        response = requests.get(self.harness.api_url() + 'api/openapi.json')
+        assert response.status_code == 200
+        assert '/api/transfers/create' in response.json().get('paths', {})
+
+    def test_access_token__works_against_api(self):                             # token from harness is accepted by the API
+        token    = self.harness.access_token()
+        response = requests.post(self.harness.api_url() + 'api/transfers/create'    ,
+                                 json    = {"file_size_bytes": 100}                  ,
+                                 headers = {"x-sgraph-access-token": token}          )
         assert response.status_code == 200
         assert 'transfer_id' in response.json()
 
-        harness.teardown()
+    # ── UI server ────────────────────────────────────────────────────────────
 
-    def test_storage__set_token__bypasses_gate(self):                           # token injection via qa-setup.html works end-to-end
-        harness = SG_Send__Browser__Test_Harness().setup()
+    def test_ui_server__root(self):
+        response = requests.get(self.harness.ui_url())
+        assert response.status_code == 200
 
-        with harness.sg_send() as _:
-            _.storage__set_token(harness.access_token())
+    def test_ui_server__en_gb(self):
+        response = requests.get(self.harness.ui_url() + 'en-gb')
+        assert response.status_code == 200
+
+    def test_ui_server__qa_setup(self):
+        response = requests.get(self.harness.ui_url() + '_common/qa-setup.html')
+        assert response.status_code == 200
+
+    # ── Browser ──────────────────────────────────────────────────────────────
+
+    def test_browser__qa_setup_page(self):
+        with self.harness.sg_send() as _:
+            _.page__qa_setup()
+            assert _.title() == 'QA Setup'
+
+    def test_browser__set_token_bypasses_gate(self):                            # token injection → gate bypassed → upload zone visible
+        with self.harness.sg_send() as _:
+            _.storage__set_token(self.harness.access_token())
             _.page__root()
-            assert _.is_access_gate_visible() is False                          # gate bypassed
-            assert _.upload_state()           == 'idle'                         # upload zone ready
-
-        harness.teardown()
+            assert _.is_access_gate_visible() is False
+            assert _.upload_state()           == 'idle'

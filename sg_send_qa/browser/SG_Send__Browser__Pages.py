@@ -112,8 +112,9 @@ class SG_Send__Browser__Pages(Type_Safe):
     # ═══════════════════════════════════════════════════════════════════════════
 
     def storage__set_token(self, token):                                        # pre-populate access token via lightweight page
-        self.page__qa_setup()
-        self.js_evaluate(f"QA.setToken('{token}')")
+        #self.page__qa_setup()
+        #self.js_evaluate(f"QA.setToken('{token}')")                                # security-vuln: vulnerable to XSS on token
+        self.js_evaluate(f"localStorage.setItem('sgraph-send-token', '{token}')")   # security-vuln: vulnerable to XSS on token
         return self
 
     def storage__get_token(self):                                               # read token from localStorage
@@ -237,12 +238,30 @@ class SG_Send__Browser__Pages(Type_Safe):
 
     def upload__get_combined_link(self):                                            # extract combined link from done step
         el = self.raw_page().locator("upload-step-done #combined-link")
-        el.wait_for(state="visible", timeout=5000)
+        #el.wait_for(state="visible", timeout=5000)
         return el.text_content().strip()
 
     def upload__get_friendly_token(self):                                           # extract friendly token from done step
-        el = self.raw_page().locator("upload-step-done #simple-token")
-        el.wait_for(state="visible", timeout=5000)
+        #document.querySelector("upload-step-done").shadowRoot.querySelector("#simple-token").innerText
+        #el = self.raw_page().locator("upload-step-done #simple-token")
+        # todo: explore how to make code like the one below to be more generic since it doesn't have the timeout problem that locator has
+        outer_selector =  "upload-step-done"
+        inner_selector = "#simple-token"
+        js__get_simple_token = f"""
+var outer_selector =  "{outer_selector}"
+var inner_selector = "{inner_selector}"
+var node = document.querySelector(outer_selector).shadowRoot.querySelector(inner_selector)
+if (node) {{
+    result = node.innerText
+}} else {{
+    result = null
+}}
+result
+"""
+        result = self.invoke__javascript(js__get_simple_token)
+        return result
+
+        #el.wait_for(state="visible", timeout=5000)
         return el.text_content().strip()
 
     def upload__get_full_link(self):                                                # extract full link (token mode) from done step

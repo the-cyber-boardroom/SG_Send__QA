@@ -2,123 +2,201 @@
 # SG/Send QA — Browser Test Harness
 # Manages the full local stack lifecycle (API server + UI server + browser)
 # for integration tests. Extracts the common setUpClass/tearDownClass pattern.
+#
+# Debug mode (headless=False):
+#   - Ports are persisted to disk → same port across runs → localStorage survives
+#   - UI build is cached by version → skip rebuild if unchanged
+#   - set_access_token() checks before acting → usually a no-op
+#
+# CI mode (headless=True):
+#   - Fresh random ports every run → full isolation
+#   - No persistence → clean state guaranteed
 # ═══════════════════════════════════════════════════════════════════════════════
 
 from pathlib                                                                import Path
 from osbot_fast_api.utils.Fast_API_Server                                   import Fast_API_Server
-from osbot_utils.helpers.duration.decorators.capture_duration import capture_duration
 from osbot_utils.type_safe.Type_Safe                                        import Type_Safe
 from osbot_utils.testing.Stderr                                             import Stderr
 from osbot_utils.testing.Temp_Folder                                        import Temp_Folder
 from osbot_utils.testing.Temp_Web_Server                                    import Temp_Web_Server
+from osbot_utils.utils.Files                                                import path_combine, temp_folder_current, folder_create, folder_exists
 from sg_send_qa.browser.SG_Send__Browser__Pages                             import SG_Send__Browser__Pages
 from sg_send_qa.browser.Schema__Browser_Test_Config                         import Schema__Browser_Test_Config
+from sg_send_qa.browser.Harness_State__Persistence                          import Harness_State__Persistence, Schema__Harness_State
 from sg_send_qa.utils.QA_UI_Server                                          import build_ui_serve_dir
 from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import setup__send_user_lambda__test_client, Send__User_Lambda__Test_Objs
 
-# todo: rename all variables and methods that start with _ to not use _  (i.e. these are not internal methods or variables)
-#       add a class to capture all important durations that we have here (like we had in the previous mode)
-            # with capture_duration as duration__action_abc:
-            #     pass
-            #
-            # durations.action_abc = duration__action_abc.duration # this returns the duration value in seconds
+
+UI_BUILD_FOLDER_FORMAT = 'sg_send_qa_ui_build_{version}'
+
 
 class SG_Send__Browser__Test_Harness(Type_Safe):                                # manages API server + UI server + browser lifecycle
     config          : Schema__Browser_Test_Config                               # session configuration
+    persistence     : Harness_State__Persistence                                # load/save state across runs
 
-    _api_server     : Fast_API_Server               = None                      # FastAPI on random port (in-memory backend)
-    _ui_folder      : Temp_Folder                   = None                      # temp dir with built static files
-    _ui_server      : Temp_Web_Server               = None                      # static file server on random port
-    _stderr         : Stderr                        = None                      # stderr capture (Chrome + server logs)
-    _sg_send        : SG_Send__Browser__Pages       = None                      # browser page primitives
-    _test_objs      : Send__User_Lambda__Test_Objs  = None                      # Send__User_Lambda__Test_Objs
+    api_server      : Fast_API_Server               = None                      # FastAPI on stable port (in-memory backend)
+    ui_folder       : Temp_Folder                   = None                      # temp dir with built static files (or cached)
+    ui_server       : Temp_Web_Server               = None                      # static file server on stable port
+    stderr          : Stderr                        = None                      # stderr capture (Chrome + server logs)
+    sg_send         : SG_Send__Browser__Pages       = None                      # browser page primitives
+    test_objs       : Send__User_Lambda__Test_Objs  = None                      # Send__User_Lambda__Test_Objs
+    ui_serve_dir    : str                           = ''                        # resolved path to UI files (always full path)
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Lifecycle
     # ═══════════════════════════════════════════════════════════════════════════
 
     def setup(self):                                                            # start everything — call from setUpClass
-        self._start_api_server()
-        self._build_ui()
-        self._start_ui_server()
+        saved_state = self._load_saved_state()
+        self._start_api_server(saved_state)
+        self._build_ui(saved_state)
+        self._start_ui_server(saved_state)
         self._create_browser()
+        self._save_state()
         if self.config.capture_stderr:
-            self._stderr = Stderr()
-            self._stderr.start()
+            self.stderr = Stderr()
+            self.stderr.start()
         return self
 
     def teardown(self):                                                         # stop everything — call from tearDownClass
-        if self._stderr:
-            self._stderr.stop()
-        if self._ui_server:
-            self._ui_server.__exit__(None, None, None)
-        if self._ui_folder:
-            self._ui_folder.__exit__(None, None, None)
-        if self._api_server:
-            self._api_server.stop()
-        if self.config.headless and self._sg_send:
-            self._sg_send.qa_browser().stop()
+        if self.stderr:
+            self.stderr.stop()
+        if self.ui_server:
+            self.ui_server.__exit__(None, None, None)
+        if self.ui_folder and self.config.headless:                             # only delete build folder in CI mode
+            self.ui_folder.__exit__(None, None, None)                           # debug mode keeps the cached build
+        if self.api_server:
+            self.api_server.stop()
+        if self.config.headless and self.sg_send:
+            self.sg_send.qa_browser().stop()
         return self
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Accessors
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def sg_send(self) -> SG_Send__Browser__Pages:                               # the browser page API
-        return self._sg_send
-
     def access_token(self) -> str:                                              # the auto-generated access token
-        return self._test_objs.access_token
+        return self.test_objs.access_token
 
-    def headless(self, value=True):                                                  # note: when setting this to False, this needs to be called before the .setup() method
+    def headless(self, value=True):                                             # note: call before .setup()
         self.config.headless = value
         return self
 
     def api_url(self) -> str:                                                   # e.g. http://localhost:54321/
-        return f"http://{self.config.host}:{self._api_server.port}/"
+        return f"http://{self.config.host}:{self.api_server.port}/"
 
     def ui_url(self) -> str:                                                    # e.g. http://localhost:63960/
-        return f"http://{self.config.host}:{self._ui_server.port}/"
-
-    # ═══════════════════════════════════════════════════════════════════════════
-    # Internal setup steps
-    # ═══════════════════════════════════════════════════════════════════════════
-
-    def _start_api_server(self):
-        self._test_objs = setup__send_user_lambda__test_client()
-        self._api_server = Fast_API_Server(app=self._test_objs.fast_api__app)
-        self._api_server.start()
-
-    def _build_ui(self):                                                    # todo: optimise this so that we don't need to build the static content all the time, in fact, use the current qa project version value to determine if we need to rebuild these files
-        self._ui_folder = Temp_Folder()
-        self._ui_folder.__enter__()
-        build_ui_serve_dir(api_url   = self.api_url()                  ,
-                           serve_dir = Path(self._ui_folder.path())    )
-
-    def _start_ui_server(self):
-        self._ui_server = Temp_Web_Server(root_folder = self._ui_folder.path() ,
-                                          host        = self.config.host       )
-        self._ui_server.__enter__()
-
-    def _create_browser(self):
-        self._sg_send = SG_Send__Browser__Pages(headless    = self.config.headless  ,
-                                                target_port = self._ui_server.port  )
-
+        return f"http://{self.config.host}:{self.ui_server.port}/"
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Util methods
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def set_access_token(self):                                 # todo: optimise this so that we detect if the current page has the token already (so that we don't need to open the QA page)
-        with self._sg_send as _:
-            try:
-                current_token = _.invoke__javascript("localStorage.getItem('sgraph-send-token');")      # check if the token is already setup
-            except:             # todo: add a better way to find this (for example we could check the URL)
-                pass            #
-            if current_token:                                                                       # if it is
-                return current_token                                                                #   just return it and no need to open the QA page (which will flicker the screen
+    def set_access_token(self):                                                 # inject token, skip if already set
+        token = self.access_token()
+        with self.sg_send as _:
+            current_token = None
+            current_url   = _.url()
+
+            if str(self.ui_server.port) in current_url:                         # already on the right origin
+                try:
+                    current_token = _.invoke__javascript(                        # check localStorage directly
+                        "localStorage.getItem('sgraph-send-token');")
+                except Exception:
+                    pass
+
+                if current_token == token:                                          # token already set — no-op
+                    return current_token
+                else:
+                    _.storage__set_token(token=token)                                   # inject token
+                    return token
             else:
-                valid_token= self.access_token()                                                    # if there is no token setup, get the one set on server setup
-                _.page__qa_setup()                                                                  # go to the qa-setup page
-                _.storage__set_token(token=valid_token)                                             # and set it there
-                return valid_token                                                                  # and return the token set
+                _.page__qa_setup()                                                  # navigate to lightweight page
+                _.storage__set_token(token=token)                                   # inject token
+                return token
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # Internal setup steps
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    def _load_saved_state(self):                                                # load previous state (debug mode only)
+        if self.config.headless:
+            return None                                                         # CI mode — always fresh
+        state = self.persistence.load()
+        if state and self.persistence.ports_in_use(state):                      # stale servers from crashed test
+            print(f"[harness] WARNING: ports {state.api_port}/{state.ui_port} still in use from previous run")
+        return state
+
+    def _start_api_server(self, saved_state=None):
+        self.test_objs  = setup__send_user_lambda__test_client()
+        api_port        = saved_state.api_port if saved_state else 0            # 0 = let Fast_API_Server pick random
+        self.api_server = Fast_API_Server(app  = self.test_objs.fast_api__app ,
+                                          port = api_port                      )
+        self.api_server.start()
+
+
+
+    def _build_ui(self, saved_state=None):
+        ui_version = self._current_ui_version()
+
+        if not self.config.headless and saved_state:
+            cached_folder = saved_state.ui_build_folder
+            if (saved_state.ui_version == ui_version
+                    and cached_folder
+                    and folder_exists(cached_folder)
+                    and saved_state.api_port == self.api_server.port):
+                self.ui_serve_dir = cached_folder               # reuse cached — skip rebuild
+                return
+
+        if self.config.headless:
+            self.ui_folder = Temp_Folder()
+            self.ui_folder.__enter__()
+            self.ui_serve_dir = self.ui_folder.path()           # Temp_Folder manages lifecycle
+        else:
+            self.ui_serve_dir = self._stable_build_folder(ui_version)
+            folder_create(self.ui_serve_dir)
+
+        build_ui_serve_dir(api_url   = self.api_url()              ,
+                           serve_dir = Path(self.ui_serve_dir)     )
+
+    def _start_ui_server(self, saved_state=None):
+        ui_port = saved_state.ui_port if saved_state and not self.config.headless else 0
+        self.ui_server = Temp_Web_Server(root_folder = self.ui_serve_dir   ,
+                                         host        = self.config.host    ,
+                                         port        = ui_port             )
+        self.ui_server.__enter__()
+
+    # def _start_ui_server(self, saved_state=None):
+    #     ui_port   = saved_state.ui_port if saved_state and not self.config.headless else 0
+    #     serve_dir = self.ui_folder.folder_name if self.ui_folder.folder_name else self.ui_folder.path()
+    #     self.ui_server = Temp_Web_Server(root_folder = serve_dir           ,
+    #                                      host        = self.config.host    ,
+    #                                      port        = ui_port             )
+    #     self.ui_server.__enter__()
+
+    def _create_browser(self):
+        self.sg_send = SG_Send__Browser__Pages(headless    = self.config.headless  ,
+                                               target_port = self.ui_server.port   )
+
+    def _save_state(self):
+        if self.config.headless:
+            return
+        state = Schema__Harness_State(
+            api_port        = self.api_server.port                             ,
+            ui_port         = self.ui_server.port                              ,
+            ui_build_folder = self.ui_serve_dir                                ,   # ← was self.ui_folder.folder_name
+            ui_version      = self._current_ui_version()                       ,
+            access_token    = self.access_token()                              ,
+            chrome_port     = 10070                                            )
+        self.persistence.save(state)
+
+    def _current_ui_version(self):                                              # read from the QA project version
+        try:
+            version_file = Path(__file__).parent.parent / 'version'
+            return version_file.read_text().strip()
+        except Exception:
+            return 'unknown'
+
+    def _stable_build_folder(self, version):                                    # debug mode: stable path in temp
+        folder_name = UI_BUILD_FOLDER_FORMAT.format(version=version)
+        return path_combine(temp_folder_current(), folder_name)

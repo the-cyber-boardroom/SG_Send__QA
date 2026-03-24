@@ -12,7 +12,7 @@ class test_SG_Send__Browser__Pages(TestCase):                                   
     @classmethod
     def setUpClass(cls):
         cls.harness = SG_Send__Browser__Test_Harness().setup()
-        cls.sg_send = cls.harness.sg_send()
+        cls.sg_send = cls.harness.sg_send
 
     @classmethod
     def tearDownClass(cls):
