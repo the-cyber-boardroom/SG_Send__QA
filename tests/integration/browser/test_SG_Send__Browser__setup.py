@@ -55,7 +55,7 @@ class test_SG_Send__Browser__setup(TestCase):                            # Page 
 
     # ── check local servers ───────────────────────────────────────────────────────
 
-    def test_check_test_server(self):
+    def test_check_http_server(self):
         assert self.api_url == f"http://localhost:{self.api_server.port}/"
         assert self.ui_url  == f"http://localhost:{self.ui_server.port}/"
 
@@ -91,3 +91,25 @@ class test_SG_Send__Browser__setup(TestCase):                            # Page 
         assert path__ui__en_gb          .status_code == 200
         assert path__ui__en_gb_browse   .status_code == 200
         assert path__ui__common_qa_setup.status_code == 200
+
+    def test_check_browser_access(self):
+        with self.sg_send.page() as _:
+            #assert _.url() == 'chrome://new-tab-page/'
+
+            _.open(self.api_url)
+            assert _.url() == self.api_url
+
+            _.open(self.api_url + 'api/docs')
+            assert _.title() == 'SGraph Send - Swagger UI'
+
+            _.open(self.ui_url + 'en-gb/browse')                           # if there is no redirects, we can do this here
+            assert _.title() == 'SG/Send — Browse Files'
+
+
+        # with a redirect we need to wait until page ready (which is still very quick)
+        with self.sg_send as _:
+            _.page().open(self.ui_url)                                    # will redirect
+            _.wait_for_page_ready()
+            assert _.url() == self.ui_url + 'en-gb/'
+            assert _.title() == 'SG/Send — Zero-knowledge encrypted file sharing'
+

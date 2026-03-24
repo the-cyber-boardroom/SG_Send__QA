@@ -16,6 +16,7 @@ class test_SG_Send__Browser__setup(TestCase):                            # Page 
 
     @classmethod
     def setUpClass(cls):
+        cls.headless    = True
         with print_duration(action_name='start api server'):
             cls.send_user_lambda__test_objs = setup__send_user_lambda__test_client()
             cls.api_server                  = Fast_API_Server(app=cls.send_user_lambda__test_objs.fast_api__app)
@@ -34,7 +35,8 @@ class test_SG_Send__Browser__setup(TestCase):                            # Page 
                                             host        = 'localhost'          )   # localhost for Web Crypto secure context
             cls.ui_server.__enter__()
 
-            cls.sg_send = SG_Send__Browser__Pages(target_port = cls.ui_server.port)
+            cls.sg_send = SG_Send__Browser__Pages(headless=cls.headless,
+                                                  target_port = cls.ui_server.port)
             cls.ui_url  = f'http://localhost:{cls.ui_server.port}/'
 
 
@@ -46,6 +48,10 @@ class test_SG_Send__Browser__setup(TestCase):                            # Page 
             cls.ui_folder.__exit__(None, None, None)                                # deletes temp folder
         with print_duration(action_name='stop api server'):
             cls.api_server.stop()
+
+        if cls.headless:                                                            # if we are headless
+            cls.sg_send.qa_browser().stop()
+
 
     # ── QA Setup ───────────────────────────────────────────────────────
 
