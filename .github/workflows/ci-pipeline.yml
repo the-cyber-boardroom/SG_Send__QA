@@ -34,7 +34,10 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: | 
+          git clone --depth 1 -b dev https://github.com/the-cyber-boardroom/SGraph-AI__App__Send /tmp/sgraph-send-ref
+          pip install -e /tmp/sgraph-send-ref --no-deps
+          pip install -r requirements.txt
 
       - name: Run unit tests
         run: python -m pytest tests/unit/ -v

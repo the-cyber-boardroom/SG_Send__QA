@@ -6,6 +6,7 @@
 
 from pathlib                                                                import Path
 from osbot_fast_api.utils.Fast_API_Server                                   import Fast_API_Server
+from osbot_utils.helpers.duration.decorators.capture_duration import capture_duration
 from osbot_utils.type_safe.Type_Safe                                        import Type_Safe
 from osbot_utils.testing.Stderr                                             import Stderr
 from osbot_utils.testing.Temp_Folder                                        import Temp_Folder
@@ -15,6 +16,12 @@ from sg_send_qa.browser.Schema__Browser_Test_Config                         impo
 from sg_send_qa.utils.QA_UI_Server                                          import build_ui_serve_dir
 from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import setup__send_user_lambda__test_client, Send__User_Lambda__Test_Objs
 
+# todo: rename all variables and methods that start with _ to not use _  (i.e. these are not internal methods or variables)
+#       add a class to capture all important durations that we have here (like we had in the previous mode)
+            # with capture_duration as duration__action_abc:
+            #     pass
+            #
+            # durations.action_abc = duration__action_abc.duration # this returns the duration value in seconds
 
 class SG_Send__Browser__Test_Harness(Type_Safe):                                # manages API server + UI server + browser lifecycle
     config          : Schema__Browser_Test_Config                               # session configuration
@@ -63,6 +70,10 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     def access_token(self) -> str:                                              # the auto-generated access token
         return self._test_objs.access_token
 
+    def headless(self, value=True):                                                  # note: when setting this to False, this needs to be called before the .setup() method
+        self.config.headless = value
+        return self
+
     def api_url(self) -> str:                                                   # e.g. http://localhost:54321/
         return f"http://{self.config.host}:{self._api_server.port}/"
 
@@ -78,7 +89,7 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         self._api_server = Fast_API_Server(app=self._test_objs.fast_api__app)
         self._api_server.start()
 
-    def _build_ui(self):
+    def _build_ui(self):                                                    # todo: optimise this so that we don't need to build the static content all the time, in fact, use the current qa project version value to determine if we need to rebuild these files
         self._ui_folder = Temp_Folder()
         self._ui_folder.__enter__()
         build_ui_serve_dir(api_url   = self.api_url()                  ,
@@ -92,3 +103,15 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     def _create_browser(self):
         self._sg_send = SG_Send__Browser__Pages(headless    = self.config.headless  ,
                                                 target_port = self._ui_server.port  )
+
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # Util methods
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    def set_access_token(self):                                 # todo: optimise this so that we detect if the current page has the token already (so that we don't need to open the QA page)
+        token= self.access_token()
+        with self._sg_send as _:
+            _.page__qa_setup()
+            _.storage__set_token(token=token)        # make sure access token is set
+        return token
