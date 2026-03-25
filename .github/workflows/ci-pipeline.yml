@@ -208,6 +208,9 @@ jobs:
       - name: Diff screenshots (revert rendering noise below 1% threshold)
         run: python -m sg_send_qa.ci.diff_screenshots
 
+      - name: Pull latest before committing (handle concurrent pushes)
+        run: git pull --rebase origin ${{ inputs.git_branch }} || true
+
       - name: Commit screenshots and docs
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
@@ -220,6 +223,9 @@ jobs:
     timeout-minutes: 10
     needs: [generate-docs]
     if: always() && needs.generate-docs.result != 'cancelled'
+    concurrency:
+      group: github-pages
+      cancel-in-progress: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
