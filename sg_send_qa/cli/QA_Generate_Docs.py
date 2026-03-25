@@ -21,7 +21,7 @@ from pathlib import Path
 from osbot_utils.base_classes.Kwargs_To_Self import Kwargs_To_Self as Type_Safe
 
 
-FRONT_MATTER = '---\ntitle: "Use Case: {title}"\npermalink: /pages/use-cases/{name}/\n---\n'
+FRONT_MATTER = '---\ntitle: "Use Case: {title}"\npermalink: /pages/use-cases/{group}/{name}/\n---\n'
 
 
 class QA_Generate_Docs(Type_Safe):
@@ -63,10 +63,11 @@ class QA_Generate_Docs(Type_Safe):
 
     # --------------------------------------------------------------- scaffold
 
-    def scaffold_page(self, use_case_dir: Path, name: str, metadata: dict | None) -> str:
+    def scaffold_page(self, use_case_dir: Path, name: str, metadata: dict | None,
+                      group_name: str = "") -> str:
         """Generate a starter markdown page for a new use case."""
         title = self.title_from_name(name)
-        md    = FRONT_MATTER.format(title=title, name=name)
+        md    = FRONT_MATTER.format(title=title, group=group_name, name=name)
         md   += f"\n# {title}\n\n"
 
         if metadata and metadata.get("module_doc"):
@@ -156,7 +157,7 @@ class QA_Generate_Docs(Type_Safe):
 
         md_path = uc_dir / f"{name}.md"
         if not md_path.exists():
-            content = self.scaffold_page(uc_dir, name, metadata)
+            content = self.scaffold_page(uc_dir, name, metadata, group_name=group_name)
             md_path.write_text(content)
             print(f"  Scaffolded: {md_path}")
         else:
