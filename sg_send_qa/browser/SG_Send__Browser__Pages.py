@@ -1,13 +1,18 @@
 # ═══════════════════════════════════════════════════════════════════════════════
 # SG/Send QA — Browser Page Primitives (Layer 1)
 # Navigation, access gate, upload wizard, download — Shadow DOM aware
+#
+# All Python→JS communication goes through self.js() (JS_Query__Shadow_DOM).
+# No raw js_evaluate() with string interpolation. No locator() for DOM reads.
 # ═══════════════════════════════════════════════════════════════════════════════
-from osbot_playwright.playwright.api.Playwright_Page import Playwright_Page
+from osbot_playwright.playwright.api.Playwright_Page                             import Playwright_Page
 from osbot_utils.decorators.methods.cache_on_self                                import cache_on_self
 from osbot_utils.type_safe.Type_Safe                                             import Type_Safe
 from osbot_utils.type_safe.primitives.domains.network.safe_uint.Safe_UInt__Port  import Safe_UInt__Port
 from osbot_utils.type_safe.primitives.domains.web.safe_str.Safe_Str__Url__Server import Safe_Str__Url__Server
 from osbot_utils.utils.Http                                                      import url_join_safe
+from osbot_utils.utils.Misc                                                      import str_to_base64
+from sg_send_qa.browser.JS_Query__Shadow_DOM                                     import JS_Query__Shadow_DOM
 from sg_send_qa.browser.QA_Browser                                               import QA_Browser
 
 DEFAULT__TARGET_SERVER__LOCALHOST = Safe_Str__Url__Server('http://localhost')
@@ -33,26 +38,30 @@ class SG_Send__Browser__Pages(Type_Safe):
     def page(self):                                                             # Playwright_Page wrapper
         return self.qa_browser().page()
 
-    def raw_page(self):                                                         # raw playwright.sync_api.Page for locators
+    def raw_page(self):                                                         # raw playwright.sync_api.Page for locators/waits
         return self.page().page
+
+    def js(self):                                                               # JS query layer — ALL JS goes through here
+        return JS_Query__Shadow_DOM(raw_page=self.raw_page())
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Navigation
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def open(self, path, use_language=True) -> Playwright_Page:                 # navigate to a path under the target server
+    def open(self, path, use_language=True, wait_for_ready=True) -> Playwright_Page:  # navigate; wait for app init by default
         url = self.url__for_path(path=path, use_language=use_language)
-        self.raw_page().goto(url, wait_until="commit")                         # commit fires on first byte — SG/Send inline scripts may block domcontentloaded
+        self.raw_page().goto(url, wait_until="commit")                         # commit fires on first byte; domcontentloaded blocked by SG/Send inline scripts
+        if wait_for_ready:
+            self.wait_for_page_ready()                                         # event: body[data-ready] set by app init
         return self.page()
 
     def url__target_server(self):                                               # base URL of the local QA server
         return f'{self.target_server}:{self.target_port}/'
 
-
-    def url__for_locale(self):                                              # join path to base URL
+    def url__for_locale(self):                                                  # locale-prefixed base: http://host:port/en-gb
         return url_join_safe(self.url__target_server(), DEFAULT__I18N__LANGUAGE_LOCATION)
 
-    def url__for_path(self, path, use_language=True):                                              # join path to base URL
+    def url__for_path(self, path, use_language=True):                           # full URL for a route path
         if use_language:
             return url_join_safe(self.url__for_locale(), path)
         else:
@@ -109,80 +118,73 @@ class SG_Send__Browser__Pages(Type_Safe):
         url = f"{self.url__for_locale()}/download/#{transfer_id}"
         return self._open_with_hash(url)
 
-    def _open_with_hash(self, url):                                             # navigate using commit — fires on first byte received
-        self.raw_page().goto(url, wait_until="commit")                          # SG/Send inline scripts may delay domcontentloaded; commit is safest
+    def _open_with_hash(self, url, wait_for_ready=True):                        # navigate to a URL with hash fragment; wait for app init
+        self.raw_page().goto(url, wait_until="commit")                          # hash routes use same SG/Send app shell
+        if wait_for_ready:
+            self.wait_for_page_ready()
         return self
 
-    def page__qa_setup(self):                                                   # minimal page — localStorage only, no JS overhead
-        return self.open("_common/qa-setup.html", use_language=False)
+    def page__qa_setup(self):                                                   # minimal static page — localStorage only, no JS app init
+        return self.open("_common/qa-setup.html", use_language=False,
+                         wait_for_ready=False)                                  # qa-setup.html is static HTML; no app init, no body[data-ready]
 
     # ═══════════════════════════════════════════════════════════════════════════
-    # Storage helpers
+    # Storage helpers — all localStorage ops go through js().storage_*
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def storage__set_token(self, token):                                        # pre-populate access token via lightweight page
-        #self.page__qa_setup()
-        #self.js_evaluate(f"QA.setToken('{token}')")                                # security-vuln: vulnerable to XSS on token
-        self.js_evaluate(f"localStorage.setItem('sgraph-send-token', '{token}')")   # security-vuln: vulnerable to XSS on token
+    def storage__set_token(self, token):                                        # pre-populate access token in localStorage
+        self.js().storage_set('sgraph-send-token', token)                      # base64-safe — no XSS risk
         return self
 
-    def storage__get_token(self):                                               # read token from localStorage
-        self.page__qa_setup()
-        return self.js_evaluate("QA.getToken()")
+    def storage__get_token(self):                                               # read access token from localStorage
+        return self.js().storage_get('sgraph-send-token')
 
-    def storage__clear(self):                                                   # wipe localStorage (clean slate between tests)
-        self.page__qa_setup()
-        self.js_evaluate("QA.clear()")
+    def storage__set(self, key, value):                                         # write an arbitrary localStorage entry
+        self.js().storage_set(key, value)
+        return self
+
+    def storage__get(self, key):                                                # read an arbitrary localStorage entry
+        return self.js().storage_get(key)
+
+    def storage__clear(self):                                                   # wipe all localStorage
+        self.js().storage_clear()
         return self
 
     def storage__dump(self):                                                    # return all localStorage as dict
-        self.page__qa_setup()
-        return self.js_evaluate("QA.dump()")
+        return self.js().storage_dump()
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Wait helpers
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def wait(self, ms=1000):                                                    # explicit wait (ms)
-        self.raw_page().wait_for_timeout(ms)
-        return self
-
-    def wait_for_page_ready(self, timeout=5000):                                # wait for data-ready attribute on body
+    def wait_for_page_ready(self, timeout=5000):                                # wait for app init: body[data-ready] set by SG/Send bootstrap
         self.raw_page().wait_for_selector("body[data-ready]", timeout=timeout)
         return self
 
-    def wait_for_component(self, tag_name, timeout=5000):                       # wait for a Web Component to emit component-ready
+    def wait_for_component(self, tag_name, timeout=5000):                       # wait for a Web Component to be attached to DOM
         self.raw_page().wait_for_selector(tag_name, state="attached", timeout=timeout)
         return self
 
-    def wait_for_upload_state(self, state, timeout=10000):                      # wait for upload orchestrator to reach a state
-        self.raw_page().wait_for_function(                                      # polls send-upload._state via JS
-            f"document.querySelector('send-upload')?._state === '{state}'",
-            timeout=timeout,
-        )
+    def wait_for_upload_state(self, state, timeout=10000):                      # wait for upload wizard to reach a state
+        pred = self.js().predicate__light_property_equals("send-upload", "_state", state)
+        self.raw_page().wait_for_function(pred, timeout=timeout)
         return self
 
-    def wait_for_download_state(self, state, timeout=15000):                    # wait for send-download component to reach a state
-        self.raw_page().wait_for_function(                                      # states: loading|entry|ready|decrypting|complete|error
-            f"document.querySelector('send-download')?.state === '{state}'",
-            timeout=timeout,
-        )
+    def wait_for_download_state(self, state, timeout=15000):                    # wait for send-download to reach a state
+        pred = self.js().predicate__light_property_equals("send-download", "state", state)
+        self.raw_page().wait_for_function(pred, timeout=timeout)                # states: loading|entry|ready|decrypting|complete|error
         return self
 
-    def wait_for_download_states(self, states, timeout=15000):                  # wait for any of multiple send-download states
-        states_js = str(states).replace("'", '"')                               # JS-safe list
-        self.raw_page().wait_for_function(
-            f"(function(){{ var s = document.querySelector('send-download')?.state; "
-            f"return {states_js}.indexOf(s) !== -1; }})()",
-            timeout=timeout,
-        )
+    def wait_for_download_states(self, states, timeout=15000):                  # wait for send-download to reach any of the given states
+        pred = self.js().predicate__light_property_in("send-download", "state", states)
+        self.raw_page().wait_for_function(pred, timeout=timeout)
         return self
 
-    def wait_for_selector_hidden(self, selector, timeout=5000):                 # wait for an element to disappear
+    def wait_for_selector_hidden(self, selector, timeout=5000):                 # wait for an element to disappear (Playwright selector wait)
         self.raw_page().wait_for_selector(selector, state="hidden", timeout=timeout)
         return self
 
-    def wait_for_selector_visible(self, selector, timeout=5000):                # wait for an element to appear
+    def wait_for_selector_visible(self, selector, timeout=5000):                # wait for an element to appear (Playwright selector wait)
         self.raw_page().wait_for_selector(selector, state="visible", timeout=timeout)
         return self
 
@@ -190,23 +192,20 @@ class SG_Send__Browser__Pages(Type_Safe):
     # State queries
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def invoke__javascript(self, expression):           # todo: add this method to the Playwright_Page class
-        return self.js_evaluate(expression)
+    def visible_text(self):                                                     # visible text of the page body
+        return self.js().light_text("body")
 
-    def js_evaluate(self, expression):                                                   # run JS in page context
-        return self.raw_page().evaluate(expression)
+    def upload_state(self):                                                     # current upload wizard state (_state property)
+        return self.js().light_property("send-upload", "_state")
 
-    def visible_text(self):                                                     # visible text only (no <script> content)
-        return self.raw_page().inner_text("body")
-
-    def upload_state(self):                                                     # current upload wizard state
-        return self.js_evaluate("document.querySelector('send-upload')?._state")
+    def download_state(self):                                                   # current download component state
+        return self.js().light_property("send-download", "state")
 
     def is_access_gate_visible(self):                                           # is the token entry form showing?
-        return self.raw_page().locator("#access-token-input").is_visible(timeout=2000)
+        return self.js().light_visible("#access-token-input")
 
-    def is_upload_zone_visible(self):                                           # is the upload drop zone visible? (inside shadow DOM)
-        return self.raw_page().locator("upload-step-select").is_visible(timeout=2000)
+    def is_upload_zone_visible(self):                                           # is the upload drop zone present?
+        return self.js().light_visible("upload-step-select")
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Access gate — light DOM (send-access-gate uses innerHTML, not shadow)
@@ -220,15 +219,16 @@ class SG_Send__Browser__Pages(Type_Safe):
 
     def access_gate__submit(self):                                              # click the Go button; wait for gate to respond
         self.raw_page().locator("#access-token-submit").click()
-        # wait for gate to dismiss (upload zone appears) or reject (gate stays visible with error)
+        gate_b64   = str_to_base64("#access-token-input")
+        upload_b64 = str_to_base64("upload-step-select")
+        pred = (f'() => {{'                                                     # gate dismissed (input gone) OR upload zone appeared
+                f' return document.querySelector(atob("{gate_b64}")) === null'
+                f' || document.querySelector(atob("{upload_b64}")) !== null'
+                f'}}')
         try:
-            self.raw_page().wait_for_function(                                  # either gate gone OR upload zone appeared
-                "document.querySelector('#access-token-input') === null "
-                "|| document.querySelector('upload-step-select') !== null",
-                timeout=3000,
-            )
+            self.raw_page().wait_for_function(pred, timeout=3000)
         except Exception:
-            pass                                                                # gate stayed — handled by caller
+            pass                                                                # gate stayed (wrong token) — caller checks state
         return self
 
     def access_gate__enter_and_submit(self, token):                             # combined: fill + submit
@@ -240,7 +240,7 @@ class SG_Send__Browser__Pages(Type_Safe):
     # Upload wizard — Shadow DOM aware
     #
     # Component tree:
-    #   <send-upload>                    (light DOM orchestrator)
+    #   <send-upload>                    (light DOM orchestrator, ._state)
     #     <upload-step-select>           (shadow DOM — #file-input, #drop-zone)
     #     <upload-step-delivery>         (shadow DOM)
     #     <upload-step-share>            (shadow DOM — .share-card[data-mode])
@@ -256,69 +256,47 @@ class SG_Send__Browser__Pages(Type_Safe):
         file_input.set_input_files({"name"    : filename     ,
                                     "mimeType": mime_type    ,
                                     "buffer"  : content_bytes})
-        self.wait(800)                                                              # let wizard auto-advance to delivery
+        # TODO: replace with wait_for_upload_state("delivery") once upload state names are confirmed
+        # Waiting for wizard to auto-advance from select → delivery step
+        self.raw_page().wait_for_timeout(800)
         return self
 
     def upload__click_next(self):                                                   # click the Next / Encrypt & Upload button
         btn = self.raw_page().locator("#upload-next-btn")
         btn.wait_for(state="visible", timeout=5000)
         btn.click()
-        self.wait(500)
+        # TODO: replace with wait_for_upload_state(next_state) once all step state names are confirmed
+        # Waiting for wizard step transition animation/render
+        self.raw_page().wait_for_timeout(500)
         return self
 
     def upload__select_share_mode(self, mode):                                      # click a share mode card: 'combined', 'token', 'separate'
         card = self.raw_page().locator(f'upload-step-share [data-mode="{mode}"]')
         card.wait_for(state="visible", timeout=5000)
         card.click()
-        self.wait(500)                                                              # let wizard auto-advance to confirm
+        # TODO: replace with wait_for_upload_state("confirm") once confirmed
+        # Waiting for wizard to auto-advance from share → confirm step
+        self.raw_page().wait_for_timeout(500)
         return self
 
     def upload__wait_for_complete(self, timeout=20000):                             # wait for upload to finish
         self.wait_for_upload_state("complete", timeout=timeout)
         return self
 
-    def upload__get_combined_link(self):                                            # extract combined link from done step
-        el = self.raw_page().locator("upload-step-done #combined-link")
-        #el.wait_for(state="visible", timeout=5000)
-        return el.text_content().strip()
+    def upload__get_combined_link(self):                                            # extract combined link from done step (shadow DOM)
+        return self.js().text("upload-step-done", "#combined-link")
 
-    def upload__get_friendly_token(self):                                           # extract friendly token from done step
-        #document.querySelector("upload-step-done").shadowRoot.querySelector("#simple-token").innerText
-        #el = self.raw_page().locator("upload-step-done #simple-token")
-        # todo: explore how to make code like the one below to be more generic since it doesn't have the timeout problem that locator has
-        outer_selector =  "upload-step-done"
-        inner_selector = "#simple-token"
-        js__get_simple_token = f"""
-var outer_selector =  "{outer_selector}"
-var inner_selector = "{inner_selector}"
-var node = document.querySelector(outer_selector).shadowRoot.querySelector(inner_selector)
-if (node) {{
-    result = node.innerText
-}} else {{
-    result = null
-}}
-result
-"""
-        result = self.invoke__javascript(js__get_simple_token)
-        return result
+    def upload__get_friendly_token(self):                                           # extract friendly token from done step (shadow DOM)
+        return self.js().text("upload-step-done", "#simple-token")
 
-        #el.wait_for(state="visible", timeout=5000)
-        return el.text_content().strip()
+    def upload__get_full_link(self):                                                # extract full link (token mode) from done step (shadow DOM)
+        return self.js().text("upload-step-done", "#full-link")
 
-    def upload__get_full_link(self):                                                # extract full link (token mode) from done step
-        el = self.raw_page().locator("upload-step-done #full-link")
-        el.wait_for(state="visible", timeout=5000)
-        return el.text_content().strip()
+    def upload__get_link_only(self):                                                # extract link-only URL (separate key mode) from done step (shadow DOM)
+        return self.js().text("upload-step-done", "#link-only")
 
-    def upload__get_link_only(self):                                                # extract link-only URL (separate key mode)
-        el = self.raw_page().locator("upload-step-done #link-only")
-        el.wait_for(state="visible", timeout=5000)
-        return el.text_content().strip()
-
-    def upload__get_decryption_key(self):                                           # extract decryption key (separate key mode)
-        el = self.raw_page().locator("upload-step-done #decryption-key")
-        el.wait_for(state="visible", timeout=5000)
-        return el.text_content().strip()
+    def upload__get_decryption_key(self):                                           # extract decryption key (separate key mode) from done step (shadow DOM)
+        return self.js().text("upload-step-done", "#decryption-key")
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Download page — light DOM (send-download uses this.innerHTML)
@@ -349,12 +327,12 @@ result
         self.wait_for_download_states(["ready", "complete", "error", "entry"], timeout=timeout)
         return self
 
-    def download__wait_for_content(self, text, timeout=15000):                      # wait for decrypted text to appear
+    def download__wait_for_content(self, text, timeout=15000):                      # wait for decrypted text to appear in light DOM
         self.raw_page().locator(f"text={text}").wait_for(state="visible", timeout=timeout)
         return self
 
     def download__save_button_visible(self):                                        # is the Save Locally button present?
-        return self.raw_page().locator("#sf-save").is_visible(timeout=3000)
+        return self.js().light_visible("#sf-save")
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Workflows — multi-step sequences (Layer 2 preview)
@@ -363,39 +341,36 @@ result
     def workflow__upload_combined(self, token, filename, content_bytes,              # full combined link upload flow
                                   mime_type="text/plain"                ):
         self.page__root()
-        self.wait_for_page_ready()
         if self.is_access_gate_visible():
             self.access_gate__enter_and_submit(token)
         self.upload__set_file(filename, content_bytes, mime_type)
-        self.upload__click_next()                                                   # delivery → share
-        self.upload__select_share_mode("combined")                                  # auto-advances to confirm
-        self.upload__click_next()                                                   # confirm → encrypt & upload
+        self.upload__click_next()                                                    # delivery → share
+        self.upload__select_share_mode("combined")                                   # auto-advances to confirm
+        self.upload__click_next()                                                    # confirm → encrypt & upload
         self.upload__wait_for_complete()
         return self.upload__get_combined_link()
 
     def workflow__upload_friendly_token(self, token, filename, content_bytes,        # full simple token upload flow
                                         mime_type="text/plain"               ):
         self.page__root()
-        self.wait_for_page_ready()
         if self.is_access_gate_visible():
             self.access_gate__enter_and_submit(token)
         self.upload__set_file(filename, content_bytes, mime_type)
-        self.upload__click_next()                                                   # delivery → share
-        self.upload__select_share_mode("token")                                     # auto-advances to confirm
-        self.upload__click_next()                                                   # confirm → encrypt & upload
+        self.upload__click_next()                                                    # delivery → share
+        self.upload__select_share_mode("token")                                      # auto-advances to confirm
+        self.upload__click_next()                                                    # confirm → encrypt & upload
         self.upload__wait_for_complete()
         return self.upload__get_friendly_token()
 
     def workflow__upload_separate_key(self, token, filename, content_bytes,          # full separate key upload flow
                                       mime_type="text/plain"              ):
         self.page__root()
-        self.wait_for_page_ready()
         if self.is_access_gate_visible():
             self.access_gate__enter_and_submit(token)
         self.upload__set_file(filename, content_bytes, mime_type)
-        self.upload__click_next()                                                   # delivery → share
-        self.upload__select_share_mode("separate")                                  # auto-advances to confirm
-        self.upload__click_next()                                                   # confirm → encrypt & upload
+        self.upload__click_next()                                                    # delivery → share
+        self.upload__select_share_mode("separate")                                   # auto-advances to confirm
+        self.upload__click_next()                                                    # confirm → encrypt & upload
         self.upload__wait_for_complete()
         link = self.upload__get_link_only()
         key  = self.upload__get_decryption_key()

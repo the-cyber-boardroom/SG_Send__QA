@@ -43,9 +43,7 @@ class test_SG_Send__Browser__Pages__Workflow(TestCase):                         
     def test__02__workflow__get_token_and_persist(self):                         # extract token and store in localStorage
         simple_token = self.sg_send.upload__get_friendly_token()
         assert simple_token and len(simple_token.split("-")) == 3               # word-word-NNNN
-        self.sg_send.js_evaluate(
-            f"localStorage.setItem('qa-workflow-token', '{simple_token}')"
-        )
+        self.sg_send.js().storage_set('qa-workflow-token', simple_token)        # persist via JS query layer (base64-safe)
         self.__class__.simple_token = simple_token
 
     def test__03__workflow__navigate_to_welcome_with_token(self):                # friendly token -> welcome page resolves
@@ -79,13 +77,12 @@ class test_SG_Send__Browser__Pages__Workflow(TestCase):                         
     def test__06__workflow__localStorage_handoff(self):                          # upload stores ID + key; read back
         tid, key_b64 = self.helper.upload_encrypted(SAMPLE_CONTENT, SAMPLE_FILENAME)
 
-        self.sg_send.js_evaluate(
-            f"localStorage.setItem('qa-transfer-id',  '{tid}');"
-            f"localStorage.setItem('qa-transfer-key', '{key_b64}');"
-        )
+        js = self.sg_send.js()
+        js.storage_set('qa-transfer-id',  tid)                                  # base64-safe write
+        js.storage_set('qa-transfer-key', key_b64)
 
-        read_tid = self.sg_send.js_evaluate("localStorage.getItem('qa-transfer-id')")
-        read_key = self.sg_send.js_evaluate("localStorage.getItem('qa-transfer-key')")
+        read_tid = js.storage_get('qa-transfer-id')                             # base64-safe read
+        read_key = js.storage_get('qa-transfer-key')
 
         assert read_tid == tid
         assert read_key == key_b64

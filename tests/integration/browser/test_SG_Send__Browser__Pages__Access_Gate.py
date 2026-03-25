@@ -20,7 +20,7 @@ class test_SG_Send__Browser__Pages__Access_Gate(TestCase):                      
 
     def _clear_token_and_go_root(self):                                          # helper: remove token from localStorage then navigate to root
         self.sg_send.page__qa_setup()
-        self.sg_send.js_evaluate("localStorage.removeItem('sgraph-send-token')")
+        self.sg_send.js().storage_remove('sgraph-send-token')                   # base64-safe remove
         self.sg_send.page__root()
         self.sg_send.wait_for_selector_visible("#access-token-input")           # event-based: wait for gate input to appear
 
@@ -33,9 +33,7 @@ class test_SG_Send__Browser__Pages__Access_Gate(TestCase):                      
     def test__02__gate__enter_token_into_input(self):                            # can type into the token input field
         self._clear_token_and_go_root()
         self.sg_send.access_gate__enter_token("test-token-12345")
-        value = self.sg_send.js_evaluate(
-            "document.querySelector('#access-token-input')?.value"
-        )
+        value = self.sg_send.js().light_value("#access-token-input")            # read input value through JS query layer
         assert value == "test-token-12345"
 
     def test__03__gate__wrong_token_shows_error_or_stays(self):                  # gate responds to wrong token submission
