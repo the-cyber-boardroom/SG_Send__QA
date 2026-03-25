@@ -34,7 +34,7 @@ class test_SG_Send__Browser__Pages__State(TestCase):                            
 
 
     def test_wait_for_page_ready(self):                                         # body[data-ready] appears after init
-        ready = self.sg_send.js_evaluate("document.body.getAttribute('data-ready')")     # confirm that .wait_for_page_ready() is not needed
+        ready = self.sg_send.js().light_attribute("body", "data-ready")         # read via JS query layer
         assert ready == 'true'
 
     def test_visible_text__no_script_content(self):                             # inner_text excludes <script> tags
@@ -51,5 +51,5 @@ class test_SG_Send__Browser__Pages__State(TestCase):                            
     #     assert 'gallery' in self.sg_send.url()
 
     def test_js__document_title(self):                                          # JS eval works
-        title = self.sg_send.js_evaluate('document.title')
+        title = self.sg_send.js().light_text("title")                           # read via JS query layer
         assert 'SG/Send' in title

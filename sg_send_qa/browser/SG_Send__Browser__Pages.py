@@ -170,6 +170,11 @@ class SG_Send__Browser__Pages(Type_Safe):
         self.raw_page().wait_for_function(pred, timeout=timeout)
         return self
 
+    def wait_for_upload_states(self, states, timeout=10000):                    # wait for upload wizard to reach any of the given states
+        pred = self.js().predicate__light_property_in("send-upload", "_state", states)
+        self.raw_page().wait_for_function(pred, timeout=timeout)
+        return self
+
     def wait_for_download_state(self, state, timeout=15000):                    # wait for send-download to reach a state
         pred = self.js().predicate__light_property_equals("send-download", "state", state)
         self.raw_page().wait_for_function(pred, timeout=timeout)                # states: loading|entry|ready|decrypting|complete|error
@@ -256,27 +261,31 @@ class SG_Send__Browser__Pages(Type_Safe):
         file_input.set_input_files({"name"    : filename     ,
                                     "mimeType": mime_type    ,
                                     "buffer"  : content_bytes})
-        # TODO: replace with wait_for_upload_state("delivery") once upload state names are confirmed
-        # Waiting for wizard to auto-advance from select → delivery step
-        self.raw_page().wait_for_timeout(800)
+        self.wait_for_upload_states(['file-ready', 'choosing-delivery'])            # wait for wizard to advance from idle after file selection
         return self
 
     def upload__click_next(self):                                                   # click the Next / Encrypt & Upload button
         btn = self.raw_page().locator("#upload-next-btn")
         btn.wait_for(state="visible", timeout=5000)
+        state_before = self.upload_state()                                          # capture state before click
         btn.click()
-        # TODO: replace with wait_for_upload_state(next_state) once all step state names are confirmed
-        # Waiting for wizard step transition animation/render
-        self.raw_page().wait_for_timeout(500)
+        # wait for state to change from whatever it was before — works regardless of which step we're on
+        pre_b64 = str_to_base64(str(state_before))
+        pred    = (f'() => {{'
+                   f' var el = document.querySelector(atob("{str_to_base64("send-upload")}")); '
+                   f' return el != null && el[atob("{str_to_base64("_state")}")] !== atob("{pre_b64}") '
+                   f'}}')
+        try:
+            self.raw_page().wait_for_function(pred, timeout=3000)
+        except Exception:
+            pass                                                                    # upload may jump quickly through states; caller handles completion
         return self
 
     def upload__select_share_mode(self, mode):                                      # click a share mode card: 'combined', 'token', 'separate'
         card = self.raw_page().locator(f'upload-step-share [data-mode="{mode}"]')
         card.wait_for(state="visible", timeout=5000)
         card.click()
-        # TODO: replace with wait_for_upload_state("confirm") once confirmed
-        # Waiting for wizard to auto-advance from share → confirm step
-        self.raw_page().wait_for_timeout(500)
+        self.wait_for_upload_state('confirming')                                    # wait for wizard to advance from choosing-share → confirming
         return self
 
     def upload__wait_for_complete(self, timeout=20000):                             # wait for upload to finish
