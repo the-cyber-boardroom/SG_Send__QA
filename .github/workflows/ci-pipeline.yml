@@ -114,11 +114,43 @@ jobs:
             tests/qa/v030/p0__zero_knowledge/ \
             -v --tb=short --timeout=30
 
+  run-v030-browser-tests:
+    name: "Run v030 P0 Browser Tests"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: [run-unit-tests]
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install SG/Send (for test server + UI package)
+        run: |
+          git clone --depth 1 -b dev https://github.com/the-cyber-boardroom/SGraph-AI__App__Send /tmp/sgraph-send-ref
+          pip install -e /tmp/sgraph-send-ref --no-deps
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest-timeout
+          python -m playwright install --with-deps chromium
+
+      - name: Run v030 P0 browser tests (upload → download round-trip)
+        timeout-minutes: 12
+        run: |
+          python -m pytest \
+            tests/qa/v030/p0__upload__single_file/ \
+            tests/qa/v030/p0__combined_link/ \
+            tests/qa/v030/p0__friendly_token/ \
+            -v --tb=short --timeout=120
+
   increment-tag:
     name: Increment Tag
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [run-unit-tests, run-integration-tests, run-v030-tests]
+    needs: [run-unit-tests, run-integration-tests, run-v030-tests, run-v030-browser-tests]
     if: inputs.should_increment_tag
     steps:
       - uses: actions/checkout@v5

@@ -12,7 +12,10 @@ Happy-path end-to-end test:
 import pytest
 
 from playwright.sync_api import expect
-from tests.qa.v030.browser_helpers import goto, handle_access_gate
+from tests.qa.v030.browser_helpers import (
+    goto, handle_access_gate,
+    wait_for_upload_state, wait_for_upload_states,
+)
 
 pytestmark = pytest.mark.p0
 
@@ -25,10 +28,10 @@ def _upload_file(page, ui_url, send_server, screenshots, filename, content_bytes
 
     Wizard behaviour (send-upload.js):
       - set_input_files triggers _setFile() → _advanceToDelivery() automatically.
-        A brief pause (800ms) lets the wizard register the file before we click Next.
+        Wait for wizard state before clicking Next.
       - Clicking a share card emits step-share-selected → wizard auto-advances to
-        confirm.  A brief pause (500ms) lets the transition settle before clicking Next.
-    Minimal button sequence: <pause> → [Next] → <card click> → <pause> → [Encrypt & Upload]
+        confirm.  Wait for 'confirming' state before proceeding.
+    Minimal button sequence: [Next] → <card click> → [Encrypt & Upload]
     """
     goto(page, f"{ui_url}/en-gb/")
     handle_access_gate(page, send_server.access_token)
@@ -38,8 +41,8 @@ def _upload_file(page, ui_url, send_server, screenshots, filename, content_bytes
         "mimeType": "text/plain",
         "buffer"  : content_bytes,
     })
-    # Brief pause for wizard to register file and auto-advance to delivery step
-    page.wait_for_timeout(800)
+    # Wait for wizard to register file and auto-advance to delivery step
+    wait_for_upload_states(page, ["file-ready", "choosing-delivery"])
     screenshots.capture(page, "01_file_selected", "File selected — delivery step")
 
     # Delivery → Share mode
@@ -49,7 +52,7 @@ def _upload_file(page, ui_url, send_server, screenshots, filename, content_bytes
 
     # Select combined link — auto-advances to confirm step
     page.locator('[data-mode="combined"]').click()
-    page.wait_for_timeout(500)  # let confirm step transition settle
+    wait_for_upload_state(page, "confirming")
     screenshots.capture(page, "03_mode_selected", "Combined link selected")
 
     # Confirm → Encrypt & Upload — done step shows the link as <a href>

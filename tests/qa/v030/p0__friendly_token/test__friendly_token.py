@@ -12,7 +12,11 @@ Flow:
 import pytest
 import re
 
-from tests.qa.v030.browser_helpers import goto, handle_access_gate
+from tests.qa.v030.browser_helpers import (
+    goto, handle_access_gate,
+    wait_for_upload_state, wait_for_upload_states,
+    wait_for_download_states,
+)
 
 pytestmark = pytest.mark.p0
 
@@ -35,21 +39,21 @@ def _upload_with_simple_token(page, ui_url, send_server, screenshots, filename="
         "name": filename, "mimeType": "text/plain",
         "buffer": SAMPLE_CONTENT.encode(),
     })
-    page.wait_for_timeout(800)
+    wait_for_upload_states(page, ["file-ready", "choosing-delivery"])
     screenshots.capture(page, "01_file_selected", "File selected (delivery step active)")
 
     # Delivery → Share mode
     page.locator("#upload-next-btn").click()
-    page.wait_for_timeout(800)
+    page.locator("[data-mode]").first.wait_for(state="visible")
 
     # Select Simple Token — click auto-advances to confirm step
     page.locator('[data-mode="token"]').click()
-    page.wait_for_timeout(500)
+    wait_for_upload_state(page, "confirming")
     screenshots.capture(page, "02_simple_token_selected", "Simple Token selected")
 
     # Confirm → Encrypt & Upload
     page.locator("#upload-next-btn").click()
-    page.wait_for_timeout(5000)
+    wait_for_upload_state(page, "complete", timeout=20_000)
     screenshots.capture(page, "03_upload_complete", "Upload complete")
 
     # Extract the friendly token from the Done step.
@@ -90,7 +94,7 @@ class TestFriendlyToken:
         # Open token in new tab
         resolve_page = page.context.new_page()
         goto(resolve_page, f"{ui_url}/en-gb/browse/#{friendly_token}")
-        resolve_page.wait_for_timeout(4000)
+        wait_for_download_states(resolve_page, ["complete", "error"])
         screenshots.capture(resolve_page, "06_token_resolved", f"Token '{friendly_token}' resolved")
 
         resolve_text = resolve_page.text_content("body") or ""
@@ -122,7 +126,7 @@ class TestFriendlyToken:
 
         resolve_page = page.context.new_page()
         goto(resolve_page, f"{ui_url}/en-gb/browse/#{friendly_token}")
-        resolve_page.wait_for_timeout(4000)
+        wait_for_download_states(resolve_page, ["complete", "error"])
         screenshots.capture(resolve_page, "05_token_resolved", f"Token '{friendly_token}'")
 
         resolve_text = resolve_page.text_content("body") or ""
@@ -153,7 +157,7 @@ class TestFriendlyToken:
 
         resolve_page = page.context.new_page()
         goto(resolve_page, f"{ui_url}/en-gb/browse/#{friendly_token}")
-        resolve_page.wait_for_timeout(4000)
+        wait_for_download_states(resolve_page, ["complete", "error"])
 
         final_url = resolve_page.url
         screenshots.capture(resolve_page, "05_hash_after_decrypt", f"URL after decrypt: {final_url}")
