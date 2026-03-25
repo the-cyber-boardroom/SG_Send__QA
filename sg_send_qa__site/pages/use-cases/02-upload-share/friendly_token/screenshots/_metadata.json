@@ -52,38 +52,38 @@
     },
     {
       "name": "05_token_captured",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
-      "description": "Token: water-climb-1061"
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
+      "description": "Token: beach-tango-4041"
     },
     {
       "name": "06_token_resolved",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
-      "description": "Token 'water-climb-1061' resolved"
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
+      "description": "Token 'beach-tango-4041' resolved"
     },
     {
       "name": "05_token_resolved",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
-      "description": "Token 'jungle-valve-4205'"
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
+      "description": "Token 'verse-rain-9832'"
     },
     {
       "name": "01_file_selected",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/01_file_selected.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/01_file_selected.png",
       "description": "File selected (delivery step active)"
     },
     {
       "name": "02_simple_token_selected",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/02_simple_token_selected.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/02_simple_token_selected.png",
       "description": "Simple Token selected"
     },
     {
       "name": "03_upload_complete",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/03_upload_complete.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/03_upload_complete.png",
       "description": "Upload complete"
     },
     {
       "name": "05_hash_after_decrypt",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
-      "description": "URL after decrypt: http://localhost:10062/en-gb/browse/#umber-ocean-2218"
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
+      "description": "URL after decrypt: http://localhost:10062/en-gb/browse/#ember-birch-5841"
     }
   ]
 }

@@ -12,6 +12,12 @@
           "composite": true
         },
         {
+          "id": "access_gate_standalone",
+          "title": "Access Gate Standalone",
+          "group_id": "01-access-gate",
+          "composite": false
+        },
+        {
           "id": "bogus_token_shows_error",
           "title": "Bogus Token Shows Error",
           "group_id": "01-access-gate",
@@ -35,6 +41,12 @@
           "title": "Friendly Token",
           "group_id": "02-upload-share",
           "composite": true
+        },
+        {
+          "id": "upload__single_file",
+          "title": "Upload  Single File",
+          "group_id": "02-upload-share",
+          "composite": true
         }
       ]
     },
@@ -54,6 +66,18 @@
           "title": "Entry Form Shown Without Hash",
           "group_id": "03-separate-key",
           "composite": false
+        },
+        {
+          "id": "manual_entry",
+          "title": "Manual Entry",
+          "group_id": "03-separate-key",
+          "composite": true
+        },
+        {
+          "id": "separate_key",
+          "title": "Separate Key",
+          "group_id": "03-separate-key",
+          "composite": true
         },
         {
           "id": "valid_transfer_id_resolves",
@@ -111,6 +135,12 @@
           "composite": false
         },
         {
+          "id": "navigation",
+          "title": "Navigation",
+          "group_id": "04-navigation",
+          "composite": true
+        },
+        {
           "id": "route_handling",
           "title": "Route Handling",
           "group_id": "04-navigation",
@@ -140,6 +170,12 @@
           "title": "Action Buttons Present",
           "group_id": "05-gallery",
           "composite": false
+        },
+        {
+          "id": "download__gallery",
+          "title": "Download  Gallery",
+          "group_id": "05-gallery",
+          "composite": true
         },
         {
           "id": "gallery_page_loads",
@@ -185,6 +221,12 @@
           "composite": false
         },
         {
+          "id": "download__browse",
+          "title": "Download  Browse",
+          "group_id": "06-browse",
+          "composite": true
+        },
+        {
           "id": "file_click_opens_preview",
           "title": "File Click Opens Preview",
           "group_id": "06-browse",
@@ -201,6 +243,12 @@
           "title": "Keyboard Navigation J K",
           "group_id": "06-browse",
           "composite": false
+        },
+        {
+          "id": "upload__folder",
+          "title": "Upload  Folder",
+          "group_id": "06-browse",
+          "composite": true
         }
       ]
     },
@@ -214,6 +262,12 @@
           "title": "Copy Url Contains Key",
           "group_id": "07-viewer",
           "composite": false
+        },
+        {
+          "id": "download__viewer",
+          "title": "Download  Viewer",
+          "group_id": "07-viewer",
+          "composite": true
         },
         {
           "id": "info_tab_present",
@@ -269,6 +323,12 @@
           "title": "Pdf Lightbox Opens",
           "group_id": "08-pdf",
           "composite": false
+        },
+        {
+          "id": "pdf_present",
+          "title": "Pdf Present",
+          "group_id": "08-pdf",
+          "composite": true
         },
         {
           "id": "present_button_click_enters_fullscreen",

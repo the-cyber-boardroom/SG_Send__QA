@@ -45,47 +45,47 @@
   "screenshots": [
     {
       "name": "01_upload_page",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_upload_page.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_upload_page.png",
       "description": "Upload page loaded"
     },
     {
       "name": "05_download_page",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/05_download_page.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/05_download_page.png",
       "description": "Download page \u2014 awaiting decrypt"
     },
     {
       "name": "06_decrypted",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/06_decrypted.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/06_decrypted.png",
       "description": "Content decrypted and visible"
     },
     {
       "name": "01_file_selected",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_file_selected.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_file_selected.png",
       "description": "File selected \u2014 delivery step"
     },
     {
       "name": "02_share_step",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/02_share_step.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/02_share_step.png",
       "description": "Share mode step"
     },
     {
       "name": "03_mode_selected",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/03_mode_selected.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/03_mode_selected.png",
       "description": "Combined link selected"
     },
     {
       "name": "04_upload_done",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/04_upload_done.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/04_upload_done.png",
       "description": "Upload complete \u2014 link shown"
     },
     {
       "name": "07_link_format",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/07_link_format.png",
-      "description": "Link verified: http://localhost:10062/en-gb/browse/#f69783b2da6d/7kEprSUHirzPEUfzXb_QARPW6hU8hB"
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/07_link_format.png",
+      "description": "Link verified: http://localhost:10062/en-gb/browse/#c419e004d960/C7GKS6VAOu4HsoRQ9tGEdTKpnP6pi9"
     },
     {
       "name": "01_footer",
-      "path": "sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_footer.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_footer.png",
       "description": "Footer showing version"
     }
   ]

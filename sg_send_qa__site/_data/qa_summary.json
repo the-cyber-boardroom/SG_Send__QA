@@ -1,73 +1,73 @@
 {
-  "generated_at": "2026-03-23T17:05:53Z",
-  "version": "v0.2.16",
-  "total_tests": 31,
-  "total_screenshots": 46,
+  "generated_at": "2026-03-25T18:32:50Z",
+  "version": "v0.2.28",
+  "total_tests": 65,
+  "total_screenshots": 108,
   "zero_evidence": 10,
   "groups": [
     {
       "id": "01-access-gate",
       "name": "Access Gate",
       "icon": "🔐",
-      "total": 2,
-      "with_evidence": 2,
+      "total": 3,
+      "with_evidence": 3,
       "coverage_pct": 100
     },
     {
       "id": "02-upload-share",
       "name": "Upload & Share",
       "icon": "📤",
-      "total": 2,
-      "with_evidence": 2,
+      "total": 3,
+      "with_evidence": 3,
       "coverage_pct": 100
     },
     {
       "id": "03-separate-key",
       "name": "Separate Key",
       "icon": "🗝️",
-      "total": 3,
-      "with_evidence": 3,
+      "total": 5,
+      "with_evidence": 5,
       "coverage_pct": 100
     },
     {
       "id": "04-navigation",
       "name": "Navigation",
       "icon": "🧭",
-      "total": 10,
-      "with_evidence": 6,
-      "coverage_pct": 60
+      "total": 11,
+      "with_evidence": 7,
+      "coverage_pct": 64
     },
     {
       "id": "05-gallery",
       "name": "Gallery",
       "icon": "🖼️",
-      "total": 6,
-      "with_evidence": 5,
-      "coverage_pct": 83
+      "total": 7,
+      "with_evidence": 6,
+      "coverage_pct": 86
     },
     {
       "id": "06-browse",
       "name": "Browse",
       "icon": "📂",
-      "total": 4,
-      "with_evidence": 3,
-      "coverage_pct": 75
+      "total": 6,
+      "with_evidence": 5,
+      "coverage_pct": 83
     },
     {
       "id": "07-viewer",
       "name": "Viewer",
       "icon": "👁️",
-      "total": 8,
-      "with_evidence": 7,
-      "coverage_pct": 88
+      "total": 9,
+      "with_evidence": 8,
+      "coverage_pct": 89
     },
     {
       "id": "08-pdf",
       "name": "PDF",
       "icon": "📄",
-      "total": 3,
-      "with_evidence": 0,
-      "coverage_pct": 0
+      "total": 4,
+      "with_evidence": 1,
+      "coverage_pct": 25
     }
   ],
   "needs_attention": [
