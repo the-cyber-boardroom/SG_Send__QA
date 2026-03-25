@@ -1,6 +1,6 @@
 ---
 title: "Use Case: Download  Gallery"
-permalink: /pages/use-cases/download__gallery/
+permalink: /pages/use-cases/05-gallery/download__gallery/
 ---
 
 # Download  Gallery

@@ -1,6 +1,6 @@
 ---
 title: "Use Case: Access Gate Standalone"
-permalink: /pages/use-cases/access_gate_standalone/
+permalink: /pages/use-cases/01-access-gate/access_gate_standalone/
 ---
 
 # Access Gate Standalone

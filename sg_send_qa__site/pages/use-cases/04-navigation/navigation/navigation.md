@@ -1,6 +1,6 @@
 ---
 title: "Use Case: Navigation"
-permalink: /pages/use-cases/navigation/
+permalink: /pages/use-cases/04-navigation/navigation/
 ---
 
 # Navigation

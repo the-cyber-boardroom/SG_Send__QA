@@ -1,6 +1,6 @@
 ---
 title: "Use Case: Upload  Single File"
-permalink: /pages/use-cases/upload__single_file/
+permalink: /pages/use-cases/02-upload-share/upload__single_file/
 ---
 
 # Upload  Single File
@@ -72,7 +72,7 @@ Upload complete — link shown
 
 ### 07 Link Format
 
-Link verified: http://localhost:10062/en-gb/browse/#c419e004d960/C7GKS6VAOu4HsoRQ9tGEdTKpnP6pi9
+Link verified: http://localhost:10062/en-gb/browse/#f69783b2da6d/7kEprSUHirzPEUfzXb_QARPW6hU8hB
 
 ![07 Link Format](screenshots/07_link_format.png)
 
