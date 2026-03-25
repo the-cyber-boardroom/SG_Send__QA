@@ -18,20 +18,20 @@ class test_SG_Send__Browser__Pages__Access_Gate(TestCase):                      
     def setUp(self):
         Stderr().start()
 
+    def _clear_token_and_go_root(self):                                          # helper: remove token from localStorage then navigate to root
+        self.sg_send.page__qa_setup()
+        self.sg_send.js_evaluate("localStorage.removeItem('sgraph-send-token')")
+        self.sg_send.page__root()
+        self.sg_send.wait_for_selector_visible("#access-token-input")           # event-based: wait for gate input to appear
+
     # ---- Access gate visibility --------------------------------------------
 
     def test__01__gate__visible_without_token(self):                             # gate shows when no token in localStorage
-        self.sg_send.page__qa_setup()
-        self.sg_send.js_evaluate("localStorage.removeItem('sgraph-send-token')")
-        self.sg_send.page__root()
-        self.sg_send.wait(1500)
+        self._clear_token_and_go_root()
         assert self.sg_send.is_access_gate_visible() is True
 
     def test__02__gate__enter_token_into_input(self):                            # can type into the token input field
-        self.sg_send.page__qa_setup()
-        self.sg_send.js_evaluate("localStorage.removeItem('sgraph-send-token')")
-        self.sg_send.page__root()
-        self.sg_send.wait(1500)
+        self._clear_token_and_go_root()
         self.sg_send.access_gate__enter_token("test-token-12345")
         value = self.sg_send.js_evaluate(
             "document.querySelector('#access-token-input')?.value"
@@ -39,12 +39,8 @@ class test_SG_Send__Browser__Pages__Access_Gate(TestCase):                      
         assert value == "test-token-12345"
 
     def test__03__gate__wrong_token_shows_error_or_stays(self):                  # gate responds to wrong token submission
-        self.sg_send.page__qa_setup()
-        self.sg_send.js_evaluate("localStorage.removeItem('sgraph-send-token')")
-        self.sg_send.page__root()
-        self.sg_send.wait(1500)
-        self.sg_send.access_gate__enter_and_submit("wrong-token-xxxxx")
-        self.sg_send.wait(1500)                                                 # let gate respond
+        self._clear_token_and_go_root()
+        self.sg_send.access_gate__enter_and_submit("wrong-token-xxxxx")        # submit internally waits for gate response
         text               = self.sg_send.visible_text().lower()
         gate_still_visible = self.sg_send.is_access_gate_visible()
         # The local test server may accept any token (in-memory, no real validation)
@@ -57,12 +53,9 @@ class test_SG_Send__Browser__Pages__Access_Gate(TestCase):                      
                 gate_still_visible or gate_dismissed_and_upload_visible)
 
     def test__04__gate__correct_token_hides_gate(self):                          # valid token passes the gate
-        self.sg_send.page__qa_setup()
-        self.sg_send.js_evaluate("localStorage.removeItem('sgraph-send-token')")
-        self.sg_send.page__root()
-        self.sg_send.wait(1500)
-        self.sg_send.access_gate__enter_and_submit(self.access_token)
-        self.sg_send.wait(2000)                                                 # let gate resolve + upload page render
+        self._clear_token_and_go_root()
+        self.sg_send.access_gate__enter_and_submit(self.access_token)          # submit waits for gate to respond
+        self.sg_send.wait_for_selector_visible("upload-step-select")            # event-based: wait for upload zone to appear
         assert self.sg_send.is_access_gate_visible() is False
         assert self.sg_send.is_upload_zone_visible() is True
 
@@ -70,6 +63,6 @@ class test_SG_Send__Browser__Pages__Access_Gate(TestCase):                      
         self.sg_send.page__qa_setup()
         self.sg_send.storage__set_token(self.access_token)
         self.sg_send.page__root()
-        self.sg_send.wait(1500)
+        self.sg_send.wait_for_selector_visible("upload-step-select")            # event-based: upload zone present = gate bypassed
         assert self.sg_send.is_access_gate_visible() is False
         assert self.sg_send.is_upload_zone_visible() is True
