@@ -12,5 +12,4 @@ jobs:
       git_branch          : 'main'
       release_type        : 'major'
       should_increment_tag: true
-      target_url          : 'https://send.sgraph.ai'
     secrets: inherit
