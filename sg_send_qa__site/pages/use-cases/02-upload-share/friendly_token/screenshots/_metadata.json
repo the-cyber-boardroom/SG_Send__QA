@@ -53,17 +53,17 @@
     {
       "name": "05_token_captured",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
-      "description": "Token: beach-tango-4041"
+      "description": "Token: shell-noble-9040"
     },
     {
       "name": "06_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
-      "description": "Token 'beach-tango-4041' resolved"
+      "description": "Token 'shell-noble-9040' resolved"
     },
     {
       "name": "05_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
-      "description": "Token 'verse-rain-9832'"
+      "description": "Token 'focus-scroll-1646'"
     },
     {
       "name": "01_file_selected",
@@ -83,7 +83,7 @@
     {
       "name": "05_hash_after_decrypt",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
-      "description": "URL after decrypt: http://localhost:10062/en-gb/browse/#ember-birch-5841"
+      "description": "URL after decrypt: http://localhost:10062/en-gb/browse/#atlas-trail-7844"
     }
   ]
 }
