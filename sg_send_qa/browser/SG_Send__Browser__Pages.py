@@ -162,6 +162,30 @@ class SG_Send__Browser__Pages(Type_Safe):
         )
         return self
 
+    def wait_for_download_state(self, state, timeout=15000):                    # wait for send-download component to reach a state
+        self.raw_page().wait_for_function(                                      # states: loading|entry|ready|decrypting|complete|error
+            f"document.querySelector('send-download')?.state === '{state}'",
+            timeout=timeout,
+        )
+        return self
+
+    def wait_for_download_states(self, states, timeout=15000):                  # wait for any of multiple send-download states
+        states_js = str(states).replace("'", '"')                               # JS-safe list
+        self.raw_page().wait_for_function(
+            f"(function(){{ var s = document.querySelector('send-download')?.state; "
+            f"return {states_js}.indexOf(s) !== -1; }})()",
+            timeout=timeout,
+        )
+        return self
+
+    def wait_for_selector_hidden(self, selector, timeout=5000):                 # wait for an element to disappear
+        self.raw_page().wait_for_selector(selector, state="hidden", timeout=timeout)
+        return self
+
+    def wait_for_selector_visible(self, selector, timeout=5000):                # wait for an element to appear
+        self.raw_page().wait_for_selector(selector, state="visible", timeout=timeout)
+        return self
+
     # ═══════════════════════════════════════════════════════════════════════════
     # State queries
     # ═══════════════════════════════════════════════════════════════════════════
@@ -194,9 +218,17 @@ class SG_Send__Browser__Pages(Type_Safe):
         gate_input.fill(token)
         return self
 
-    def access_gate__submit(self):                                              # click the Go button (not the eye icon)
+    def access_gate__submit(self):                                              # click the Go button; wait for gate to respond
         self.raw_page().locator("#access-token-submit").click()
-        self.wait(500)                                                          # let access gate swap content
+        # wait for gate to dismiss (upload zone appears) or reject (gate stays visible with error)
+        try:
+            self.raw_page().wait_for_function(                                  # either gate gone OR upload zone appeared
+                "document.querySelector('#access-token-input') === null "
+                "|| document.querySelector('upload-step-select') !== null",
+                timeout=3000,
+            )
+        except Exception:
+            pass                                                                # gate stayed — handled by caller
         return self
 
     def access_gate__enter_and_submit(self, token):                             # combined: fill + submit
@@ -298,9 +330,11 @@ result
         key_input.fill(key)
         return self
 
-    def download__click_decrypt(self):                                              # click the Decrypt button
-        self.raw_page().locator("#decrypt-btn").click()
-        self.wait(3000)                                                             # allow decrypt + render
+    def download__click_decrypt(self, timeout=20000):                               # click Decrypt & wait for state change
+        btn = self.raw_page().locator("#decrypt-btn")
+        btn.wait_for(state="visible", timeout=5000)
+        btn.click()
+        self.wait_for_download_states(["complete", "error"], timeout=timeout)       # wait for decrypt pipeline to finish
         return self
 
     def download__enter_manual_id(self, text):                                      # enter transfer ID in manual entry form
@@ -309,9 +343,10 @@ result
         entry.fill(text)
         return self
 
-    def download__submit_manual_entry(self):                                        # submit the manual entry form
+    def download__submit_manual_entry(self, timeout=10000):                         # submit manual entry; wait for response
         self.raw_page().locator("#entry-btn").click()
-        self.wait(2000)
+        # after submit: may reach ready/complete/error OR stay in entry with inline error
+        self.wait_for_download_states(["ready", "complete", "error", "entry"], timeout=timeout)
         return self
 
     def download__wait_for_content(self, text, timeout=15000):                      # wait for decrypted text to appear

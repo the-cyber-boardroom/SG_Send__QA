@@ -37,13 +37,12 @@ class test_SG_Send__Browser__Pages__Workflow(TestCase):                         
             _.upload__click_next()                                              # -> choosing-share
             _.upload__select_share_mode("token")                               # -> confirming
             _.upload__click_next()                                             # -> uploading
-            _.upload__wait_for_complete()
+            _.upload__wait_for_complete()                                      # event-based: polls send-upload._state
             assert _.upload_state() == "complete"
 
     def test__02__workflow__get_token_and_persist(self):                         # extract token and store in localStorage
         simple_token = self.sg_send.upload__get_friendly_token()
         assert simple_token and len(simple_token.split("-")) == 3               # word-word-NNNN
-        # persist for downstream test
         self.sg_send.js_evaluate(
             f"localStorage.setItem('qa-workflow-token', '{simple_token}')"
         )
@@ -51,9 +50,8 @@ class test_SG_Send__Browser__Pages__Workflow(TestCase):                         
 
     def test__03__workflow__navigate_to_welcome_with_token(self):                # friendly token -> welcome page resolves
         self.sg_send.page__welcome()
-        self.sg_send.wait(1500)                                                 # let send-welcome render
+        self.sg_send.wait_for_selector_visible("send-header")                   # wait for header component to appear
         text = self.sg_send.visible_text()
-        # welcome page should be reachable -- not an error
         assert "error" not in text.lower() or len(text) > 200
 
     # ---- Upload via API (transfer_helper), read via browser -----------------
@@ -62,13 +60,11 @@ class test_SG_Send__Browser__Pages__Workflow(TestCase):                         
         tid, key_b64 = self.helper.upload_encrypted(SAMPLE_CONTENT, SAMPLE_FILENAME)
         assert tid and key_b64
 
-        # store in class for subsequent tests
         self.__class__.transfer_id = tid
         self.__class__.key_b64     = key_b64
 
-        # navigate browser to the download hash URL
         self.sg_send.page__browse_with_hash(tid, key_b64)
-        self.sg_send.wait(4000)                                                 # decrypt + render
+        self.sg_send.wait_for_download_state("complete")                        # event-based: wait for decrypt pipeline
 
         text = self.sg_send.visible_text()
         assert SAMPLE_CONTENT.decode() in text or SAMPLE_FILENAME in text
@@ -76,14 +72,13 @@ class test_SG_Send__Browser__Pages__Workflow(TestCase):                         
     def test__05__workflow__api_upload_gallery_view(self):                       # API upload -> gallery hash navigation
         tid, key_b64 = self.helper.upload_encrypted(SAMPLE_CONTENT, SAMPLE_FILENAME)
         self.sg_send.page__gallery_with_hash(tid, key_b64)
-        self.sg_send.wait(4000)
+        self.sg_send.wait_for_download_state("complete")
         text = self.sg_send.visible_text()
         assert "error" not in text.lower() or len(text) > 100
 
     def test__06__workflow__localStorage_handoff(self):                          # upload stores ID + key; read back
         tid, key_b64 = self.helper.upload_encrypted(SAMPLE_CONTENT, SAMPLE_FILENAME)
 
-        # simulate what an upload-then-download test sequence does
         self.sg_send.js_evaluate(
             f"localStorage.setItem('qa-transfer-id',  '{tid}');"
             f"localStorage.setItem('qa-transfer-key', '{key_b64}');"
