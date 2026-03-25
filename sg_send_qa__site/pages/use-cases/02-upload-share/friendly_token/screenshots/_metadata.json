@@ -53,17 +53,17 @@
     {
       "name": "05_token_captured",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
-      "description": "Token: plaza-ridge-9098"
+      "description": "Token: amber-radar-7865"
     },
     {
       "name": "06_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
-      "description": "Token 'plaza-ridge-9098' resolved"
+      "description": "Token 'amber-radar-7865' resolved"
     },
     {
       "name": "05_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
-      "description": "Token 'plush-ocean-3994'"
+      "description": "Token 'lemon-linen-2917'"
     },
     {
       "name": "01_file_selected",
@@ -83,7 +83,7 @@
     {
       "name": "05_hash_after_decrypt",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
-      "description": "URL after decrypt: http://localhost:10062/en-gb/browse/#clover-halo-5474"
+      "description": "URL after decrypt: http://localhost:10062/en-gb/browse/#equal-logic-3401"
     }
   ]
 }
