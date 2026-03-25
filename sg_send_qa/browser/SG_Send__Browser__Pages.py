@@ -267,12 +267,18 @@ class SG_Send__Browser__Pages(Type_Safe):
     def upload__click_next(self):                                                   # click the Next / Encrypt & Upload button
         btn = self.raw_page().locator("#upload-next-btn")
         btn.wait_for(state="visible", timeout=5000)
+        state_before = self.upload_state()                                          # capture state before click
         btn.click()
-        # TODO: replace with event-based wait — upload__click_next is called from two different steps:
-        #   choosing-delivery → choosing-share (next state: 'choosing-share')
-        #   confirming        → uploading      (next state: 'uploading'; caller waits for 'complete')
-        # Requires knowing current state before clicking to determine the expected next state.
-        self.raw_page().wait_for_timeout(500)
+        # wait for state to change from whatever it was before — works regardless of which step we're on
+        pre_b64 = str_to_base64(str(state_before))
+        pred    = (f'() => {{'
+                   f' var el = document.querySelector(atob("{str_to_base64("send-upload")}")); '
+                   f' return el != null && el[atob("{str_to_base64("_state")}")] !== atob("{pre_b64}") '
+                   f'}}')
+        try:
+            self.raw_page().wait_for_function(pred, timeout=3000)
+        except Exception:
+            pass                                                                    # upload may jump quickly through states; caller handles completion
         return self
 
     def upload__select_share_mode(self, mode):                                      # click a share mode card: 'combined', 'token', 'separate'
