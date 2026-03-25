@@ -169,7 +169,6 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: [run-integration-tests, run-v030-browser-tests]
-    if: always()
     steps:
       - uses: actions/checkout@v5
         with:
@@ -208,21 +207,28 @@ jobs:
       - name: Diff screenshots (revert rendering noise below 1% threshold)
         run: python -m sg_send_qa.ci.diff_screenshots
 
-      - name: Pull latest before committing (handle concurrent pushes)
-        run: git pull --rebase origin ${{ inputs.git_branch }} || true
-
-      - name: Commit screenshots and docs
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "ci: update QA screenshots and docs [skip ci]"
-          file_pattern: sg_send_qa__site/
+      - name: Commit and push screenshots and docs (with rebase retry)
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add sg_send_qa__site/
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git commit -m "ci: update QA screenshots and docs [skip ci]"
+          for attempt in 1 2 3 4; do
+            git pull --rebase origin ${{ inputs.git_branch }} \
+              && git push origin HEAD:${{ inputs.git_branch }} \
+              && echo "Pushed on attempt $attempt" && exit 0
+            echo "Attempt $attempt failed — retrying in $((attempt * 2))s"
+            sleep $((attempt * 2))
+          done
+          echo "All push attempts failed" && exit 1
 
   deploy-docs:
     name: "Deploy Documentation to GitHub Pages"
     runs-on: ubuntu-latest
     timeout-minutes: 10
     needs: [generate-docs]
-    if: always() && needs.generate-docs.result != 'cancelled'
+    if: needs.generate-docs.result == 'success'
     concurrency:
       group: github-pages
       cancel-in-progress: true
