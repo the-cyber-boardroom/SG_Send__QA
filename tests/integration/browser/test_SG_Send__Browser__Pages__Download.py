@@ -27,8 +27,7 @@ class test_SG_Send__Browser__Pages__Download(TestCase):                         
     def test__01__download__manual_entry_form_visible(self):                     # entry form shows when no hash
         self.sg_send.page__download()
         self.sg_send.wait_for_download_state("entry")                           # send-download reaches 'entry' state = form visible
-        is_visible = self.sg_send.raw_page().locator("#entry-input").is_visible(timeout=3000)
-        assert is_visible is True
+        assert self.sg_send.js().light_visible("#entry-input") is True          # read via JS query layer
 
     def test__02__download__bogus_token_form_response(self):                     # bogus token: UI shows feedback (error or resets form)
         self.sg_send.page__download()
@@ -38,7 +37,7 @@ class test_SG_Send__Browser__Pages__Download(TestCase):                         
         text = self.sg_send.visible_text().lower()
         # UI may show explicit error text OR silently reset the form (both are valid responses)
         error_shown  = any(kw in text for kw in ["not found", "error", "invalid", "expired"])
-        form_visible = self.sg_send.raw_page().locator("#entry-input").is_visible(timeout=2000)
+        form_visible = self.sg_send.js().light_visible("#entry-input")          # read via JS query layer
         assert error_shown or form_visible                                       # gate responded in some way
 
     # ---- Hash navigation ---------------------------------------------------
@@ -49,7 +48,7 @@ class test_SG_Send__Browser__Pages__Download(TestCase):                         
         text = self.sg_send.visible_text().lower()
         # App may show explicit error OR fall back to the entry form (both are graceful)
         error_shown  = any(kw in text for kw in ["not found", "error", "invalid", "expired"])
-        form_visible = self.sg_send.raw_page().locator("#entry-input").is_visible(timeout=2000)
+        form_visible = self.sg_send.js().light_visible("#entry-input")          # read via JS query layer
         assert error_shown or form_visible                                       # no unhandled crash
 
     def test__04__download__valid_hash_shows_content(self):                      # valid hash -> decrypted content visible
@@ -79,7 +78,7 @@ class test_SG_Send__Browser__Pages__Download(TestCase):                         
         self.sg_send.page__download_with_id(tid)
         self.sg_send.wait_for_download_states(["ready", "error"])               # component either fetched transfer (ready) or failed (error)
 
-        key_input_visible = self.sg_send.raw_page().locator("#key-input").is_visible(timeout=2000)
+        key_input_visible = self.sg_send.js().light_visible("#key-input")        # read via JS query layer
 
         if key_input_visible:                                                   # 'ready' state: key input visible — attempt decrypt
             self.sg_send.download__enter_key(key_b64)                          # enter_key already waits for #key-input visible
@@ -91,13 +90,11 @@ class test_SG_Send__Browser__Pages__Download(TestCase):                         
     def test__07__download__localStorage_handoff(self):                          # store + read back transfer ID/key
         tid, key_b64 = self.helper.upload_encrypted(SAMPLE_CONTENT, SAMPLE_FILENAME)
 
-        # Persist via localStorage (inter-test state channel)
-        self.sg_send.js_evaluate(
-            f"localStorage.setItem('qa-transfer-id',  '{tid}');"
-            f"localStorage.setItem('qa-transfer-key', '{key_b64}');"
-        )
-        read_tid = self.sg_send.js_evaluate("localStorage.getItem('qa-transfer-id')")
-        read_key = self.sg_send.js_evaluate("localStorage.getItem('qa-transfer-key')")
+        js = self.sg_send.js()
+        js.storage_set('qa-transfer-id',  tid)                                  # base64-safe write
+        js.storage_set('qa-transfer-key', key_b64)
+        read_tid = js.storage_get('qa-transfer-id')                             # base64-safe read
+        read_key = js.storage_get('qa-transfer-key')
         assert read_tid == tid
         assert read_key == key_b64
 
