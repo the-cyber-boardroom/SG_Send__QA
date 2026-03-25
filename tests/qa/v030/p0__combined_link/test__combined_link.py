@@ -10,7 +10,11 @@ Flow:
 import pytest
 import re
 
-from tests.qa.v030.browser_helpers import goto, handle_access_gate
+from tests.qa.v030.browser_helpers import (
+    goto, handle_access_gate,
+    wait_for_upload_state, wait_for_upload_states,
+    wait_for_download_states,
+)
 
 pytestmark = pytest.mark.p0
 
@@ -35,22 +39,22 @@ def _upload_and_select_mode(page, ui_url, send_server, screenshots, mode_data_at
         "name": "combined-link-test.txt", "mimeType": "text/plain",
         "buffer": SAMPLE_CONTENT.encode(),
     })
-    page.wait_for_timeout(800)
+    wait_for_upload_states(page, ["file-ready", "choosing-delivery"])
     screenshots.capture(page, "01_file_selected", "File selected (delivery step active)")
 
     # Delivery → Share mode
     page.locator("#upload-next-btn").click()
-    page.wait_for_timeout(800)
+    page.locator("[data-mode]").first.wait_for(state="visible")
     screenshots.capture(page, "02_share_step", "Share mode step")
 
     # Select share mode card — click auto-advances to confirm step
     page.locator(f'[data-mode="{mode_data_attr}"]').click()
-    page.wait_for_timeout(500)
+    wait_for_upload_state(page, "confirming")
     screenshots.capture(page, "03_mode_selected", f"{step2_label} selected")
 
     # Confirm → Encrypt & Upload
     page.locator("#upload-next-btn").click()
-    page.wait_for_timeout(5000)   # wait for encrypt + upload
+    wait_for_upload_state(page, "complete", timeout=20_000)
     screenshots.capture(page, "04_upload_complete", "Upload complete")
 
 
@@ -89,7 +93,7 @@ class TestCombinedLink:
             download_url = f"{ui_url}{download_url}"
         dl_page = page.context.new_page()
         goto(dl_page, download_url)
-        dl_page.wait_for_timeout(4000)   # allow JS decrypt
+        wait_for_download_states(dl_page, ["complete", "error"])
         screenshots.capture(dl_page, "07_auto_decrypted", "Auto-decrypted content")
 
         body_text = dl_page.text_content("body") or ""
@@ -109,7 +113,7 @@ class TestCombinedLink:
         combined_url = f"{ui_url}/en-gb/browse/#{tid}/{key_b64}"
 
         goto(page, combined_url)
-        page.wait_for_timeout(4000)   # allow JS decrypt
+        wait_for_download_states(page, ["complete", "error"])
         screenshots.capture(page, "01_api_created_decrypt",
                             "Decrypted content from API-created transfer")
 
