@@ -141,12 +141,6 @@
           "composite": true
         },
         {
-          "id": "route_handling",
-          "title": "Route Handling",
-          "group_id": "04-navigation",
-          "composite": false
-        },
-        {
           "id": "short_v_route",
           "title": "Short V Route",
           "group_id": "04-navigation",
@@ -329,12 +323,6 @@
           "title": "Pdf Present",
           "group_id": "08-pdf",
           "composite": true
-        },
-        {
-          "id": "present_button_click_enters_fullscreen",
-          "title": "Present Button Click Enters Fullscreen",
-          "group_id": "08-pdf",
-          "composite": false
         },
         {
           "id": "present_button_visible_for_pdf",

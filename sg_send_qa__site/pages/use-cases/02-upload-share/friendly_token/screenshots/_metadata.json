@@ -53,17 +53,17 @@
     {
       "name": "05_token_captured",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
-      "description": "Token: shell-noble-9040"
+      "description": "Token: plaza-ridge-9098"
     },
     {
       "name": "06_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
-      "description": "Token 'shell-noble-9040' resolved"
+      "description": "Token 'plaza-ridge-9098' resolved"
     },
     {
       "name": "05_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
-      "description": "Token 'focus-scroll-1646'"
+      "description": "Token 'plush-ocean-3994'"
     },
     {
       "name": "01_file_selected",
@@ -83,7 +83,7 @@
     {
       "name": "05_hash_after_decrypt",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
-      "description": "URL after decrypt: http://localhost:10062/en-gb/browse/#atlas-trail-7844"
+      "description": "URL after decrypt: http://localhost:10062/en-gb/browse/#clover-halo-5474"
     }
   ]
 }
