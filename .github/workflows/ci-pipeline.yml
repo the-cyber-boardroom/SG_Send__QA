@@ -223,6 +223,9 @@ jobs:
     timeout-minutes: 10
     needs: [generate-docs]
     if: always() && needs.generate-docs.result != 'cancelled'
+    concurrency:
+      group: github-pages
+      cancel-in-progress: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
