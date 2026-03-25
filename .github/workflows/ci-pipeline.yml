@@ -21,6 +21,8 @@ env:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   run-unit-tests:
@@ -85,6 +87,14 @@ jobs:
           # files (QA helper not wired, navigation issues). Running confirmed tests only
           # while those are fixed in subsequent PRs.
 
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-integration
+          path: sg_send_qa__site/
+          if-no-files-found: ignore
+
   run-v030-tests:
     name: "Run v030 API & Crypto Tests (no browser)"
     runs-on: ubuntu-latest
@@ -145,6 +155,105 @@ jobs:
             tests/qa/v030/p0__combined_link/ \
             tests/qa/v030/p0__friendly_token/ \
             -v --tb=short --timeout=120
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-v030
+          path: sg_send_qa__site/
+          if-no-files-found: ignore
+
+  generate-docs:
+    name: "Generate Documentation"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [run-integration-tests, run-v030-browser-tests]
+    if: always()
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.git_branch }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install SG/Send (for QA_Generate_Docs imports)
+        run: |
+          git clone --depth 1 -b dev https://github.com/the-cyber-boardroom/SGraph-AI__App__Send /tmp/sgraph-send-ref
+          pip install -e /tmp/sgraph-send-ref --no-deps
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download integration test screenshots
+        uses: actions/download-artifact@v4
+        with:
+          name: screenshots-integration
+          path: sg_send_qa__site/
+        continue-on-error: true
+
+      - name: Download v030 browser test screenshots
+        uses: actions/download-artifact@v4
+        with:
+          name: screenshots-v030
+          path: sg_send_qa__site/
+        continue-on-error: true
+
+      - name: Generate markdown documentation
+        run: python -m sg_send_qa.cli.generate_docs
+
+      - name: Diff screenshots (revert rendering noise below 1% threshold)
+        run: python -m sg_send_qa.ci.diff_screenshots
+
+      - name: Commit screenshots and docs
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "ci: update QA screenshots and docs [skip ci]"
+          file_pattern: sg_send_qa__site/
+
+  deploy-docs:
+    name: "Deploy Documentation to GitHub Pages"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [generate-docs]
+    if: always() && needs.generate-docs.result != 'cancelled'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.git_branch }}
+          fetch-depth: 0
+
+      - name: Pull latest (picks up auto-committed screenshots and docs)
+        run: git pull origin ${{ inputs.git_branch }} --ff-only || true
+
+      - uses: actions/configure-pages@v5
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+          working-directory: sg_send_qa__site
+
+      - name: Build Jekyll site
+        working-directory: sg_send_qa__site
+        run: bundle exec jekyll build --destination ../_site
+        env:
+          JEKYLL_ENV: production
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
   increment-tag:
     name: Increment Tag
