@@ -1,6 +1,6 @@
 ---
 title: "Use Case: Manual Entry"
-permalink: /pages/use-cases/manual_entry/
+permalink: /pages/use-cases/03-separate-key/manual_entry/
 ---
 
 # Manual Entry

@@ -1,6 +1,6 @@
 ---
 title: "Use Case: Download  Browse"
-permalink: /pages/use-cases/download__browse/
+permalink: /pages/use-cases/06-browse/download__browse/
 ---
 
 # Download  Browse

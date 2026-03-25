@@ -1,6 +1,6 @@
 ---
 title: "Use Case: Download  Viewer"
-permalink: /pages/use-cases/download__viewer/
+permalink: /pages/use-cases/07-viewer/download__viewer/
 ---
 
 # Download  Viewer

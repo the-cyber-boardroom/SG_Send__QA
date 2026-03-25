@@ -1,6 +1,6 @@
 ---
 title: "Use Case: Separate Key"
-permalink: /pages/use-cases/separate_key/
+permalink: /pages/use-cases/03-separate-key/separate_key/
 ---
 
 # Separate Key

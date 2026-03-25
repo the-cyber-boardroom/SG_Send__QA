@@ -1,6 +1,6 @@
 ---
 title: "Use Case: Upload  Folder"
-permalink: /pages/use-cases/upload__folder/
+permalink: /pages/use-cases/06-browse/upload__folder/
 ---
 
 # Upload  Folder
