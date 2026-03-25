@@ -40,10 +40,10 @@ class SG_Send__Browser__Pages(Type_Safe):
     # Navigation
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def open(self, path, use_language=True) -> Playwright_Page:                                                       # navigate to a path under the target server
-        url  = self.url__for_path(path=path, use_language=use_language)
-        page = self.qa_browser().open(url)
-        return page
+    def open(self, path, use_language=True) -> Playwright_Page:                 # navigate to a path under the target server
+        url = self.url__for_path(path=path, use_language=use_language)
+        self.raw_page().goto(url, wait_until="commit")                         # commit fires on first byte — SG/Send inline scripts may block domcontentloaded
+        return self.page()
 
     def url__target_server(self):                                               # base URL of the local QA server
         return f'{self.target_server}:{self.target_port}/'
@@ -90,19 +90,28 @@ class SG_Send__Browser__Pages(Type_Safe):
         return self.open("welcome")
 
     def page__browse_with_hash(self, transfer_id, key_b64):                     # browse with decrypt hash
-        return self.open(f"browse/#{transfer_id}/{key_b64}")
+        url = f"{self.url__for_locale()}/browse/#{transfer_id}/{key_b64}"      # hash must bypass url_join_safe (it sanitises #)
+        return self._open_with_hash(url)
 
     def page__gallery_with_hash(self, transfer_id, key_b64):                    # gallery with decrypt hash
-        return self.open(f"gallery/#{transfer_id}/{key_b64}")
+        url = f"{self.url__for_locale()}/gallery/#{transfer_id}/{key_b64}"
+        return self._open_with_hash(url)
 
     def page__view_with_hash(self, transfer_id, key_b64):                       # view with decrypt hash
-        return self.open(f"view/#{transfer_id}/{key_b64}")
+        url = f"{self.url__for_locale()}/view/#{transfer_id}/{key_b64}"
+        return self._open_with_hash(url)
 
     def page__download_with_hash(self, transfer_id, key_b64):                   # download with combined link hash
-        return self.open(f"download/#{transfer_id}/{key_b64}")
+        url = f"{self.url__for_locale()}/download/#{transfer_id}/{key_b64}"
+        return self._open_with_hash(url)
 
     def page__download_with_id(self, transfer_id):                              # download without key (separate key mode)
-        return self.open(f"download/#{transfer_id}")
+        url = f"{self.url__for_locale()}/download/#{transfer_id}"
+        return self._open_with_hash(url)
+
+    def _open_with_hash(self, url):                                             # navigate using commit — fires on first byte received
+        self.raw_page().goto(url, wait_until="commit")                          # SG/Send inline scripts may delay domcontentloaded; commit is safest
+        return self
 
     def page__qa_setup(self):                                                   # minimal page — localStorage only, no JS overhead
         return self.open("_common/qa-setup.html", use_language=False)

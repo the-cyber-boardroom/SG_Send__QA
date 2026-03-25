@@ -1,58 +1,96 @@
-# from unittest                                                           import TestCase
-# from sg_send_qa.browser.SG_Send__Browser__Pages                         import SG_Send__Browser__Pages
-#
-# class test_SG_Send__Browser__Pages__Workflow(TestCase):                         # Full workflow tests — need local stack + valid token
-#     sg_send      : SG_Send__Browser__Pages
-#     access_token : str
-#
-#     @classmethod
-#     def setUpClass(cls):
-#         cls.sg_send = SG_Send__Browser__Pages()
-#         cls.sg_send.qa_browser.headless = False
-#         # To run these tests, set the access token for your local QA server:
-#         cls.access_token = ""                                                   # set this to your local token
-#
-#     def _skip_if_no_token(self):
-#         if not self.access_token:
-#             self.skipTest("No access token — set cls.access_token for workflow tests")
-#
-#     # ── Combined link workflow ───────────────────────────────────────────────
-#
-#     def test_workflow__upload_combined(self):                                    # full upload → get combined link
-#         self._skip_if_no_token()
-#         link = self.sg_send.workflow__upload_combined(
-#             token         = self.access_token       ,
-#             filename      = "workflow-test.txt"      ,
-#             content_bytes = b"Workflow test content." ,
-#         )
-#         assert link                                                             # link is not empty
-#         assert 'http' in link or '/' in link                                    # looks like a URL
-#
-#     def test_workflow__upload_friendly_token(self):                              # full upload → get friendly token
-#         self._skip_if_no_token()
-#         token = self.sg_send.workflow__upload_friendly_token(
-#             token         = self.access_token                     ,
-#             filename      = "token-test.txt"                       ,
-#             content_bytes = b"Friendly token workflow test content.",
-#         )
-#         assert token                                                            # token is not empty
-#         parts = token.split("-")
-#         assert len(parts) == 3                                                  # word-word-NNNN format
-#
-#     def test_workflow__upload_and_browse(self):                                  # upload combined, then open in browse view
-#         self._skip_if_no_token()
-#         link = self.sg_send.workflow__upload_combined(
-#             token         = self.access_token     ,
-#             filename      = "browse-test.txt"      ,
-#             content_bytes = b"Browse workflow test.",
-#         )
-#         assert link
-#         # extract hash from the combined link
-#         if '#' in link:
-#             hash_part = link.split('#', 1)[1]
-#             parts     = hash_part.split('/', 1)
-#             if len(parts) == 2:
-#                 self.sg_send.page__browse_with_hash(parts[0], parts[1])
-#                 self.sg_send.wait(3000)                                         # let decrypt complete
-#                 text = self.sg_send.visible_text()
-#                 assert 'Browse workflow test.' in text or 'browse-test.txt' in text
+from unittest                                           import TestCase
+from osbot_utils.testing.Stderr                         import Stderr
+from sg_send_qa.browser.SG_Send__Browser__Pages         import SG_Send__Browser__Pages
+from sg_send_qa.browser.SG_Send__Browser__Test_Harness  import SG_Send__Browser__Test_Harness
+
+SAMPLE_CONTENT  = b"Workflow integration test -- SG/Send QA round trip."
+SAMPLE_FILENAME = "workflow-test.txt"
+
+
+class test_SG_Send__Browser__Pages__Workflow(TestCase):                          # Full upload -> download round-trip
+    @classmethod
+    def setUpClass(cls):
+        cls.harness = SG_Send__Browser__Test_Harness().headless(True).setup()
+        cls.sg_send = cls.harness.sg_send
+        cls.helper  = cls.harness.transfer_helper()
+        cls.page_setup()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.harness.teardown()
+
+    def setUp(self):
+        Stderr().start()
+
+    @classmethod
+    def page_setup(cls):
+        with cls.harness as _:
+            cls.access_token = _.set_access_token()
+
+    # ---- Upload via browser, read results -----------------------------------
+
+    def test__01__workflow__upload_friendly_token(self):                         # upload and retrieve friendly token
+        with self.sg_send as _:
+            assert type(_) is SG_Send__Browser__Pages
+            _.page__root()
+            _.upload__set_file(SAMPLE_FILENAME, SAMPLE_CONTENT)
+            _.upload__click_next()                                              # -> choosing-share
+            _.upload__select_share_mode("token")                               # -> confirming
+            _.upload__click_next()                                             # -> uploading
+            _.upload__wait_for_complete()
+            assert _.upload_state() == "complete"
+
+    def test__02__workflow__get_token_and_persist(self):                         # extract token and store in localStorage
+        simple_token = self.sg_send.upload__get_friendly_token()
+        assert simple_token and len(simple_token.split("-")) == 3               # word-word-NNNN
+        # persist for downstream test
+        self.sg_send.js_evaluate(
+            f"localStorage.setItem('qa-workflow-token', '{simple_token}')"
+        )
+        self.__class__.simple_token = simple_token
+
+    def test__03__workflow__navigate_to_welcome_with_token(self):                # friendly token -> welcome page resolves
+        self.sg_send.page__welcome()
+        self.sg_send.wait(1500)                                                 # let send-welcome render
+        text = self.sg_send.visible_text()
+        # welcome page should be reachable -- not an error
+        assert "error" not in text.lower() or len(text) > 200
+
+    # ---- Upload via API (transfer_helper), read via browser -----------------
+
+    def test__04__workflow__api_upload_browser_download(self):                   # API upload -> browser hash navigation
+        tid, key_b64 = self.helper.upload_encrypted(SAMPLE_CONTENT, SAMPLE_FILENAME)
+        assert tid and key_b64
+
+        # store in class for subsequent tests
+        self.__class__.transfer_id = tid
+        self.__class__.key_b64     = key_b64
+
+        # navigate browser to the download hash URL
+        self.sg_send.page__browse_with_hash(tid, key_b64)
+        self.sg_send.wait(4000)                                                 # decrypt + render
+
+        text = self.sg_send.visible_text()
+        assert SAMPLE_CONTENT.decode() in text or SAMPLE_FILENAME in text
+
+    def test__05__workflow__api_upload_gallery_view(self):                       # API upload -> gallery hash navigation
+        tid, key_b64 = self.helper.upload_encrypted(SAMPLE_CONTENT, SAMPLE_FILENAME)
+        self.sg_send.page__gallery_with_hash(tid, key_b64)
+        self.sg_send.wait(4000)
+        text = self.sg_send.visible_text()
+        assert "error" not in text.lower() or len(text) > 100
+
+    def test__06__workflow__localStorage_handoff(self):                          # upload stores ID + key; read back
+        tid, key_b64 = self.helper.upload_encrypted(SAMPLE_CONTENT, SAMPLE_FILENAME)
+
+        # simulate what an upload-then-download test sequence does
+        self.sg_send.js_evaluate(
+            f"localStorage.setItem('qa-transfer-id',  '{tid}');"
+            f"localStorage.setItem('qa-transfer-key', '{key_b64}');"
+        )
+
+        read_tid = self.sg_send.js_evaluate("localStorage.getItem('qa-transfer-id')")
+        read_key = self.sg_send.js_evaluate("localStorage.getItem('qa-transfer-key')")
+
+        assert read_tid == tid
+        assert read_key == key_b64

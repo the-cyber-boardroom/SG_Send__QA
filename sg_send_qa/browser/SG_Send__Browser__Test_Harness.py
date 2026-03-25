@@ -197,6 +197,11 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         except Exception:
             return 'unknown'
 
+    def transfer_helper(self):                                                  # create transfers via API (no browser needed)
+        from sg_send_qa.utils.QA_Transfer_Helper import QA_Transfer_Helper
+        return QA_Transfer_Helper(api_url      = self.api_url().rstrip("/"),  # strip trailing slash — helper adds its own
+                                  access_token = self.access_token()      )
+
     def _stable_build_folder(self, version):                                    # debug mode: stable path in temp
         folder_name = UI_BUILD_FOLDER_FORMAT.format(version=version)
         return path_combine(temp_folder_current(), folder_name)
