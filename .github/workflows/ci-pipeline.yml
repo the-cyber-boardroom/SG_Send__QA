@@ -85,11 +85,40 @@ jobs:
           # files (QA helper not wired, navigation issues). Running confirmed tests only
           # while those are fixed in subsequent PRs.
 
+  run-v030-tests:
+    name: "Run v030 API & Crypto Tests (no browser)"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [run-unit-tests]
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install SG/Send (for test server)
+        run: |
+          git clone --depth 1 -b dev https://github.com/the-cyber-boardroom/SGraph-AI__App__Send /tmp/sgraph-send-ref
+          pip install -e /tmp/sgraph-send-ref --no-deps
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt && pip install pytest-timeout
+
+      - name: Run v030 transfer helper + API smoke + zero-knowledge tests
+        timeout-minutes: 3
+        run: |
+          python -m pytest \
+            tests/qa/v030/p1__transfer_helper/ \
+            tests/qa/v030/p1__api_smoke/ \
+            tests/qa/v030/p0__zero_knowledge/ \
+            -v --tb=short --timeout=30
+
   increment-tag:
     name: Increment Tag
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    needs: [run-unit-tests, run-integration-tests]
+    needs: [run-unit-tests, run-integration-tests, run-v030-tests]
     if: inputs.should_increment_tag
     steps:
       - uses: actions/checkout@v5
