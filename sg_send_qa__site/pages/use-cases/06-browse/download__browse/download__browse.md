@@ -6,7 +6,7 @@ auto_generated: true
 
 # Download  Browse
 
-> Generated at commit [`e5e045f9`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/e5e045f9) · v0.2.37 · 2026-03-26 11:04 UTC
+> Test source at commit [`d9cf0f4e`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/d9cf0f4e) · v0.2.37
 
 UC-07: Browse view features (P1).
 

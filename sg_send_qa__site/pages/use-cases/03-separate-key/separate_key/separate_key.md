@@ -6,7 +6,7 @@ auto_generated: true
 
 # Separate Key
 
-> Generated at commit [`e5e045f9`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/e5e045f9) · v0.2.37 · 2026-03-26 11:04 UTC
+> Test source at commit [`a713eea0`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/a713eea0) · v0.2.37
 
 UC-05: Separate Key share mode (P0).
 

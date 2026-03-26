@@ -6,7 +6,7 @@ auto_generated: true
 
 # Friendly Token
 
-> Generated at commit [`e5e045f9`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/e5e045f9) · v0.2.37 · 2026-03-26 11:04 UTC
+> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.37
 
 UC-03: Friendly Token — Simple Token share mode (P0).
 

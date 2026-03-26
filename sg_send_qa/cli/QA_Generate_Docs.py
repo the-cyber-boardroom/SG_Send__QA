@@ -15,7 +15,6 @@ time (reads git-log per file), so the generated markdown is stable and
 only produces a diff when actual content changes.
 """
 import json
-import os
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -102,29 +101,39 @@ class QA_Generate_Docs(Type_Safe):
             rel = path
         return f"{GITHUB_REPO}/blob/dev/{rel}"
 
-    def _provenance_line(self) -> str:
-        """Return a markdown blockquote with commit SHA, version, and timestamp."""
-        sha = os.environ.get("GITHUB_SHA") or subprocess.getoutput("git rev-parse HEAD")
-        sha = sha.strip()[:8]
+    def _provenance_line(self, test_file: Path | None = None) -> str:
+        """Return a stable provenance blockquote for a generated page.
+
+        Uses the last git commit that touched the specific test file (not HEAD),
+        so this line only changes when the test file itself changes — not on every
+        CI run.  No timestamp is included; Jekyll's jekyll-last-modified-at plugin
+        reads git history at build time and displays the page's last-modified date.
+
+        Core principle: if no code changed, no generated file should change.
+        """
+        if test_file:
+            raw = subprocess.getoutput(f"git log -1 --format=%H -- {test_file}").strip()
+            sha = raw[:8] if raw else "unknown"
+        else:
+            sha = subprocess.getoutput("git rev-parse HEAD").strip()[:8]
+
         try:
             version = Path("sg_send_qa/version").read_text().strip()
         except Exception:
             version = "unknown"
-        ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
-        return (
-            f"> Generated at commit [`{sha}`]({GITHUB_REPO}/commit/{sha})"
-            f" · {version} · {ts}\n\n"
-        )
+
+        return f"> Test source at commit [`{sha}`]({GITHUB_REPO}/commit/{sha}) · {version}\n\n"
 
     # --------------------------------------------------------------- scaffold
 
     def scaffold_page(self, use_case_dir: Path, name: str, metadata: dict | None,
                       group_name: str = "") -> str:
         """Generate a starter markdown page for a new use case."""
+        test_file = self._find_test_file(name)
         title = self.title_from_name(name)
         md    = FRONT_MATTER.format(title=title, group=group_name, name=name)
         md   += f"\n# {title}\n\n"
-        md   += self._provenance_line()
+        md   += self._provenance_line(test_file)
 
         if metadata and metadata.get("module_doc"):
             md += f"{metadata['module_doc'].strip()}\n\n"
@@ -135,9 +144,8 @@ class QA_Generate_Docs(Type_Safe):
 
         # GitHub link to test source
         gh_url = self._github_test_url(name)
-        if gh_url:
-            test_file = self._find_test_file(name)
-            rel_path  = str(test_file.relative_to(Path("."))) if test_file else f"tests/qa/v030/test__{name}.py"
+        if gh_url and test_file:
+            rel_path = str(test_file.relative_to(Path(".")))
             md += f"[View source on GitHub]({gh_url}) — `{rel_path}`\n\n"
 
         md += "---\n\n"
@@ -183,11 +191,10 @@ class QA_Generate_Docs(Type_Safe):
                     md += f"![{label} — masked](screenshots/{shot_name}__deterministic.png)\n\n"
                     md += "</details>\n\n"
 
-        source = self.read_test_source(name)
-        if source:
+        if test_file and test_file.exists():
+            source   = test_file.read_text()
+            rel_path = str(test_file.relative_to(Path(".")))
             md += "---\n\n"
-            test_file = self._find_test_file(name)
-            rel_path  = str(test_file.relative_to(Path("."))) if test_file else f"tests/qa/v030/test__{name}.py"
             md += "<details>\n"
             md += f"<summary>View test source — <code>{rel_path}</code></summary>\n\n"
             md += f"```python\n{source}\n```\n\n"
@@ -229,10 +236,14 @@ class QA_Generate_Docs(Type_Safe):
 
         md_path = uc_dir / f"{name}.md"
         if not md_path.exists() or _is_auto_generated(md_path):
-            content = self.scaffold_page(uc_dir, name, metadata, group_name=group_name)
-            md_path.write_text(content)
-            action = "Scaffolded" if not md_path.exists() else "Refreshed "
-            print(f"  {action}: {md_path}")
+            content  = self.scaffold_page(uc_dir, name, metadata, group_name=group_name)
+            existing = md_path.read_text() if md_path.exists() else None
+            if existing == content:
+                print(f"  Unchanged:  {md_path}")
+            else:
+                md_path.write_text(content)
+                action = "Scaffolded" if existing is None else "Refreshed "
+                print(f"  {action}: {md_path}")
         else:
             print(f"  Preserved:  {md_path} (hand-crafted)")
 
@@ -352,9 +363,13 @@ class QA_Generate_Docs(Type_Safe):
                 })
             groups.append({"id": group_dir.name, "name": gname, "icon": icon, "members": items})
 
-        path = self.data_dir / "qa_sidebar.json"
-        path.write_text(json.dumps({"groups": groups}, indent=2, ensure_ascii=False))
-        print(f"  Written:    {path}")
+        path    = self.data_dir / "qa_sidebar.json"
+        content = json.dumps({"groups": groups}, indent=2, ensure_ascii=False)
+        if not path.exists() or path.read_text() != content:
+            path.write_text(content)
+            print(f"  Written:    {path}")
+        else:
+            print(f"  Unchanged:  {path}")
 
     def write_summary_data(self, groups_data: list) -> None:
         """Write _data/qa_summary.json for Jekyll dashboard rendering."""
@@ -397,8 +412,8 @@ class QA_Generate_Docs(Type_Safe):
                 "coverage_pct": pct,
             })
 
-        summary = {
-            "generated_at"     : datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        # Build the stable content (no timestamp) for comparison
+        stable = {
             "version"          : version__sg_send__qa,
             "total_tests"      : total_tests,
             "total_screenshots": total_screenshots,
@@ -407,5 +422,19 @@ class QA_Generate_Docs(Type_Safe):
             "needs_attention"  : needs_attention,
         }
         path = self.data_dir / "qa_summary.json"
-        path.write_text(json.dumps(summary, indent=2, ensure_ascii=False))
-        print(f"  Written:    {path}")
+        # Only write (and update generated_at) when the stats actually changed
+        existing_stable = None
+        if path.exists():
+            try:
+                existing_data = json.loads(path.read_text())
+                existing_stable = {k: v for k, v in existing_data.items() if k != "generated_at"}
+            except Exception:
+                pass
+
+        if existing_stable == stable:
+            print(f"  Unchanged:  {path}")
+        else:
+            summary = {"generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                       **stable}
+            path.write_text(json.dumps(summary, indent=2, ensure_ascii=False))
+            print(f"  Written:    {path}")

@@ -6,7 +6,7 @@ auto_generated: true
 
 # Pdf Present
 
-> Generated at commit [`e5e045f9`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/e5e045f9) · v0.2.37 · 2026-03-26 11:04 UTC
+> Test source at commit [`807336ab`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/807336ab) · v0.2.37
 
 UC-06 (P2): PDF lightbox — Present mode and 'f' fullscreen shortcut.
 

@@ -6,7 +6,7 @@ auto_generated: true
 
 # Manual Entry
 
-> Generated at commit [`e5e045f9`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/e5e045f9) · v0.2.37 · 2026-03-26 11:04 UTC
+> Test source at commit [`17d0c5af`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/17d0c5af) · v0.2.37
 
 UC-09: Manual token/ID entry form (P1).
 
