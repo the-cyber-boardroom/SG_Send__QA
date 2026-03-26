@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-03-26T01:24:20Z",
+  "generated_at": "2026-03-26T01:32:12Z",
   "version": "v0.2.36",
   "total_tests": 75,
   "total_screenshots": 108,
-  "zero_evidence": 8,
+  "zero_evidence": 9,
   "groups": [
     {
       "id": "01-access-gate",
@@ -65,9 +65,9 @@
       "id": "08-pdf",
       "name": "PDF",
       "icon": "📄",
-      "total": 3,
+      "total": 4,
       "with_evidence": 1,
-      "coverage_pct": 33
+      "coverage_pct": 25
     }
   ],
   "needs_attention": [
@@ -98,6 +98,10 @@
     {
       "group": "08-pdf",
       "use_case": "pdf_lightbox_opens"
+    },
+    {
+      "group": "08-pdf",
+      "use_case": "present_button_click_enters_fullscreen"
     },
     {
       "group": "08-pdf",

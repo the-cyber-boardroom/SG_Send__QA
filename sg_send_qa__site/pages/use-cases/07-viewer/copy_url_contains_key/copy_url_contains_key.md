@@ -1,9 +1,12 @@
 ---
 title: "Use Case: Copy Url Contains Key"
 permalink: /pages/use-cases/07-viewer/copy_url_contains_key/
+auto_generated: true
 ---
 
 # Copy Url Contains Key
+
+> Generated at commit [`56f21db3`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/56f21db3) · v0.2.36 · 2026-03-26 01:32 UTC
 
 The share URL shown in the panel contains the key (hash fragment).
 

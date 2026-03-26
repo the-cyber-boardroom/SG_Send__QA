@@ -325,6 +325,12 @@
           "composite": true
         },
         {
+          "id": "present_button_click_enters_fullscreen",
+          "title": "Present Button Click Enters Fullscreen",
+          "group_id": "08-pdf",
+          "composite": false
+        },
+        {
           "id": "present_button_visible_for_pdf",
           "title": "Present Button Visible For Pdf",
           "group_id": "08-pdf",

@@ -1,9 +1,12 @@
 ---
 title: "Use Case: Viewer Page Loads"
 permalink: /pages/use-cases/07-viewer/viewer_page_loads/
+auto_generated: true
 ---
 
 # Viewer Page Loads
+
+> Generated at commit [`56f21db3`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/56f21db3) · v0.2.36 · 2026-03-26 01:32 UTC
 
 Single-file viewer loads without errors.
 

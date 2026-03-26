@@ -1,9 +1,12 @@
 ---
 title: "Use Case: Keyboard Navigation J K"
 permalink: /pages/use-cases/06-browse/keyboard_navigation_j_k/
+auto_generated: true
 ---
 
 # Keyboard Navigation J K
+
+> Generated at commit [`56f21db3`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/56f21db3) · v0.2.36 · 2026-03-26 01:32 UTC
 
 Keyboard j/k navigate through files in browse view (P2).
 
