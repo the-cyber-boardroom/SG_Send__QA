@@ -36,9 +36,10 @@ class QA_API__Runner(Type_Safe):
         response = Schema__QA_Response(trace_id=request.trace_id)
         try:
             with QA_API__Session(request=request) as session:
-                result               = workflow_fn(session)
-                response.status      = 'pass'
-                response.duration_ms = int((time.time() - start) * 1000)
+                result                        = workflow_fn(session)
+                response.status               = 'pass'
+                response.duration_ms          = int((time.time() - start) * 1000)
+                response.transitions_observed = session.transitions_observed
                 return {**response.json(), **result}
         except Exception as exc:
             response.status      = 'fail'

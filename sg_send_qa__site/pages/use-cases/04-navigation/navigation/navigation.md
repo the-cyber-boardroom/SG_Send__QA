@@ -6,7 +6,7 @@ auto_generated: true
 
 # Navigation
 
-> Test source at commit [`17d0c5af`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/17d0c5af) · v0.2.37
+> Test source at commit [`17d0c5af`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/17d0c5af) · v0.2.40
 
 UC-11: Route handling + mode switching (P1).
 
