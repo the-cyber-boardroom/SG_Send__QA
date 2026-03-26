@@ -54,18 +54,61 @@ class test_QA_API__Runner(TestCase):
         assert len(result['trace_id']) == 8
 
     def test__run__returns_pass_on_success(self):
+        from sg_send_qa.api.QA_API__Session import QA_API__Session
         runner = QA_API__Runner(request=Schema__QA_Request())
 
         def good_workflow(session):
             return {"link": "http://localhost/#id/key"}
 
         import unittest.mock as mock
-        mock_session = mock.MagicMock()
+        real_session = QA_API__Session(request=runner.request)
         with mock.patch('sg_send_qa.api.QA_API__Runner.QA_API__Session') as MockSession:
-            MockSession.return_value.__enter__.return_value = mock_session
+            MockSession.return_value.__enter__.return_value = real_session
             MockSession.return_value.__exit__ = mock.MagicMock(return_value=False)
             result = runner.run(good_workflow)
 
         assert result['status']            == 'pass'
         assert result['link']              == 'http://localhost/#id/key'
         assert result['duration_ms']       >= 0
+
+    def test__run__merges_transitions_observed(self):
+        """Transitions recorded in session appear in response as serialised dicts."""
+        from sg_send_qa.api.QA_API__Session import QA_API__Session
+        runner = QA_API__Runner(request=Schema__QA_Request())
+
+        def workflow_with_transitions(session):
+            session.record_transition('idle',       'file-ready',     'file_selected')
+            session.record_transition('file-ready', 'choosing-share', 'single_file')
+            return {}
+
+        import unittest.mock as mock
+        real_session = QA_API__Session(request=runner.request)
+
+        with mock.patch('sg_send_qa.api.QA_API__Runner.QA_API__Session') as MockSession:
+            MockSession.return_value.__enter__.return_value = real_session
+            MockSession.return_value.__exit__ = mock.MagicMock(return_value=False)
+            result = runner.run(workflow_with_transitions)
+
+        assert result['status'] == 'pass'
+        assert len(result['transitions_observed']) == 2
+        assert result['transitions_observed'][0]['from_state'] == 'idle'
+        assert result['transitions_observed'][1]['to_state']   == 'choosing-share'
+
+    def test__run__transitions_empty_by_default(self):
+        """If workflow doesn't record transitions, list is empty."""
+        runner = QA_API__Runner(request=Schema__QA_Request())
+
+        def no_transitions(session):
+            return {}
+
+        import unittest.mock as mock
+        from sg_send_qa.api.QA_API__Session import QA_API__Session
+        real_session = QA_API__Session(request=runner.request)
+
+        with mock.patch('sg_send_qa.api.QA_API__Runner.QA_API__Session') as MockSession:
+            MockSession.return_value.__enter__.return_value = real_session
+            MockSession.return_value.__exit__ = mock.MagicMock(return_value=False)
+            result = runner.run(no_transitions)
+
+        assert result['status']               == 'pass'
+        assert result['transitions_observed'] == []

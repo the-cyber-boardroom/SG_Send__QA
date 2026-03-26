@@ -1,6 +1,8 @@
 from unittest                                           import TestCase
 from osbot_utils.testing.Stderr                         import Stderr
 from sg_send_qa.browser.SG_Send__Browser__Test_Harness  import SG_Send__Browser__Test_Harness
+from sg_send_qa.state_machines.State_Machine__Download  import download_state_machine
+from sg_send_qa.state_machines.State_Machine__Utils     import State_Machine__Utils
 
 SAMPLE_CONTENT  = b"Download integration test -- SG/Send QA."
 SAMPLE_FILENAME = "download-test.txt"
@@ -9,9 +11,11 @@ SAMPLE_FILENAME = "download-test.txt"
 class test_SG_Send__Browser__Pages__Download(TestCase):                          # Download page interaction tests
     @classmethod
     def setUpClass(cls):
-        cls.harness = SG_Send__Browser__Test_Harness().headless(True).setup()
-        cls.sg_send = cls.harness.sg_send
-        cls.helper  = cls.harness.transfer_helper()
+        cls.harness      = SG_Send__Browser__Test_Harness().headless(True).setup()
+        cls.sg_send      = cls.harness.sg_send
+        cls.helper       = cls.harness.transfer_helper()
+        cls.download_sm  = download_state_machine()
+        cls.sm_utils     = State_Machine__Utils()
         with cls.harness as _:
             _.set_access_token()
 
@@ -28,6 +32,8 @@ class test_SG_Send__Browser__Pages__Download(TestCase):                         
         self.sg_send.page__download()
         self.sg_send.wait_for_download_state("entry")                           # send-download reaches 'entry' state = form visible
         assert self.sg_send.js().light_visible("#entry-input") is True          # read via JS query layer
+        # graph edge: loading → entry (no hash in URL)
+        assert self.sm_utils.validate_transition(self.download_sm, 'loading', 'entry')
 
     def test__02__download__bogus_token_form_response(self):                     # bogus token: UI shows feedback (error or resets form)
         self.sg_send.page__download()
@@ -60,6 +66,9 @@ class test_SG_Send__Browser__Pages__Download(TestCase):                         
         self.sg_send.wait_for_download_state("complete")                        # wait for decrypt pipeline to finish
         text = self.sg_send.visible_text()
         assert SAMPLE_CONTENT.decode() in text or SAMPLE_FILENAME in text
+        # graph edges: loading → ready → [browse|viewer|gallery] and ultimately → complete
+        assert self.sm_utils.validate_transition(self.download_sm, 'loading', 'ready')
+        assert self.sm_utils.validate_transition(self.download_sm, 'decrypting', 'complete')
 
     def test__05__download__gallery_view_with_valid_hash(self):                  # valid hash in gallery view
         tid, key_b64 = self.helper.upload_encrypted(SAMPLE_CONTENT, SAMPLE_FILENAME)
