@@ -6,7 +6,7 @@ auto_generated: true
 
 # Friendly Token
 
-> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.39
+> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.40
 
 UC-03: Friendly Token — Simple Token share mode (P0).
 
@@ -45,7 +45,7 @@ URL after decrypt: http://localhost:10062/en-gb/browse/#terra-chain-5022
 
 ### 05 Token Captured
 
-Token: kite-fable-1590
+Token: glade-twist-8692
 
 ![05 Token Captured](screenshots/05_token_captured.png)
 
@@ -58,7 +58,7 @@ Token: kite-fable-1590
 
 ### 06 Token Resolved
 
-Token 'kite-fable-1590' resolved
+Token 'glade-twist-8692' resolved
 
 ![06 Token Resolved](screenshots/06_token_resolved.png)
 
@@ -71,7 +71,7 @@ Token 'kite-fable-1590' resolved
 
 ### 05 Token Resolved
 
-Token 'moss-lucky-2469'
+Token 'oasis-wind-9326'
 
 ![05 Token Resolved](screenshots/05_token_resolved.png)
 
@@ -123,7 +123,7 @@ Upload complete
 
 ### 05 Hash After Decrypt
 
-URL after decrypt: http://localhost:65000//en-gb/browse/#amber-hound-5355
+URL after decrypt: http://localhost:26431//en-gb/browse/#crane-elite-4694
 
 ![05 Hash After Decrypt](screenshots/05_hash_after_decrypt.png)
 
