@@ -40,6 +40,39 @@
       "screenshots": [
         "01_footer"
       ]
+    },
+    {
+      "method": "test__01__upload_page_loads",
+      "doc": "Navigate to /en-gb/ and verify the upload zone is visible.",
+      "screenshots": [
+        "01_upload_page"
+      ]
+    },
+    {
+      "method": "test__02__single_file_upload_flow",
+      "doc": "Upload a text file through the wizard and verify the download link works.",
+      "screenshots": [
+        "01_file_selected",
+        "02_share_step",
+        "03_mode_selected",
+        "04_upload_done",
+        "05_download_page",
+        "06_decrypted"
+      ]
+    },
+    {
+      "method": "test__03__download_link_format",
+      "doc": "Verify the download link contains transfer ID and key in the hash.",
+      "screenshots": [
+        "07_link_format"
+      ]
+    },
+    {
+      "method": "test__04__footer_version",
+      "doc": "Verify the footer shows v0.3.0.",
+      "screenshots": [
+        "01_footer"
+      ]
     }
   ],
   "screenshots": [
@@ -47,16 +80,6 @@
       "name": "01_upload_page",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_upload_page.png",
       "description": "Upload page loaded"
-    },
-    {
-      "name": "05_download_page",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/05_download_page.png",
-      "description": "Download page \u2014 awaiting decrypt"
-    },
-    {
-      "name": "06_decrypted",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/06_decrypted.png",
-      "description": "Content decrypted and visible"
     },
     {
       "name": "01_file_selected",
@@ -79,9 +102,19 @@
       "description": "Upload complete \u2014 link shown"
     },
     {
+      "name": "05_download_page",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/05_download_page.png",
+      "description": "Download page \u2014 awaiting decrypt"
+    },
+    {
+      "name": "06_decrypted",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/06_decrypted.png",
+      "description": "Content decrypted and visible"
+    },
+    {
       "name": "07_link_format",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/07_link_format.png",
-      "description": "Link verified: http://localhost:10062/en-gb/browse/#707138e168e8/meAUB07a5NeVXfXZyLYVPPEwA79K8K"
+      "description": "Link verified: http://localhost:52794/en-gb/browse/#c3e88bc4e2dd/uTJ_2JVhYWM8rgMqfDXbxCZ45w49-R"
     },
     {
       "name": "01_footer",
