@@ -6,7 +6,7 @@ auto_generated: true
 
 # Short Url V Route
 
-> Test source at commit [`5d3caec1`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5d3caec1) · v0.2.38
+> Test source at commit [`6b2d9867`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/6b2d9867) · v0.2.40
 
 Short URL /en-gb/v/ works the same as /en-gb/view/.
 

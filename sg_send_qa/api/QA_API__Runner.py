@@ -18,28 +18,28 @@ from sg_send_qa.api.QA_API__Session         import QA_API__Session
 
 
 class QA_API__Runner(Type_Safe):
-    request : Schema__QA_Request = None
 
-    def _ensure_capture(self):                                  # populate capture config defaults based on mode if not provided
-        if self.request.capture is None:
-            self.request.capture = Schema__Capture_Config()
-            if self.request.mode == 'qa':                       # qa mode: enable screenshots
-                self.request.capture.screenshots = True
+    def _ensure_capture(self, request: Schema__QA_Request):     # populate capture config defaults based on mode if not provided
+        if request.capture is None:
+            request.capture = Schema__Capture_Config()
+            if request.mode == 'qa':                            # qa mode: enable screenshots
+                request.capture.screenshots = True
 
-    def _ensure_trace_id(self):                                 # auto-generate trace ID if caller didn't provide one
-        if not self.request.trace_id:
-            self.request.trace_id = uuid.uuid4().hex[:8]
+    def _ensure_trace_id(self, request: Schema__QA_Request):    # auto-generate trace ID if caller didn't provide one
+        if not request.trace_id:
+            request.trace_id = uuid.uuid4().hex[:8]
 
-    def run(self, workflow_fn) -> dict:                         # execute a workflow function inside a managed session
-        self._ensure_capture()
-        self._ensure_trace_id()
+    def run(self, request: Schema__QA_Request, workflow_fn) -> dict:    # execute a workflow function inside a managed session
+        self._ensure_capture(request)
+        self._ensure_trace_id(request)
         start    = time.time()
-        response = Schema__QA_Response(trace_id=self.request.trace_id)
+        response = Schema__QA_Response(trace_id=request.trace_id)
         try:
-            with QA_API__Session(request=self.request) as session:
-                result               = workflow_fn(session)
-                response.status      = 'pass'
-                response.duration_ms = int((time.time() - start) * 1000)
+            with QA_API__Session(request=request) as session:
+                result                        = workflow_fn(session)
+                response.status               = 'pass'
+                response.duration_ms          = int((time.time() - start) * 1000)
+                response.transitions_observed = session.transitions_observed
                 return {**response.json(), **result}
         except Exception as exc:
             response.status      = 'fail'

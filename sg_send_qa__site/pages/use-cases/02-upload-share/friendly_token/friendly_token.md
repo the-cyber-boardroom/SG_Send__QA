@@ -6,7 +6,7 @@ auto_generated: true
 
 # Friendly Token
 
-> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.38
+> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.40
 
 UC-03: Friendly Token — Simple Token share mode (P0).
 
@@ -45,7 +45,7 @@ URL after decrypt: http://localhost:10062/en-gb/browse/#terra-chain-5022
 
 ### 05 Token Captured
 
-Token: camel-north-2891
+Token: brave-bonus-1431
 
 ![05 Token Captured](screenshots/05_token_captured.png)
 
@@ -58,7 +58,7 @@ Token: camel-north-2891
 
 ### 06 Token Resolved
 
-Token 'camel-north-2891' resolved
+Token 'brave-bonus-1431' resolved
 
 ![06 Token Resolved](screenshots/06_token_resolved.png)
 
@@ -71,7 +71,7 @@ Token 'camel-north-2891' resolved
 
 ### 05 Token Resolved
 
-Token 'grape-frost-5687'
+Token 'tiger-topaz-4775'
 
 ![05 Token Resolved](screenshots/05_token_resolved.png)
 
@@ -123,7 +123,7 @@ Upload complete
 
 ### 05 Hash After Decrypt
 
-URL after decrypt: http://localhost:60262//en-gb/browse/#shark-chief-7748
+URL after decrypt: http://localhost:50899//en-gb/browse/#humor-terra-6389
 
 ![05 Hash After Decrypt](screenshots/05_hash_after_decrypt.png)
 
