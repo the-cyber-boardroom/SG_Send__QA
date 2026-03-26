@@ -45,7 +45,7 @@ URL after decrypt: http://localhost:10062/en-gb/browse/#terra-chain-5022
 
 ### 05 Token Captured
 
-Token: glade-twist-8692
+Token: oak-lily-9350
 
 ![05 Token Captured](screenshots/05_token_captured.png)
 
@@ -58,7 +58,7 @@ Token: glade-twist-8692
 
 ### 06 Token Resolved
 
-Token 'glade-twist-8692' resolved
+Token 'oak-lily-9350' resolved
 
 ![06 Token Resolved](screenshots/06_token_resolved.png)
 
@@ -71,7 +71,7 @@ Token 'glade-twist-8692' resolved
 
 ### 05 Token Resolved
 
-Token 'oasis-wind-9326'
+Token 'mercy-medal-3424'
 
 ![05 Token Resolved](screenshots/05_token_resolved.png)
 
@@ -123,7 +123,7 @@ Upload complete
 
 ### 05 Hash After Decrypt
 
-URL after decrypt: http://localhost:26431//en-gb/browse/#crane-elite-4694
+URL after decrypt: http://localhost:53490//en-gb/browse/#terra-haven-4216
 
 ![05 Hash After Decrypt](screenshots/05_hash_after_decrypt.png)
 

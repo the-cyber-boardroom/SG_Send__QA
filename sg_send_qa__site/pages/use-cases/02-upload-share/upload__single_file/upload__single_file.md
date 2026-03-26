@@ -130,7 +130,7 @@ Content decrypted and visible
 
 ### 07 Link Format
 
-Link verified: http://localhost:31011/en-gb/browse/#c446dd8ef4d3/ZqB3cQaVqBCy1YywsCMuxkqE8cD-Qf
+Link verified: http://localhost:32709/en-gb/browse/#a6d25de40b8b/q7br-bLtcZZyffzRzHkEaWFpPDWEF4
 
 ![07 Link Format](screenshots/07_link_format.png)
 
