@@ -123,3 +123,31 @@ class test_Schema__Viewer_Page(TestCase):
         assert self.schema.file_name    == 'document.pdf'
         assert self.schema.state        == 'complete'
         assert self.schema.content_text == 'PDF content here'
+
+
+class test_SG_Send__Browser__Pages__extract_methods(TestCase):
+    """Structural tests — verify extract__*() return type annotations are correct.
+    Reads source as text to avoid importing osbot_playwright."""
+
+    @classmethod
+    def _source(cls):
+        from pathlib import Path
+        return (Path(__file__).parent.parent.parent.parent /
+                'sg_send_qa' / 'browser' / 'SG_Send__Browser__Pages.py').read_text()
+
+    def test__extract_methods_return_annotations(self):
+        import ast
+        tree    = ast.parse(self._source())
+        returns = {}
+        for node in ast.walk(tree):
+            if isinstance(node, ast.FunctionDef) and node.name.startswith('extract__'):
+                if node.returns:
+                    returns[node.name] = ast.unparse(node.returns)
+        assert returns.get('extract__upload_page')   == 'Schema__Upload_Page'
+        assert returns.get('extract__download_page') == 'Schema__Download_Page'
+        assert returns.get('extract__browse_page')   == 'Schema__Browse_Page'
+        assert returns.get('extract__gallery_page')  == 'Schema__Gallery_Page'
+        assert returns.get('extract__viewer_page')   == 'Schema__Viewer_Page'
+
+    def test__transfer_id_helper_in_source(self):
+        assert '_transfer_id_from_url' in self._source()
