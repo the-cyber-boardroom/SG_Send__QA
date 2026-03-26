@@ -6,7 +6,7 @@ auto_generated: true
 
 # Present Button Click Enters Fullscreen
 
-> Test source at commit [`5d3caec1`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5d3caec1) · v0.2.38
+> Test source at commit [`ee45938b`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/ee45938b) · v0.2.39
 
 Automated browser test for the **present button click enters fullscreen** workflow.
 

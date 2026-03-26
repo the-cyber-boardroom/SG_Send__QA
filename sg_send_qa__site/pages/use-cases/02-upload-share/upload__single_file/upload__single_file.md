@@ -6,7 +6,7 @@ auto_generated: true
 
 # Upload  Single File
 
-> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.38
+> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.39
 
 UC-01: Single file upload → download → content matches (P0).
 
@@ -130,7 +130,7 @@ Content decrypted and visible
 
 ### 07 Link Format
 
-Link verified: http://localhost:50748/en-gb/browse/#652268ae669d/00hQKz3WbMwt4qhMPszy1glIRrYW35
+Link verified: http://localhost:56170/en-gb/browse/#8ae22a376f45/GfRlYkeen21HcHfcDgDym_eqnkXbkz
 
 ![07 Link Format](screenshots/07_link_format.png)
 
