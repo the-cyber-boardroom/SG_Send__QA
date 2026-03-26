@@ -103,14 +103,21 @@ class QA_Generate_Docs(Type_Safe):
                 ]
 
         if screenshots:
+            shot_dir = use_case_dir / "screenshots"
             md += "## Screenshots\n\n"
             for shot in screenshots:
-                desc  = shot.get("description", "") or shot["name"].replace("_", " ").title()
-                label = shot["name"].replace("_", " ").title()
+                name  = shot["name"]
+                label = name.replace("_", " ").title()
                 md += f"### {label}\n\n"
                 if shot.get("description"):
                     md += f"{shot['description']}\n\n"
-                md += f"![{label}](screenshots/{shot['name']}.png)\n\n"
+                md += f"![{label}](screenshots/{name}.png)\n\n"
+                det_file = shot_dir / f"{name}__deterministic.png"
+                if det_file.exists():
+                    md += "<details>\n"
+                    md += "<summary>Deterministic view (non-dynamic areas only)</summary>\n\n"
+                    md += f"![{label} — masked](screenshots/{name}__deterministic.png)\n\n"
+                    md += "</details>\n\n"
 
         source = self.read_test_source(name)
         if source:
@@ -164,7 +171,9 @@ class QA_Generate_Docs(Type_Safe):
             print(f"  Exists:     {md_path}")
 
         shot_dir   = uc_dir / "screenshots"
-        shot_count = len(list(shot_dir.glob("*.png"))) if shot_dir.exists() else 0
+        shot_count = (len([p for p in shot_dir.glob("*.png")
+                           if "__deterministic" not in p.name])
+                      if shot_dir.exists() else 0)
         return (name, title, shot_count, group_name)
 
     def generate_grouped_index(self, groups_data: list) -> None:

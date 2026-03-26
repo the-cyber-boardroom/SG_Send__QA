@@ -21,6 +21,7 @@ Usage (in conftest.py):
 """
 
 import json
+import shutil
 from pathlib import Path
 
 from sg_send_qa.utils.QA_Screenshot import cdp_screenshot
@@ -97,14 +98,47 @@ class ScreenshotCapture:
             test_target = test_target,
         )
 
+    _mask_color: str = "#1a2332"
+
     def capture(self, page, name: str, description: str = "") -> None:
-        """Capture a screenshot and record it."""
-        path = self.shots_dir / f"{name}.png"
-        cdp_screenshot(page, str(path))
+        """Capture a real screenshot and a deterministic (masked) companion.
+
+        Two files are written per call:
+          - {name}.png               — full UI, real screenshot via CDP
+          - {name}__deterministic.png — same but with [data-qa-mask] elements
+                                        blacked out; used for visual diffing
+
+        If no [data-qa-mask] elements are found the deterministic file is a
+        copy of the real screenshot (identical bytes → diff ratio 0%).
+        """
+        real_path = self.shots_dir / f"{name}.png"
+        det_path  = self.shots_dir / f"{name}__deterministic.png"
+
+        # Real screenshot — CDP bypass (no font-wait flakiness)
+        cdp_screenshot(page, str(real_path))
+
+        # Deterministic screenshot — native Playwright with mask support
+        try:
+            mask_elements = page.locator("[data-qa-mask]").all()
+        except Exception:
+            mask_elements = []
+
+        if mask_elements:
+            page.screenshot(
+                path       = str(det_path),
+                mask       = mask_elements,
+                mask_color = self._mask_color,
+            )
+            has_masks = True
+        else:
+            shutil.copy2(str(real_path), str(det_path))
+            has_masks = False
+
         self._captured.append({
             "name"       : name,
-            "path"       : str(path),
+            "path"       : str(real_path),
             "description": description,
+            "has_masks"  : has_masks,
         })
 
     @property

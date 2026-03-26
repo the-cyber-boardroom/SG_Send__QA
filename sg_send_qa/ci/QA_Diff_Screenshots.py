@@ -40,6 +40,10 @@ class QA_Diff_Screenshots(Type_Safe):
         )
         return [p for p in result.stdout.strip().splitlines() if p.endswith(".png")]
 
+    def real_path_for_deterministic(self, det_path: str) -> str:
+        """Return the real PNG path that pairs with a __deterministic.png."""
+        return det_path.replace("__deterministic.png", ".png")
+
     def git_show_head(self, path: str):
         """Return the bytes of a file at HEAD, or None if it doesn't exist."""
         result = subprocess.run(
@@ -76,6 +80,15 @@ class QA_Diff_Screenshots(Type_Safe):
     def run(self) -> dict:
         """Check all modified screenshots and revert those below threshold.
 
+        Strategy:
+          - Deterministic files (*__deterministic.png) are the primary diff
+            signal.  If the deterministic diff is below threshold, BOTH the
+            deterministic file and its real counterpart are reverted.
+          - Real files that have a deterministic companion are skipped
+            (the deterministic file governs the decision for that pair).
+          - Real files with no deterministic companion are diffed directly
+            (legacy / backwards-compat behaviour).
+
         Returns a summary dict with keys: threshold, checked, reverted, kept.
         """
         threshold = self.load_threshold()
@@ -87,9 +100,21 @@ class QA_Diff_Screenshots(Type_Safe):
             print("  No modified screenshots detected.")
             return {"threshold": threshold, "checked": 0, "reverted": 0, "kept": 0}
 
-        print(f"  Checking {len(changed)} modified screenshot(s) (threshold={threshold:.1%})")
+        # Split into deterministic and real sets
+        det_paths  = {p for p in changed if p.endswith("__deterministic.png")}
+        real_paths = set(changed) - det_paths
 
-        for path in changed:
+        # Real files whose deterministic pair is also changed → skip (pair governs)
+        governed   = {self.real_path_for_deterministic(d) for d in det_paths}
+        standalone = real_paths - governed   # real files with no det companion
+
+        candidates = list(det_paths) + list(standalone)
+        print(f"  Checking {len(candidates)} screenshot(s) (threshold={threshold:.1%})")
+
+        for path in sorted(candidates):
+            is_det    = path.endswith("__deterministic.png")
+            real_path = self.real_path_for_deterministic(path) if is_det else path
+
             head_bytes = self.git_show_head(path)
             if head_bytes is None:
                 print(f"    NEW  {path}")
@@ -108,11 +133,16 @@ class QA_Diff_Screenshots(Type_Safe):
 
             if ratio <= threshold:
                 self.revert_file(path)
-                print(f"    REVERT {path} (diff={ratio:.4%} <= {threshold:.1%})")
                 reverted += 1
+                if is_det and real_path in real_paths:
+                    # Revert the paired real PNG too
+                    self.revert_file(real_path)
+                    print(f"    REVERT {path} + {real_path} (diff={ratio:.4%} <= {threshold:.1%})")
+                else:
+                    print(f"    REVERT {path} (diff={ratio:.4%} <= {threshold:.1%})")
             else:
                 print(f"    KEEP   {path} (diff={ratio:.4%} > {threshold:.1%})")
                 kept += 1
 
         print(f"  Done: {reverted} reverted, {kept} kept")
-        return {"threshold": threshold, "checked": len(changed), "reverted": reverted, "kept": kept}
+        return {"threshold": threshold, "checked": len(candidates), "reverted": reverted, "kept": kept}
