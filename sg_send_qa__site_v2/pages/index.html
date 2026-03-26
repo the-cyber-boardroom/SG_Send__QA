@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SG/Send QA — Living Documentation</title>
+    <meta name="description" content="Automated browser test results and living documentation for SG/Send, the zero-knowledge encrypted file sharing platform.">
+
+    <link rel="icon" type="image/svg+xml" href="../_common/favicon.svg">
+    <link rel="stylesheet" href="../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../_common/css/qa-site.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <div class="qa-hero">
+                <h1>SG/Send QA</h1>
+                <p>
+                    Living documentation and automated test results for
+                    <a href="https://send.sgraph.ai" target="_blank" rel="noopener">SG/Send</a>
+                    — the zero-knowledge encrypted file sharing platform by SGraph AI.
+                </p>
+                <p>
+                    Every page on this site was generated from a real Playwright browser test.
+                    Screenshots are evidence, not illustrations.
+                </p>
+            </div>
+
+            <div class="qa-stats" id="qa-stats">
+                <!-- Populated by inline script from qa_summary.json -->
+            </div>
+
+            <h2>What is SG/Send?</h2>
+            <p>
+                SG/Send is a <strong>secure, encrypted file sharing platform</strong> that enables controlled
+                distribution of sensitive documents. Key properties:
+            </p>
+            <ul>
+                <li><strong>Zero-knowledge encryption</strong> — files are encrypted in the browser before upload; the server never sees plaintext</li>
+                <li><strong>Token-based access gate</strong> — each sharing session is scoped to a unique access token</li>
+                <li><strong>Key-in-URL</strong> — the decryption key lives in the URL fragment, never sent to the server</li>
+                <li><strong>Audit trail</strong> — all access attempts (including invalid tokens) are logged</li>
+            </ul>
+
+            <h2>What Is This Site?</h2>
+            <p>
+                This documentation is <strong>automatically generated</strong> from Playwright browser tests
+                that run against the live SG/Send platform on every CI push. Every page documents a real
+                user workflow, captured as screenshots and verified by automated assertions.
+            </p>
+            <p>
+                The pipeline: <strong>tests run → screenshots are captured → pages are generated → site is deployed</strong>.
+                No manual writing. No stale documentation. If a test fails, the page is not updated.
+            </p>
+
+            <h2>Use Cases</h2>
+            <p>Browse documented workflows in the sidebar, or start with the most common flows:</p>
+            <ul>
+                <li><a href="use-cases/01-access-gate/landing_page_loads/">Landing page loads correctly</a></li>
+                <li><a href="use-cases/01-access-gate/landing_page_has_access_gate/">Access gate is present</a></li>
+                <li><a href="use-cases/01-access-gate/invalid_token_rejected/">Invalid token is rejected</a></li>
+            </ul>
+
+            <hr>
+
+            <p style="font-size: var(--text-sm); color: var(--color-text-secondary);">
+                SG/Send QA site v2 — Aurora theme, Web Components, S3/CloudFront.
+                Built by the SGraph AI team.
+            </p>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../_common/js/build-info.js"></script>
+
+    <!-- Shared site chrome from Tools CDN -->
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+
+    <!-- QA-specific sidebar (local component — not yet built, renders nothing until Session 2) -->
+    <script type="module" src="../_common/js/components/qa-sidebar.js" onerror="console.info('qa-sidebar not yet built')"></script>
+
+    <script>
+        // Populate stat cards from qa_summary.json
+        fetch('../_data/qa_summary.json')
+            .then(r => r.json())
+            .then(data => {
+                const container = document.getElementById('qa-stats');
+                const stats = [
+                    { number: data.total_tests        || '—', label: 'Tests' },
+                    { number: data.total_screenshots   || '—', label: 'Screenshots' },
+                    { number: (data.groups || []).length || '—', label: 'Use-Case Groups' },
+                    { number: data.total_use_cases     || '—', label: 'Use Cases' },
+                ];
+                container.innerHTML = stats.map(s => `
+                    <div class="qa-stat-card">
+                        <span class="number">${s.number}</span>
+                        <span class="label">${s.label}</span>
+                    </div>`).join('');
+            })
+            .catch(() => { /* summary not available locally — skip */ });
+    </script>
+
+</body>
+</html>

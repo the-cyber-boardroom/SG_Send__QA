@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>How the QA Site Works — SG/Send QA</title>
+    <meta name="description" content="How the SG/Send QA site is built, updated, and deployed — the automated pipeline from Playwright tests to live documentation.">
+
+    <link rel="icon" type="image/svg+xml" href="../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../_common/css/qa-site.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <h1>How the QA Site Works</h1>
+            <p>
+                This page documents how
+                <a href="https://qa.send.sgraph.ai" target="_blank" rel="noopener">qa.send.sgraph.ai</a>
+                is built, updated, and deployed. The site is <strong>living documentation</strong> —
+                every page is backed by automated Playwright browser tests that capture screenshots as evidence.
+            </p>
+
+            <h2>The Pipeline</h2>
+            <p>Every push to the repo triggers the full pipeline:</p>
+
+            <div class="qa-pipeline-step">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <h3>Tests run and capture screenshots</h3>
+                    <p>
+                        Playwright browser tests in <code>tests/qa/v030/</code> run against the real SG/Send
+                        platform via headless Chromium. Each test calls <code>screenshots.capture(page, name, description)</code>
+                        to save a PNG alongside a <code>_metadata.json</code> file.
+                    </p>
+                </div>
+            </div>
+
+            <div class="qa-pipeline-step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <h3>Screenshot diffing</h3>
+                    <p>
+                        New screenshots are compared against the previous commit using Pillow.
+                        If the pixel difference is under 1%, the file is reverted — preventing
+                        noisy commits from sub-pixel rendering differences. If it exceeds 1%,
+                        the new screenshot is kept.
+                    </p>
+                </div>
+            </div>
+
+            <div class="qa-pipeline-step">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <h3>Documentation is generated</h3>
+                    <p>
+                        <code>generate_docs.py</code> walks the use-cases directory. For each folder
+                        with a <code>_metadata.json</code>, it scaffolds a documentation page containing
+                        the test description, screenshot gallery, and test source code.
+                        Hand-crafted pages (like this one) are never overwritten.
+                    </p>
+                </div>
+            </div>
+
+            <div class="qa-pipeline-step">
+                <div class="step-num">4</div>
+                <div class="step-body">
+                    <h3>Changes are committed to git</h3>
+                    <p>
+                        Updated screenshots and generated documentation pages are committed back to
+                        the branch automatically. Git becomes the historical record: every version
+                        of every page and screenshot is preserved.
+                    </p>
+                </div>
+            </div>
+
+            <div class="qa-pipeline-step">
+                <div class="step-num">5</div>
+                <div class="step-body">
+                    <h3>Site is deployed to S3 / CloudFront</h3>
+                    <p>
+                        <code>deploy_static_site.py</code> uploads the committed site files to S3 and
+                        invalidates the CloudFront cache. The new version of
+                        <a href="https://qa.send.sgraph.ai" target="_blank" rel="noopener">qa.send.sgraph.ai</a>
+                        is live within minutes of the push.
+                    </p>
+                </div>
+            </div>
+
+            <h2>What Each Test Produces</h2>
+            <p>Every browser test produces two outputs:</p>
+            <ul>
+                <li><strong>A pass/fail result</strong> — the CI pipeline goes green or red</li>
+                <li><strong>A set of annotated screenshots</strong> — these become the documentation page you are reading now</li>
+            </ul>
+
+            <p>
+                A screenshot entry pairs a visual state with the code that produced it:
+            </p>
+
+            <pre><code>Action:  page.drop_file("test-photo.png")
+Code:    upload_page.drop_file(test_files["photo"])
+         upload_page.wait_for_state("file-ready")
+         screenshot("02_file_selected")
+
+[Screenshot: 02_file_selected.png — the upload UI after the file is dropped]</code></pre>
+
+            <h2>Key Files</h2>
+            <table>
+                <thead>
+                    <tr><th>File</th><th>Role</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>tests/qa/v030/conftest.py</code></td><td>Screenshot fixture, test server setup, session fixtures</td></tr>
+                    <tr><td><code>sg_send_qa/cli/generate_docs.py</code></td><td>Scaffolds HTML documentation pages from <code>_metadata.json</code></td></tr>
+                    <tr><td><code>sg_send_qa/ci/diff_screenshots.py</code></td><td>Visual diff — reverts unchanged PNGs before commit</td></tr>
+                    <tr><td><code>sg_send_qa__site_v2/</code></td><td>This site — Web Components, Aurora theme, S3/CloudFront</td></tr>
+                    <tr><td><code>.github/workflows/ci-pipeline.yml</code></td><td>Full CI: unit tests → browser tests → screenshots → docs → deploy</td></tr>
+                    <tr><td><code>scripts/deploy_static_site.py</code></td><td>Uploads to S3, invalidates CloudFront</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Local Development</h2>
+            <p>To preview the v2 site locally:</p>
+            <pre><code>./scripts/qa__run-locally.sh
+# → http://localhost:10064/</code></pre>
+
+            <p>No Ruby, no Jekyll, no build step. Screenshots load from the live site via full URLs.</p>
+
+            <p>To run tests and capture screenshots locally:</p>
+            <pre><code>python -m pytest tests/qa/v030/test__access_gate.py -v
+python -m sg_send_qa.cli.generate_docs_v2</code></pre>
+
+            <h2>Adding a New Test</h2>
+
+            <h3>Option A: Auto-scaffolded (from test output)</h3>
+            <ol>
+                <li>Write a test in <code>tests/qa/v030/</code> that uses the <code>screenshots</code> fixture</li>
+                <li>The fixture creates the folder structure automatically</li>
+                <li><code>generate_docs.py</code> creates a starter HTML page on the next CI run</li>
+                <li>CI commits and deploys</li>
+            </ol>
+
+            <h3>Option B: Hand-crafted (richer documentation)</h3>
+            <ol>
+                <li>Create <code>sg_send_qa__site_v2/pages/use-cases/{group}/{name}/index.html</code></li>
+                <li>Use the template in <code>sg_send_qa__site_v2/_common/templates/test-page.html</code></li>
+                <li>Write your test to capture screenshots; update <code>_metadata.json</code></li>
+                <li>Add the use case to <code>_data/qa_sidebar.json</code></li>
+            </ol>
+
+            <h2>Screenshot Naming Convention</h2>
+            <p>Screenshots follow a consistent naming scheme:</p>
+            <pre><code>screenshots/
+  01_landing.png              ← NN_description (sequential, snake_case)
+  02_token_entered.png
+  03_upload_ready.png
+  _metadata.json              ← test docs + screenshot descriptions</code></pre>
+
+            <p>
+                The <code>NN_</code> prefix sets the display order. The description becomes the screenshot title
+                (underscores → spaces, title-cased).
+            </p>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../_common/js/components/qa-sidebar.js" onerror="console.info('qa-sidebar not yet built')"></script>
+
+</body>
+</html>
