@@ -46,37 +46,44 @@
     {
       "name": "01_file_selected",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/01_file_selected.png",
-      "description": "File selected (delivery step active)"
+      "description": "File selected (delivery step active)",
+      "has_masks": false
     },
     {
       "name": "02_share_step",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/02_share_step.png",
-      "description": "Share mode step"
+      "description": "Share mode step",
+      "has_masks": false
     },
     {
       "name": "03_mode_selected",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/03_mode_selected.png",
-      "description": "Combined link selected"
+      "description": "Combined link selected",
+      "has_masks": false
     },
     {
       "name": "04_upload_complete",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/04_upload_complete.png",
-      "description": "Upload complete"
+      "description": "Upload complete",
+      "has_masks": true
     },
     {
       "name": "06_link_captured",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/06_link_captured.png",
-      "description": "Combined link: http://localhost:64633/en-gb/browse/#342e456f4a71/otsIrVjDddY8gm8cPC7jSii6iadfzp"
+      "description": "Combined link: http://localhost:44461/en-gb/browse/#61112e13935a/DTTkjERqtmPUx9icXcBJT6qUJFZayr",
+      "has_masks": true
     },
     {
       "name": "07_auto_decrypted",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/07_auto_decrypted.png",
-      "description": "Auto-decrypted content"
+      "description": "Auto-decrypted content",
+      "has_masks": true
     },
     {
       "name": "01_api_created_decrypt",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/01_api_created_decrypt.png",
-      "description": "Decrypted content from API-created transfer"
+      "description": "Decrypted content from API-created transfer",
+      "has_masks": true
     }
   ]
 }

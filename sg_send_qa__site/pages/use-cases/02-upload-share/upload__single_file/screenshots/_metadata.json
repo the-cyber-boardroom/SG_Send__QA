@@ -79,47 +79,56 @@
     {
       "name": "01_upload_page",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_upload_page.png",
-      "description": "Upload page loaded"
+      "description": "Upload page loaded",
+      "has_masks": false
     },
     {
       "name": "01_file_selected",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_file_selected.png",
-      "description": "File selected \u2014 delivery step"
+      "description": "File selected \u2014 delivery step",
+      "has_masks": false
     },
     {
       "name": "02_share_step",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/02_share_step.png",
-      "description": "Share mode step"
+      "description": "Share mode step",
+      "has_masks": false
     },
     {
       "name": "03_mode_selected",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/03_mode_selected.png",
-      "description": "Combined link selected"
+      "description": "Combined link selected",
+      "has_masks": false
     },
     {
       "name": "04_upload_done",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/04_upload_done.png",
-      "description": "Upload complete \u2014 link shown"
+      "description": "Upload complete \u2014 link shown",
+      "has_masks": true
     },
     {
       "name": "05_download_page",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/05_download_page.png",
-      "description": "Download page \u2014 awaiting decrypt"
+      "description": "Download page \u2014 awaiting decrypt",
+      "has_masks": true
     },
     {
       "name": "06_decrypted",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/06_decrypted.png",
-      "description": "Content decrypted and visible"
+      "description": "Content decrypted and visible",
+      "has_masks": true
     },
     {
       "name": "07_link_format",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/07_link_format.png",
-      "description": "Link verified: http://localhost:52794/en-gb/browse/#c3e88bc4e2dd/uTJ_2JVhYWM8rgMqfDXbxCZ45w49-R"
+      "description": "Link verified: http://localhost:63549/en-gb/browse/#062ff256894d/ir5akQ0H7amHNpzP0PLritDfbGMieX",
+      "has_masks": true
     },
     {
       "name": "01_footer",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_footer.png",
-      "description": "Footer showing version"
+      "description": "Footer showing version",
+      "has_masks": false
     }
   ]
 }

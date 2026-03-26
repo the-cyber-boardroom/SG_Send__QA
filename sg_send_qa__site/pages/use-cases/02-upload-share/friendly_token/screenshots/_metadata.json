@@ -93,37 +93,44 @@
     {
       "name": "05_token_captured",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
-      "description": "Token: glow-level-9647"
+      "description": "Token: anvil-unity-3358",
+      "has_masks": true
     },
     {
       "name": "06_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
-      "description": "Token 'glow-level-9647' resolved"
+      "description": "Token 'anvil-unity-3358' resolved",
+      "has_masks": true
     },
     {
       "name": "05_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
-      "description": "Token 'brook-raven-9348'"
+      "description": "Token 'river-brush-6220'",
+      "has_masks": true
     },
     {
       "name": "01_file_selected",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/01_file_selected.png",
-      "description": "File selected (delivery step active)"
+      "description": "File selected (delivery step active)",
+      "has_masks": false
     },
     {
       "name": "02_simple_token_selected",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/02_simple_token_selected.png",
-      "description": "Simple Token selected"
+      "description": "Simple Token selected",
+      "has_masks": false
     },
     {
       "name": "03_upload_complete",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/03_upload_complete.png",
-      "description": "Upload complete"
+      "description": "Upload complete",
+      "has_masks": true
     },
     {
       "name": "05_hash_after_decrypt",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
-      "description": "URL after decrypt: http://localhost:39151//en-gb/browse/#agate-rumor-1673"
+      "description": "URL after decrypt: http://localhost:36585//en-gb/browse/#quest-grain-2244",
+      "has_masks": true
     }
   ]
 }
