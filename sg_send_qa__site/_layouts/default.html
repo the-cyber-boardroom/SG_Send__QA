@@ -148,6 +148,23 @@
       .main { margin-left: 0; padding: 1.5rem; }
       body { flex-direction: column; }
     }
+    /* Print */
+    @media print {
+      .sidebar { display: none; }
+      .main {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 1rem 1.5rem;
+        font-size: 0.82rem;
+      }
+      h1 { font-size: 1.4rem; }
+      h2 { font-size: 1.1rem; }
+      h3 { font-size: 0.95rem; }
+      body { font-size: 0.82rem; line-height: 1.5; }
+      img { max-width: 100%; box-shadow: none; }
+      a { color: var(--text); text-decoration: none; }
+      footer { display: none; }
+    }
   </style>
 </head>
 <body>
