@@ -96,5 +96,20 @@
       "guard": "wrong_key_or_corrupt",
       "security": ""
     }
+  ],
+  "mermaid": "stateDiagram-v2\n    loading --> entry : no_hash [url_has_no_fragment]\n    loading --> ready : hash_resolved [transfer_fetch_succeeded]\n    loading --> error : hash_failed [transfer_fetch_failed]\n    entry --> ready : submit_valid_id [transfer_id_resolved]\n    entry --> error : submit_invalid_id [transfer_id_not_found]\n    entry --> entry : submit_bogus [inline_error_shown]\n    ready --> decrypting : click_decrypt\n    ready --> browse : auto_route [content_type_is_folder]\n    ready --> gallery : auto_route [content_type_is_multi_image]\n    ready --> viewer : auto_route [content_type_is_single_file]\n    decrypting --> complete : decrypt_succeeded\n    decrypting --> error : decrypt_failed [wrong_key_or_corrupt]",
+  "security_annotated": [
+    {
+      "from": "ready",
+      "to": "decrypting",
+      "trigger": "click_decrypt",
+      "security": "key_in_memory"
+    },
+    {
+      "from": "decrypting",
+      "to": "complete",
+      "trigger": "decrypt_succeeded",
+      "security": "plaintext_in_dom"
+    }
   ]
 }

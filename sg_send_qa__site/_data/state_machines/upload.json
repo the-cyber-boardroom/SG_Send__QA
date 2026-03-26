@@ -75,5 +75,26 @@
       "guard": "finalisation_complete",
       "security": "key_in_url"
     }
+  ],
+  "mermaid": "stateDiagram-v2\n    idle --> file-ready : file_selected [file_input_has_file]\n    file-ready --> choosing-delivery : auto_advance [needs_delivery_choice]\n    file-ready --> choosing-share : auto_advance [single_file_or_text]\n    choosing-delivery --> choosing-share : click_next [delivery_mode_selected]\n    choosing-share --> confirming : select_share_mode [share_card_clicked]\n    confirming --> encrypting : click_encrypt_upload\n    encrypting --> uploading : auto_advance [encryption_complete]\n    uploading --> completing : auto_advance [upload_complete]\n    completing --> complete : auto_advance [finalisation_complete]",
+  "security_annotated": [
+    {
+      "from": "confirming",
+      "to": "encrypting",
+      "trigger": "click_encrypt_upload",
+      "security": "plaintext_in_memory"
+    },
+    {
+      "from": "encrypting",
+      "to": "uploading",
+      "trigger": "auto_advance",
+      "security": "ciphertext_only"
+    },
+    {
+      "from": "completing",
+      "to": "complete",
+      "trigger": "auto_advance",
+      "security": "key_in_url"
+    }
   ]
 }

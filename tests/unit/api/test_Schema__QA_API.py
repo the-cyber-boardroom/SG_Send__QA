@@ -2,6 +2,7 @@ from unittest                                   import TestCase
 from sg_send_qa.api.Schema__Capture_Config      import Schema__Capture_Config
 from sg_send_qa.api.Schema__QA_Request          import Schema__QA_Request
 from sg_send_qa.api.Schema__QA_Response         import Schema__QA_Response
+from sg_send_qa.api.Schema__Transition_Observed import Schema__Transition_Observed
 
 
 class test_Schema__Capture_Config(TestCase):
@@ -86,3 +87,21 @@ class test_Schema__QA_Response(TestCase):
         data = resp.json()
         assert data['status']      == 'pass'
         assert data['duration_ms'] == 1500
+
+    def test__transitions_observed_defaults_empty(self):
+        assert list(self.schema.transitions_observed) == []
+
+    def test__transitions_observed_accepts_list(self):
+        t = Schema__Transition_Observed(from_state='idle', to_state='file-ready', trigger='file_selected')
+        self.schema.transitions_observed.append(t)
+        assert len(self.schema.transitions_observed) == 1
+        assert self.schema.transitions_observed[0].from_state == 'idle'
+
+    def test__transitions_observed_in_json(self):
+        resp = Schema__QA_Response(status='pass')
+        resp.transitions_observed.append(
+            Schema__Transition_Observed(from_state='idle', to_state='file-ready', trigger='file_selected')
+        )
+        data = resp.json()
+        assert 'transitions_observed' in data
+        assert data['transitions_observed'][0]['to_state'] == 'file-ready'
