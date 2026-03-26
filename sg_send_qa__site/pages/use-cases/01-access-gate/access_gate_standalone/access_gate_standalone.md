@@ -6,7 +6,7 @@ auto_generated: true
 
 # Access Gate Standalone
 
-> Generated at commit [`6e8ee11b`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/6e8ee11b) · v0.2.37 · 2026-03-26 01:41 UTC
+> Test source at commit [`2dad394c`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2dad394c) · v0.2.37
 
 Standalone access gate test: UC-10 (P1).
 
