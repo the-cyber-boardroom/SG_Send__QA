@@ -14,6 +14,11 @@ from osbot_utils.utils.Http                                                     
 from osbot_utils.utils.Misc                                                      import str_to_base64
 from sg_send_qa.browser.JS_Query__Shadow_DOM                                     import JS_Query__Shadow_DOM
 from sg_send_qa.browser.QA_Browser                                               import QA_Browser
+from sg_send_qa.browser.Schema__Browse_Page                                      import Schema__Browse_Page
+from sg_send_qa.browser.Schema__Download_Page                                    import Schema__Download_Page
+from sg_send_qa.browser.Schema__Gallery_Page                                     import Schema__Gallery_Page
+from sg_send_qa.browser.Schema__Upload_Page                                      import Schema__Upload_Page
+from sg_send_qa.browser.Schema__Viewer_Page                                      import Schema__Viewer_Page
 
 DEFAULT__TARGET_SERVER__LOCALHOST = Safe_Str__Url__Server('http://localhost')
 DEFAULT__I18N__LANGUAGE_LOCATION = 'en-gb'
@@ -384,3 +389,60 @@ class SG_Send__Browser__Pages(Type_Safe):
         link = self.upload__get_link_only()
         key  = self.upload__get_decryption_key()
         return link, key
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # Page model extraction — snapshot current page state into a Type_Safe schema
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    def _transfer_id_from_url(self) -> str:                                         # parse transfer ID from hash: /browse/#tid/key → tid
+        fragment = self.url().split('#')[-1] if '#' in self.url() else ''
+        return fragment.split('/')[0] if fragment else ''
+
+    def extract__upload_page(self) -> Schema__Upload_Page:                          # snapshot upload wizard state
+        return Schema__Upload_Page(
+            state           = self.upload_state()                                     or '',
+            file_name       = self.js().text("upload-step-select", "#file-name")      or '',
+            share_link      = self.js().text("upload-step-done",   "#combined-link")  or '',
+            friendly_token  = self.js().text("upload-step-done",   "#simple-token")   or '',
+            is_gate_visible = self.is_access_gate_visible()                               ,
+        )
+
+    def extract__download_page(self) -> Schema__Download_Page:                      # snapshot download/decrypt state
+        return Schema__Download_Page(
+            state                = self.download_state()                          or '',
+            is_key_input_visible = self.js().light_visible("#key-input")              ,
+            content_text         = self.visible_text()                            or '',
+            error_message        = self.js().light_text(".error-message")         or '',
+            transfer_id          = self._transfer_id_from_url()                   or '',
+        )
+
+    def extract__browse_page(self) -> Schema__Browse_Page:                          # snapshot browse view state
+        return Schema__Browse_Page(
+            state         = self.download_state()                                 or '',
+            content_text  = self.visible_text()                                   or '',
+            error_message = self.js().light_text(".error-message")                or '',
+            transfer_id   = self._transfer_id_from_url()                          or '',
+        )
+
+    def extract__gallery_page(self) -> Schema__Gallery_Page:                        # snapshot gallery view state
+        file_count_text = self.js().light_text(".gallery-count")                    # selector TBC — confirm against live DOM
+        try:
+            file_count = int(file_count_text) if file_count_text else 0
+        except (ValueError, TypeError):
+            file_count = 0
+        return Schema__Gallery_Page(
+            state         = self.download_state()                                 or '',
+            file_count    = file_count                                                ,
+            content_text  = self.visible_text()                                   or '',
+            error_message = self.js().light_text(".error-message")                or '',
+            transfer_id   = self._transfer_id_from_url()                          or '',
+        )
+
+    def extract__viewer_page(self) -> Schema__Viewer_Page:                          # snapshot single-file viewer state
+        return Schema__Viewer_Page(
+            state         = self.download_state()                                 or '',
+            file_name     = self.js().light_text(".viewer-filename")              or '',  # selector TBC — confirm against live DOM
+            content_text  = self.visible_text()                                   or '',
+            error_message = self.js().light_text(".error-message")                or '',
+            transfer_id   = self._transfer_id_from_url()                          or '',
+        )

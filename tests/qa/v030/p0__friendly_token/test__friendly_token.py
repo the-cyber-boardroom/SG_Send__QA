@@ -8,165 +8,144 @@ Flow:
   3. Open a new tab to /en-gb/browse/#<friendly-token>
   4. Verify the token resolves and content decrypts
 """
-
-import pytest
 import re
-
-from tests.qa.v030.browser_helpers import (
-    goto, handle_access_gate,
-    wait_for_upload_state, wait_for_upload_states,
-    wait_for_download_states,
-)
+from pathlib                                                    import Path
+from unittest                                                   import TestCase
+import pytest
+from sg_send_qa.browser.SG_Send__Browser__Test_Harness         import SG_Send__Browser__Test_Harness
+from sg_send_qa.utils.QA_Screenshot_Capture                    import ScreenshotCapture
 
 pytestmark = pytest.mark.p0
 
 SAMPLE_CONTENT = "Friendly token test — UC-03."
 TOKEN_PATTERN  = re.compile(r"\b[a-z]+-[a-z]+-\d{4}\b")
 
-
-def _upload_with_simple_token(page, ui_url, send_server, screenshots, filename="token-test.txt"):
-    """Shared: file (auto-advances to delivery) → Next → Simple Token card → upload → return token.
-
-    Wizard behaviour (send-upload.js):
-      - set_input_files triggers _setFile() → _advanceToDelivery() automatically.
-      - Clicking a share card emits step-share-selected → auto-advances to confirm.
-    Sequence: [Next] → <token card click> → [Encrypt & Upload].
-    """
-    goto(page, f"{ui_url}/en-gb/")
-    handle_access_gate(page, send_server.access_token)
-
-    page.locator("#file-input").set_input_files({
-        "name": filename, "mimeType": "text/plain",
-        "buffer": SAMPLE_CONTENT.encode(),
-    })
-    wait_for_upload_states(page, ["file-ready", "choosing-delivery"])
-    screenshots.capture(page, "01_file_selected", "File selected (delivery step active)")
-
-    # Delivery → Share mode
-    page.locator("#upload-next-btn").click()
-    page.locator("[data-mode]").first.wait_for(state="visible")
-
-    # Select Simple Token — click auto-advances to confirm step
-    page.locator('[data-mode="token"]').click()
-    wait_for_upload_state(page, "confirming")
-    screenshots.capture(page, "02_simple_token_selected", "Simple Token selected")
-
-    # Confirm → Encrypt & Upload
-    page.locator("#upload-next-btn").click()
-    wait_for_upload_state(page, "complete", timeout=20_000)
-    screenshots.capture(page, "03_upload_complete", "Upload complete")
-
-    # Extract the friendly token from the Done step.
-    # The done step (upload-step-done) renders in Shadow DOM, so
-    # page.text_content("body") cannot see it.  Use Playwright's
-    # shadow-piercing locators instead.
-    token_matches = []
-
-    # Primary: the #simple-token div holds the plain token string
-    simple_token_el = page.locator("#simple-token")
-    if simple_token_el.count() > 0:
-        token_text = simple_token_el.first.text_content() or ""
-        token_matches = TOKEN_PATTERN.findall(token_text)
-
-    if not token_matches:
-        # Fallback: the #full-link box contains the browse URL which includes the token
-        full_link_el = page.locator("#full-link")
-        if full_link_el.count() > 0:
-            link_text = full_link_el.first.text_content() or ""
-            token_matches = TOKEN_PATTERN.findall(link_text)
-
-    return token_matches
+_BASE  = Path(__file__).parent.parent.parent.parent.parent / "sg_send_qa__site" / "pages" / "use-cases"
+_GROUP = "02-upload-share"
+_UC    = "friendly_token"
 
 
-class TestFriendlyToken:
+class test_Friendly_Token(TestCase):
     """Validate the Simple Token (friendly token) share mode end-to-end."""
 
-    def test_friendly_token_upload_and_resolve(self, page, ui_url, send_server, screenshots):
+    @classmethod
+    def setUpClass(cls):
+        cls.harness = SG_Send__Browser__Test_Harness().headless(True).setup()
+        cls.sg_send = cls.harness.sg_send
+        cls.harness.set_access_token()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.harness.teardown()
+
+    def _shots(self, method_name, method_doc=""):
+        shots_dir = _BASE / _GROUP / _UC / "screenshots"
+        return ScreenshotCapture(
+            use_case    = _UC,
+            module_name = "test__friendly_token",
+            module_doc  = __doc__,
+            method_name = method_name,
+            method_doc  = method_doc,
+            shots_dir   = shots_dir,
+        )
+
+    def _upload_with_simple_token(self, shots, filename="token-test.txt"):
+        """Upload a file with Simple Token mode and return the friendly token string."""
+        self.sg_send.page__root()
+        self.sg_send.upload__set_file(filename, SAMPLE_CONTENT.encode())
+        shots.capture(self.sg_send.raw_page(), "01_file_selected", "File selected (delivery step active)")
+
+        self.sg_send.upload__click_next()
+        self.sg_send.upload__select_share_mode("token")
+        shots.capture(self.sg_send.raw_page(), "02_simple_token_selected", "Simple Token selected")
+
+        self.sg_send.upload__click_next()
+        self.sg_send.upload__wait_for_complete()
+        shots.capture(self.sg_send.raw_page(), "03_upload_complete", "Upload complete")
+
+        return self.sg_send.upload__get_friendly_token()
+
+    def test__01__friendly_token_upload_and_resolve(self):
         """Upload with Simple Token mode, then resolve the friendly token in a new tab."""
-        token_matches = _upload_with_simple_token(page, ui_url, send_server, screenshots)
+        shots         = self._shots("test__01__friendly_token_upload_and_resolve",
+                                    self.test__01__friendly_token_upload_and_resolve.__doc__)
+        friendly_token = self._upload_with_simple_token(shots)
 
-        assert token_matches, (
-            "No friendly token (word-word-NNNN) found on the page after upload."
-        )
-        friendly_token = token_matches[0]
-        screenshots.capture(page, "05_token_captured", f"Token: {friendly_token}")
+        assert friendly_token, "No friendly token found after upload"
+        assert TOKEN_PATTERN.search(friendly_token), \
+            f"Token does not match word-word-NNNN pattern: {friendly_token!r}"
+        shots.capture(self.sg_send.raw_page(), "05_token_captured",
+                      f"Token: {friendly_token}")
 
-        # Open token in new tab
-        resolve_page = page.context.new_page()
-        goto(resolve_page, f"{ui_url}/en-gb/browse/#{friendly_token}")
-        wait_for_download_states(resolve_page, ["complete", "error"])
-        screenshots.capture(resolve_page, "06_token_resolved", f"Token '{friendly_token}' resolved")
+        # Resolve in new page
+        new_page = self.sg_send.raw_page().context.new_page()
+        try:
+            from tests.qa.v030.browser_helpers import goto, wait_for_download_states
+            goto(new_page, f"{self.harness.ui_url()}/en-gb/browse/#{friendly_token}")
+            wait_for_download_states(new_page, ["complete", "error"])
+            shots.capture(new_page, "06_token_resolved", f"Token '{friendly_token}' resolved")
+            resolve_text = new_page.text_content("body") or ""
+            assert "not found" not in resolve_text.lower(), \
+                f"Token resolution failed — 'not found' error. Token: {friendly_token}"
+        finally:
+            new_page.close()
+        shots.save_metadata()
 
-        resolve_text = resolve_page.text_content("body") or ""
-        assert "not found" not in resolve_text.lower(), (
-            f"Token resolution failed — 'not found' error. Token: {friendly_token}"
-        )
-        resolve_page.close()
-
-    def test_friendly_token_format(self, page, ui_url, send_server, screenshots):
+    def test__02__friendly_token_format(self):
         """Verify the friendly token matches the word-word-NNNN pattern."""
-        token_matches = _upload_with_simple_token(page, ui_url, send_server, screenshots,
-                                                  filename="format-test.txt")
-        assert token_matches, "No friendly token found after upload"
-        token = token_matches[0]
+        shots          = self._shots("test__02__friendly_token_format",
+                                     self.test__02__friendly_token_format.__doc__)
+        friendly_token = self._upload_with_simple_token(shots, filename="format-test.txt")
 
-        parts = token.split("-")
-        assert len(parts) == 3,            f"Token should have 3 parts: {token}"
-        assert parts[0].isalpha(),         f"First part should be a word: {parts[0]}"
-        assert parts[1].isalpha(),         f"Second part should be a word: {parts[1]}"
-        assert parts[2].isdigit(),         f"Third part should be digits: {parts[2]}"
-        assert len(parts[2]) == 4,         f"Third part should be 4 digits: {parts[2]}"
+        assert friendly_token, "No friendly token found after upload"
+        parts = friendly_token.strip().split("-")
+        assert len(parts) == 3,        f"Token should have 3 parts: {friendly_token}"
+        assert parts[0].isalpha(),     f"First part should be a word: {parts[0]}"
+        assert parts[1].isalpha(),     f"Second part should be a word: {parts[1]}"
+        assert parts[2].isdigit(),     f"Third part should be digits: {parts[2]}"
+        assert len(parts[2]) == 4,     f"Third part should be 4 digits: {parts[2]}"
+        shots.save_metadata()
 
-    def test_friendly_token_resolves_in_new_tab(self, page, ui_url, send_server, screenshots):
+    def test__03__friendly_token_resolves_in_new_tab(self):
         """Upload with Simple Token, then open the token in a new browser tab."""
-        token_matches = _upload_with_simple_token(page, ui_url, send_server, screenshots,
-                                                  filename="resolve-test.txt")
-        assert token_matches, "No friendly token found after upload"
-        friendly_token = token_matches[0]
+        shots          = self._shots("test__03__friendly_token_resolves_in_new_tab",
+                                     self.test__03__friendly_token_resolves_in_new_tab.__doc__)
+        friendly_token = self._upload_with_simple_token(shots, filename="resolve-test.txt")
 
-        resolve_page = page.context.new_page()
-        goto(resolve_page, f"{ui_url}/en-gb/browse/#{friendly_token}")
-        wait_for_download_states(resolve_page, ["complete", "error"])
-        screenshots.capture(resolve_page, "05_token_resolved", f"Token '{friendly_token}'")
+        assert friendly_token, "No friendly token found after upload"
+        new_page = self.sg_send.raw_page().context.new_page()
+        try:
+            from tests.qa.v030.browser_helpers import goto, wait_for_download_states
+            goto(new_page, f"{self.harness.ui_url()}/en-gb/browse/#{friendly_token}")
+            wait_for_download_states(new_page, ["complete", "error"])
+            shots.capture(new_page, "05_token_resolved", f"Token '{friendly_token}'")
+            resolve_text = new_page.text_content("body") or ""
+            assert "not found" not in resolve_text.lower(), \
+                f"Token resolution failed — this is the P0 bug. Token: {friendly_token}"
+            assert SAMPLE_CONTENT in resolve_text or len(resolve_text) > 100, \
+                "Token did not resolve to decrypted content"
+        finally:
+            new_page.close()
+        shots.save_metadata()
 
-        resolve_text = resolve_page.text_content("body") or ""
-        assert "not found" not in resolve_text.lower(), (
-            f"Token resolution failed — 'not found' error. This is the P0 bug. Token: {friendly_token}"
-        )
-        assert SAMPLE_CONTENT in resolve_text or len(resolve_text) > 100, \
-            "Token did not resolve to decrypted content"
-        resolve_page.close()
+    def test__04__friendly_token_no_key_in_url_after_decrypt(self):
+        """After decryption, the friendly token remains in the URL (by design)."""
+        shots          = self._shots("test__04__friendly_token_no_key_in_url_after_decrypt",
+                                     self.test__04__friendly_token_no_key_in_url_after_decrypt.__doc__)
+        friendly_token = self._upload_with_simple_token(shots, filename="url-test.txt")
 
-    def test_friendly_token_no_key_in_url_after_decrypt(self, page, ui_url, send_server, screenshots):
-        """After decryption, the friendly token remains in the URL (by design).
-
-        The JS send-download component intentionally keeps friendly tokens in the URL
-        after decryption (comment: 'Friendly tokens are safe to keep in the URL bar').
-        Unlike combined links where the hash contains the actual encryption key,
-        a friendly token (word-word-NNNN) is merely a lookup identifier — the real
-        key is stored server-side in the vault.  So leaving it visible is not a
-        security risk, and keeping it allows the user to refresh or bookmark the page.
-
-        This test verifies that the URL still contains the token (not cleared) and that
-        no raw crypto key appears in the URL fragment.
-        """
-        token_matches = _upload_with_simple_token(page, ui_url, send_server, screenshots,
-                                                  filename="url-test.txt")
-        assert token_matches, "No friendly token found"
-        friendly_token = token_matches[0]
-
-        resolve_page = page.context.new_page()
-        goto(resolve_page, f"{ui_url}/en-gb/browse/#{friendly_token}")
-        wait_for_download_states(resolve_page, ["complete", "error"])
-
-        final_url = resolve_page.url
-        screenshots.capture(resolve_page, "05_hash_after_decrypt", f"URL after decrypt: {final_url}")
-
-        if "#" in final_url:
-            hash_fragment = final_url.split("#", 1)[1]
-            # Friendly token should remain in URL (intentional — it's a lookup key, not the crypto key)
-            # Verify the hash is the friendly token (not a raw base64 crypto key)
-            assert TOKEN_PATTERN.match(hash_fragment) or hash_fragment == "", (
-                f"URL hash is neither a friendly token nor empty: {hash_fragment}"
-            )
-        resolve_page.close()
+        assert friendly_token, "No friendly token found"
+        new_page = self.sg_send.raw_page().context.new_page()
+        try:
+            from tests.qa.v030.browser_helpers import goto, wait_for_download_states
+            goto(new_page, f"{self.harness.ui_url()}/en-gb/browse/#{friendly_token}")
+            wait_for_download_states(new_page, ["complete", "error"])
+            final_url = new_page.url
+            shots.capture(new_page, "05_hash_after_decrypt", f"URL after decrypt: {final_url}")
+            if "#" in final_url:
+                hash_fragment = final_url.split("#", 1)[1]
+                assert TOKEN_PATTERN.match(hash_fragment) or hash_fragment == "", \
+                    f"URL hash is neither a friendly token nor empty: {hash_fragment}"
+        finally:
+            new_page.close()
+        shots.save_metadata()
