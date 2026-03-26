@@ -6,7 +6,7 @@ auto_generated: true
 
 # Copy Url Contains Key
 
-> Test source at commit [`b907cdd3`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/b907cdd3) · v0.2.40
+> Test source at commit [`6b2d9867`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/6b2d9867) · v0.2.40
 
 The share URL shown in the panel contains the key (hash fragment).
 
