@@ -6,7 +6,7 @@ auto_generated: true
 
 # Combined Link
 
-> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.39
+> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.40
 
 UC-04: Combined Link share mode (P0).
 
@@ -85,7 +85,7 @@ Upload complete
 
 ### 06 Link Captured
 
-Combined link: http://localhost:58843/en-gb/browse/#b895075e4295/0pkVhaApfRUZO3Kl9CCacEyUipkUF3
+Combined link: http://localhost:48370/en-gb/browse/#81a78387269e/QN5GOWwm_oTnm0ExeVq9x3tG8at1qA
 
 ![06 Link Captured](screenshots/06_link_captured.png)
 
