@@ -50,3 +50,19 @@ class Fast_API__QA__Server(Serverless__Fast_API):
         self.add_routes(Routes__Download, qa_runner=self.qa_runner)
         self.add_routes(Routes__Workflow, qa_runner=self.qa_runner)
         return self
+
+
+# ── Module-level singletons ────────────────────────────────────────────────────
+# Exposed so uvicorn can reference them directly:
+#   uvicorn sg_send_qa.api.Fast_API__QA__Server:app --reload
+#
+# Also the Lambda handler:
+#   HANDLER=sg_send_qa.api.Fast_API__QA__Server.run
+# ──────────────────────────────────────────────────────────────────────────────
+_fast_api = Fast_API__QA__Server().setup()
+handler   = _fast_api.handler()         # Mangum-wrapped ASGI — for Lambda direct invoke
+app       = _fast_api.app()             # raw ASGI app — for uvicorn / Lambda Web Adapter
+
+
+def run(event, context=None):           # Lambda entry point
+    return handler(event, context)
