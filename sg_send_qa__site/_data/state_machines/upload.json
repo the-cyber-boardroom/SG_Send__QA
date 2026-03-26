@@ -1,0 +1,79 @@
+{
+  "name": "upload_wizard",
+  "states": [
+    "idle",
+    "file-ready",
+    "choosing-delivery",
+    "choosing-share",
+    "confirming",
+    "encrypting",
+    "uploading",
+    "completing",
+    "complete"
+  ],
+  "transitions": [
+    {
+      "from_state": "idle",
+      "to_state": "file-ready",
+      "trigger": "file_selected",
+      "guard": "file_input_has_file",
+      "security": ""
+    },
+    {
+      "from_state": "file-ready",
+      "to_state": "choosing-delivery",
+      "trigger": "auto_advance",
+      "guard": "needs_delivery_choice",
+      "security": ""
+    },
+    {
+      "from_state": "file-ready",
+      "to_state": "choosing-share",
+      "trigger": "auto_advance",
+      "guard": "single_file_or_text",
+      "security": ""
+    },
+    {
+      "from_state": "choosing-delivery",
+      "to_state": "choosing-share",
+      "trigger": "click_next",
+      "guard": "delivery_mode_selected",
+      "security": ""
+    },
+    {
+      "from_state": "choosing-share",
+      "to_state": "confirming",
+      "trigger": "select_share_mode",
+      "guard": "share_card_clicked",
+      "security": ""
+    },
+    {
+      "from_state": "confirming",
+      "to_state": "encrypting",
+      "trigger": "click_encrypt_upload",
+      "guard": "",
+      "security": "plaintext_in_memory"
+    },
+    {
+      "from_state": "encrypting",
+      "to_state": "uploading",
+      "trigger": "auto_advance",
+      "guard": "encryption_complete",
+      "security": "ciphertext_only"
+    },
+    {
+      "from_state": "uploading",
+      "to_state": "completing",
+      "trigger": "auto_advance",
+      "guard": "upload_complete",
+      "security": ""
+    },
+    {
+      "from_state": "completing",
+      "to_state": "complete",
+      "trigger": "auto_advance",
+      "guard": "finalisation_complete",
+      "security": "key_in_url"
+    }
+  ]
+}

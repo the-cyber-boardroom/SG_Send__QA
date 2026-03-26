@@ -1,0 +1,100 @@
+{
+  "name": "download_flow",
+  "states": [
+    "loading",
+    "entry",
+    "ready",
+    "decrypting",
+    "complete",
+    "error",
+    "browse",
+    "gallery",
+    "viewer"
+  ],
+  "transitions": [
+    {
+      "from_state": "loading",
+      "to_state": "entry",
+      "trigger": "no_hash",
+      "guard": "url_has_no_fragment",
+      "security": ""
+    },
+    {
+      "from_state": "loading",
+      "to_state": "ready",
+      "trigger": "hash_resolved",
+      "guard": "transfer_fetch_succeeded",
+      "security": ""
+    },
+    {
+      "from_state": "loading",
+      "to_state": "error",
+      "trigger": "hash_failed",
+      "guard": "transfer_fetch_failed",
+      "security": ""
+    },
+    {
+      "from_state": "entry",
+      "to_state": "ready",
+      "trigger": "submit_valid_id",
+      "guard": "transfer_id_resolved",
+      "security": ""
+    },
+    {
+      "from_state": "entry",
+      "to_state": "error",
+      "trigger": "submit_invalid_id",
+      "guard": "transfer_id_not_found",
+      "security": ""
+    },
+    {
+      "from_state": "entry",
+      "to_state": "entry",
+      "trigger": "submit_bogus",
+      "guard": "inline_error_shown",
+      "security": ""
+    },
+    {
+      "from_state": "ready",
+      "to_state": "decrypting",
+      "trigger": "click_decrypt",
+      "guard": "",
+      "security": "key_in_memory"
+    },
+    {
+      "from_state": "ready",
+      "to_state": "browse",
+      "trigger": "auto_route",
+      "guard": "content_type_is_folder",
+      "security": ""
+    },
+    {
+      "from_state": "ready",
+      "to_state": "gallery",
+      "trigger": "auto_route",
+      "guard": "content_type_is_multi_image",
+      "security": ""
+    },
+    {
+      "from_state": "ready",
+      "to_state": "viewer",
+      "trigger": "auto_route",
+      "guard": "content_type_is_single_file",
+      "security": ""
+    },
+    {
+      "from_state": "decrypting",
+      "to_state": "complete",
+      "trigger": "decrypt_succeeded",
+      "guard": "",
+      "security": "plaintext_in_dom"
+    },
+    {
+      "from_state": "decrypting",
+      "to_state": "error",
+      "trigger": "decrypt_failed",
+      "guard": "wrong_key_or_corrupt",
+      "security": ""
+    }
+  ]
+}
