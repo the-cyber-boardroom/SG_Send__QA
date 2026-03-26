@@ -15,10 +15,14 @@ time (reads git-log per file), so the generated markdown is stable and
 only produces a diff when actual content changes.
 """
 import json
+import os
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
 from osbot_utils.base_classes.Kwargs_To_Self import Kwargs_To_Self as Type_Safe
+
+GITHUB_REPO = "https://github.com/the-cyber-boardroom/SG_Send__QA"
 
 
 FRONT_MATTER = '---\ntitle: "Use Case: {title}"\npermalink: /pages/use-cases/{group}/{name}/\n---\n'
@@ -54,12 +58,50 @@ class QA_Generate_Docs(Type_Safe):
             return json.loads(meta_path.read_text())
         return None
 
+    def _find_test_file(self, use_case_name: str) -> Path | None:
+        """Walk tests_dir to find test__{use_case_name}.py in any subdirectory."""
+        target = f"test__{use_case_name}.py"
+        # Check flat location first (legacy)
+        flat = self.tests_path / target
+        if flat.exists():
+            return flat
+        # Walk subdirectories (v030 p0__*/p1__* layout)
+        for candidate in self.tests_path.rglob(target):
+            return candidate
+        return None
+
     def read_test_source(self, use_case_name: str) -> str | None:
         """Read the test source file for a use case, if it exists."""
-        test_path = self.tests_path / f"test__{use_case_name}.py"
-        if test_path.exists():
-            return test_path.read_text()
+        path = self._find_test_file(use_case_name)
+        if path and path.exists():
+            return path.read_text()
         return None
+
+    def _github_test_url(self, use_case_name: str) -> str | None:
+        """Return the GitHub blob URL for a test file, or None if not found."""
+        path = self._find_test_file(use_case_name)
+        if path is None:
+            return None
+        # Make relative to repo root (tests/qa/v030/...)
+        try:
+            rel = path.relative_to(Path("."))
+        except ValueError:
+            rel = path
+        return f"{GITHUB_REPO}/blob/dev/{rel}"
+
+    def _provenance_line(self) -> str:
+        """Return a markdown blockquote with commit SHA, version, and timestamp."""
+        sha = os.environ.get("GITHUB_SHA") or subprocess.getoutput("git rev-parse HEAD")
+        sha = sha.strip()[:8]
+        try:
+            version = Path("sg_send_qa/version").read_text().strip()
+        except Exception:
+            version = "unknown"
+        ts = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+        return (
+            f"> Generated at commit [`{sha}`]({GITHUB_REPO}/commit/{sha})"
+            f" · {version} · {ts}\n\n"
+        )
 
     # --------------------------------------------------------------- scaffold
 
@@ -69,6 +111,7 @@ class QA_Generate_Docs(Type_Safe):
         title = self.title_from_name(name)
         md    = FRONT_MATTER.format(title=title, group=group_name, name=name)
         md   += f"\n# {title}\n\n"
+        md   += self._provenance_line()
 
         if metadata and metadata.get("module_doc"):
             md += f"{metadata['module_doc'].strip()}\n\n"
@@ -76,6 +119,13 @@ class QA_Generate_Docs(Type_Safe):
             md += f"{metadata['test_doc'].strip()}\n\n"
         else:
             md += f"Automated browser test for the **{title.lower()}** workflow.\n\n"
+
+        # GitHub link to test source
+        gh_url = self._github_test_url(name)
+        if gh_url:
+            test_file = self._find_test_file(name)
+            rel_path  = str(test_file.relative_to(Path("."))) if test_file else f"tests/qa/v030/test__{name}.py"
+            md += f"[View source on GitHub]({gh_url}) — `{rel_path}`\n\n"
 
         md += "---\n\n"
 
@@ -100,33 +150,35 @@ class QA_Generate_Docs(Type_Safe):
                 screenshots = [
                     {"name": p.stem, "description": ""}
                     for p in sorted(shot_dir.glob("*.png"))
+                    if "__deterministic" not in p.stem
                 ]
 
         if screenshots:
             shot_dir = use_case_dir / "screenshots"
             md += "## Screenshots\n\n"
             for shot in screenshots:
-                name  = shot["name"]
-                label = name.replace("_", " ").title()
+                shot_name = shot["name"]
+                label     = shot_name.replace("_", " ").title()
                 md += f"### {label}\n\n"
                 if shot.get("description"):
                     md += f"{shot['description']}\n\n"
-                md += f"![{label}](screenshots/{name}.png)\n\n"
-                det_file = shot_dir / f"{name}__deterministic.png"
+                md += f"![{label}](screenshots/{shot_name}.png)\n\n"
+                det_file = shot_dir / f"{shot_name}__deterministic.png"
                 if det_file.exists():
                     md += "<details>\n"
                     md += "<summary>Deterministic view (non-dynamic areas only)</summary>\n\n"
-                    md += f"![{label} — masked](screenshots/{name}__deterministic.png)\n\n"
+                    md += f"![{label} — masked](screenshots/{shot_name}__deterministic.png)\n\n"
                     md += "</details>\n\n"
 
         source = self.read_test_source(name)
         if source:
             md += "---\n\n"
-            md += "## Test Source\n\n"
-            md += f"**File:** `tests/qa/v030/test__{name}.py`\n\n"
-            md += "```python\n"
-            md += source
-            md += "```\n\n"
+            test_file = self._find_test_file(name)
+            rel_path  = str(test_file.relative_to(Path("."))) if test_file else f"tests/qa/v030/test__{name}.py"
+            md += "<details>\n"
+            md += f"<summary>View test source — <code>{rel_path}</code></summary>\n\n"
+            md += f"```python\n{source}\n```\n\n"
+            md += "</details>\n\n"
 
         return md
 

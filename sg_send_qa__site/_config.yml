@@ -5,6 +5,11 @@ url: https://qa.send.sgraph.ai
 plugins:
   - jekyll-last-modified-at
 
+highlighter: rouge
+markdown: kramdown
+kramdown:
+  syntax_highlighter: rouge
+
 last-modified-at:
   date-format: '%Y-%m-%d %H:%M'
 

@@ -168,7 +168,11 @@ jobs:
     name: "Generate Documentation"
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [run-integration-tests, run-v030-browser-tests]
+    needs: [run-integration-tests, run-v030-browser-tests, increment-tag]
+    if: |
+      always() &&
+      needs.run-integration-tests.result != 'cancelled' &&
+      needs.run-v030-browser-tests.result != 'cancelled'
     steps:
       - uses: actions/checkout@v5
         with:
