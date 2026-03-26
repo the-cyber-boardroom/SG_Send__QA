@@ -72,3 +72,44 @@ class State_Machine__Utils(Type_Safe):
     def security_annotations(self, machine) -> list:
         """Return all transitions that carry a security tag."""
         return [t for t in machine.transitions if t.security]
+
+    def build_snapshot(self, machine, observed_pairs: list, version: str = '') -> 'State_Machine__Snapshot':
+        """Build a State_Machine__Snapshot from a machine definition + observed pairs.
+
+        Args:
+            machine:         a State_Machine__* instance
+            observed_pairs:  list of (from_state, to_state) tuples actually traversed
+            version:         QA suite version string (e.g. 'v0.3.0')
+
+        Returns a State_Machine__Snapshot capturing coverage and anomalies.
+        """
+        from sg_send_qa.state_machines.State_Machine__Snapshot import State_Machine__Snapshot
+        from sg_send_qa.state_machines.State_Transition        import State_Transition
+
+        defined_set  = {(str(t.from_state), str(t.to_state)) for t in machine.transitions}
+        observed_set = {(f, t) for f, t in observed_pairs}
+
+        states_found = sorted({s for pair in observed_pairs for s in pair})
+
+        transitions_observed = [
+            State_Transition(from_state=f, to_state=t)
+            for f, t in sorted(observed_set)
+        ]
+        missing = [
+            t for t in machine.transitions
+            if (str(t.from_state), str(t.to_state)) not in observed_set
+        ]
+        unexpected = [
+            State_Transition(from_state=f, to_state=t)
+            for f, t in sorted(observed_set - defined_set)
+        ]
+
+        return State_Machine__Snapshot(
+            version              = version,
+            state_machine        = str(machine.name),
+            states_found         = states_found,
+            transitions_observed = transitions_observed,
+            transitions_expected = list(machine.transitions),
+            missing              = missing,
+            unexpected           = unexpected,
+        )

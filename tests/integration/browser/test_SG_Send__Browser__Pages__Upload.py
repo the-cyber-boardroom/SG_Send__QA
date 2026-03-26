@@ -3,6 +3,8 @@ from osbot_utils.testing.Stderr                         import Stderr
 from osbot_playwright.playwright.api.Playwright_Page    import Playwright_Page
 from sg_send_qa.browser.SG_Send__Browser__Pages         import SG_Send__Browser__Pages
 from sg_send_qa.browser.SG_Send__Browser__Test_Harness  import SG_Send__Browser__Test_Harness
+from sg_send_qa.state_machines.State_Machine__Upload    import upload_state_machine
+from sg_send_qa.state_machines.State_Machine__Utils     import State_Machine__Utils
 
 SAMPLE_CONTENT  = "Hello from SG/Send QA — upload wizard test."
 SAMPLE_FILENAME = "qa-upload-test.txt"
@@ -10,8 +12,10 @@ SAMPLE_FILENAME = "qa-upload-test.txt"
 class test_SG_Send__Browser__Pages__Upload(TestCase):                           # Upload wizard — needs full local stack with valid token
     @classmethod
     def setUpClass(cls):
-        cls.harness = SG_Send__Browser__Test_Harness().headless(True).setup()
-        cls.sg_send = cls.harness.sg_send
+        cls.harness     = SG_Send__Browser__Test_Harness().headless(True).setup()
+        cls.sg_send     = cls.harness.sg_send
+        cls.upload_sm   = upload_state_machine()
+        cls.sm_utils    = State_Machine__Utils()
         cls.page_setup()
 
     @classmethod
@@ -36,16 +40,28 @@ class test_SG_Send__Browser__Pages__Upload(TestCase):                           
         with self.sg_send as _:
             assert type(_) is SG_Send__Browser__Pages
             _.page__root()
+            state_before = 'idle'
             _.upload__set_file(SAMPLE_FILENAME, SAMPLE_CONTENT.encode())
-            assert _.upload_state() in ('file-ready', 'choosing-delivery')           # wizard advanced past idle
+            state_after = _.upload_state()
+            assert state_after in ('file-ready', 'choosing-delivery')               # wizard advanced past idle
+            assert self.sm_utils.validate_transition(self.upload_sm,                # graph edge validated
+                                                     state_before, state_after)
 
     def test__02__upload__click_next__to_share_step(self):                           # Next advances to share mode selection
+        state_before = self.sg_send.upload_state()
         self.sg_send.upload__click_next()
-        assert self.sg_send.upload_state() == 'choosing-share'
+        state_after = self.sg_send.upload_state()
+        assert state_after == 'choosing-share'
+        assert self.sm_utils.validate_transition(self.upload_sm,                    # graph edge validated
+                                                 state_before, state_after)
 
     def test__03__upload__select_share_mode__simple(self):                          # selecting combined auto-advances to confirm
+        state_before = self.sg_send.upload_state()
         self.sg_send.upload__select_share_mode("token")
-        assert self.sg_send.upload_state() == 'confirming'
+        state_after = self.sg_send.upload_state()
+        assert state_after == 'confirming'
+        assert self.sm_utils.validate_transition(self.upload_sm,                    # graph edge validated
+                                                 state_before, state_after)
 
     # def test__03__upload__select_share_mode__combined(self):                          # selecting combined auto-advances to confirm
     #     self.sg_send.upload__select_share_mode("combined")
