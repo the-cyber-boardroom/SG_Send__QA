@@ -6,7 +6,7 @@ auto_generated: true
 
 # Friendly Token
 
-> Generated at commit [`56f21db3`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/56f21db3) · v0.2.36 · 2026-03-26 01:32 UTC
+> Generated at commit [`6e8ee11b`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/6e8ee11b) · v0.2.37 · 2026-03-26 01:41 UTC
 
 UC-03: Friendly Token — Simple Token share mode (P0).
 
@@ -45,7 +45,7 @@ URL after decrypt: http://localhost:10062/en-gb/browse/#terra-chain-5022
 
 ### 05 Token Captured
 
-Token: float-bread-1825
+Token: zone-zenith-5531
 
 ![05 Token Captured](screenshots/05_token_captured.png)
 
@@ -58,7 +58,7 @@ Token: float-bread-1825
 
 ### 06 Token Resolved
 
-Token 'float-bread-1825' resolved
+Token 'zone-zenith-5531' resolved
 
 ![06 Token Resolved](screenshots/06_token_resolved.png)
 
@@ -71,7 +71,7 @@ Token 'float-bread-1825' resolved
 
 ### 05 Token Resolved
 
-Token 'atlas-hound-9841'
+Token 'crown-shift-9396'
 
 ![05 Token Resolved](screenshots/05_token_resolved.png)
 
@@ -123,7 +123,7 @@ Upload complete
 
 ### 05 Hash After Decrypt
 
-URL after decrypt: http://localhost:51094//en-gb/browse/#arrow-vigor-5075
+URL after decrypt: http://localhost:38435//en-gb/browse/#iris-swift-5850
 
 ![05 Hash After Decrypt](screenshots/05_hash_after_decrypt.png)
 

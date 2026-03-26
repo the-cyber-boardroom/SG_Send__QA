@@ -93,19 +93,19 @@
     {
       "name": "05_token_captured",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
-      "description": "Token: float-bread-1825",
+      "description": "Token: zone-zenith-5531",
       "has_masks": true
     },
     {
       "name": "06_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
-      "description": "Token 'float-bread-1825' resolved",
+      "description": "Token 'zone-zenith-5531' resolved",
       "has_masks": true
     },
     {
       "name": "05_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
-      "description": "Token 'atlas-hound-9841'",
+      "description": "Token 'crown-shift-9396'",
       "has_masks": true
     },
     {
@@ -129,7 +129,7 @@
     {
       "name": "05_hash_after_decrypt",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
-      "description": "URL after decrypt: http://localhost:51094//en-gb/browse/#arrow-vigor-5075",
+      "description": "URL after decrypt: http://localhost:38435//en-gb/browse/#iris-swift-5850",
       "has_masks": true
     }
   ]

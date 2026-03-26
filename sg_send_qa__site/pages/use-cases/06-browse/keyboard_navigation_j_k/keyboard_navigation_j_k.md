@@ -6,7 +6,7 @@ auto_generated: true
 
 # Keyboard Navigation J K
 
-> Generated at commit [`56f21db3`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/56f21db3) · v0.2.36 · 2026-03-26 01:32 UTC
+> Generated at commit [`6e8ee11b`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/6e8ee11b) · v0.2.37 · 2026-03-26 01:41 UTC
 
 Keyboard j/k navigate through files in browse view (P2).
 

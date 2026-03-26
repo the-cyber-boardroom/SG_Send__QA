@@ -6,7 +6,7 @@ auto_generated: true
 
 # Combined Link
 
-> Generated at commit [`56f21db3`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/56f21db3) · v0.2.36 · 2026-03-26 01:32 UTC
+> Generated at commit [`6e8ee11b`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/6e8ee11b) · v0.2.37 · 2026-03-26 01:41 UTC
 
 UC-04: Combined Link share mode (P0).
 
@@ -85,7 +85,7 @@ Upload complete
 
 ### 06 Link Captured
 
-Combined link: http://localhost:25939/en-gb/browse/#a5e510ec11c8/zah1lfzRYo9ibtQBVQiQyRwUtYAG1F
+Combined link: http://localhost:36556/en-gb/browse/#7886ecba3719/AN5qnVFmluGyCBcXALmHzMdDzErlyL
 
 ![06 Link Captured](screenshots/06_link_captured.png)
 
