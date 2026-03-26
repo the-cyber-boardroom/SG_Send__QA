@@ -45,7 +45,7 @@ URL after decrypt: http://localhost:10062/en-gb/browse/#terra-chain-5022
 
 ### 05 Token Captured
 
-Token: oak-lily-9350
+Token: brave-bonus-1431
 
 ![05 Token Captured](screenshots/05_token_captured.png)
 
@@ -58,7 +58,7 @@ Token: oak-lily-9350
 
 ### 06 Token Resolved
 
-Token 'oak-lily-9350' resolved
+Token 'brave-bonus-1431' resolved
 
 ![06 Token Resolved](screenshots/06_token_resolved.png)
 
@@ -71,7 +71,7 @@ Token 'oak-lily-9350' resolved
 
 ### 05 Token Resolved
 
-Token 'mercy-medal-3424'
+Token 'tiger-topaz-4775'
 
 ![05 Token Resolved](screenshots/05_token_resolved.png)
 
@@ -123,7 +123,7 @@ Upload complete
 
 ### 05 Hash After Decrypt
 
-URL after decrypt: http://localhost:53490//en-gb/browse/#terra-haven-4216
+URL after decrypt: http://localhost:50899//en-gb/browse/#humor-terra-6389
 
 ![05 Hash After Decrypt](screenshots/05_hash_after_decrypt.png)
 

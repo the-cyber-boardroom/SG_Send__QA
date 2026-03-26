@@ -93,19 +93,19 @@
     {
       "name": "05_token_captured",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
-      "description": "Token: oak-lily-9350",
+      "description": "Token: brave-bonus-1431",
       "has_masks": true
     },
     {
       "name": "06_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
-      "description": "Token 'oak-lily-9350' resolved",
+      "description": "Token 'brave-bonus-1431' resolved",
       "has_masks": true
     },
     {
       "name": "05_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
-      "description": "Token 'mercy-medal-3424'",
+      "description": "Token 'tiger-topaz-4775'",
       "has_masks": true
     },
     {
@@ -129,7 +129,7 @@
     {
       "name": "05_hash_after_decrypt",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
-      "description": "URL after decrypt: http://localhost:53490//en-gb/browse/#terra-haven-4216",
+      "description": "URL after decrypt: http://localhost:50899//en-gb/browse/#humor-terra-6389",
       "has_masks": true
     }
   ]
