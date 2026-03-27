@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Combined Link — SG/Send QA</title>
+
+    <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-site.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-code.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/use-cases/02-upload-share/combined_link/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <qa-test-page
+                data-use-case="combined_link"
+                data-group="02-upload-share"
+                data-version="v0.2.38"
+                data-commit=""
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/main/tests/qa/v030/p0__combined_link/test__combined_link.py"
+                data-live-site-url="https://qa.send.sgraph.ai">
+            </qa-test-page>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <!-- Metadata embedded at generation time (hand-crafted here for validation) -->
+    <script type="application/json" id="qa-metadata">
+{
+    "use_case": "combined_link",
+    "module": "test__combined_link",
+    "module_doc": "UC-04: Combined Link share mode (P0).\n\nFlow:\n  1. Upload a file with Combined Link share mode\n  2. Capture the full link (contains #transferId/base64key)\n  3. Open the link in a new tab\n  4. Verify auto-decrypt and content display\n",
+    "tests": [
+        {
+            "method": "test_combined_link_upload_and_auto_decrypt",
+            "doc": "Upload with Combined Link, open the link, verify auto-decryption.",
+            "screenshots": ["01_file_selected","02_share_step","03_mode_selected","04_upload_complete","06_link_captured","07_auto_decrypted"]
+        },
+        {
+            "method": "test_combined_link_via_api_helper",
+            "doc": "Create an encrypted transfer via API helper, then open the combined link in browser.",
+            "screenshots": ["01_api_created_decrypt"]
+        },
+        {
+            "method": "test__01__combined_link_upload_and_auto_decrypt",
+            "doc": "Upload with Combined Link, open the link, verify auto-decryption.",
+            "screenshots": ["01_file_selected","02_share_step","03_mode_selected","04_upload_complete","06_link_captured","07_auto_decrypted"]
+        },
+        {
+            "method": "test__02__combined_link_via_api_helper",
+            "doc": "Create an encrypted transfer via API helper, then open the combined link in browser.",
+            "screenshots": ["01_api_created_decrypt"]
+        }
+    ],
+    "screenshots": [
+        {"name":"01_file_selected","description":"File selected (delivery step active)","has_masks":false},
+        {"name":"02_share_step","description":"Share mode step","has_masks":false},
+        {"name":"03_mode_selected","description":"Combined link selected","has_masks":false},
+        {"name":"04_upload_complete","description":"Upload complete","has_masks":true},
+        {"name":"06_link_captured","description":"Combined link captured","has_masks":true},
+        {"name":"07_auto_decrypted","description":"Auto-decrypted content","has_masks":true},
+        {"name":"01_api_created_decrypt","description":"Decrypted content from API-created transfer","has_masks":true}
+    ]
+}
+    </script>
+
+    <script src="../../../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+
+</body>
+</html>
