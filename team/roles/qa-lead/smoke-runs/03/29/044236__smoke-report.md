@@ -21,25 +21,12 @@ None — all steps passed.
 ## Suite 1 Detail
 
 ```
-/tmp/venv312/lib/python3.12/site-packages/pydantic/json_schema.py:2448: PydanticJsonSchemaWarning: Default value 0 is not JSON serializable; excluding default from JSON schema [non-serializable-default]
-  warnings.warn(message, PydanticJsonSchemaWarning)
-/tmp/venv312/lib/python3.12/site-packages/pydantic/json_schema.py:2448: PydanticJsonSchemaWarning: Default value  is not JSON serializable; excluding default from JSON schema [non-serializable-default]
-  warnings.warn(message, PydanticJsonSchemaWarning)
-/tmp/venv312/lib/python3.12/site-packages/fastapi/openapi/utils.py:252: UserWarning: Duplicate Operation ID api_vault_write_put for function write__vault_id at /tmp/sgraph-send-ref/sgraph_ai_app_send/lambda__user/fast_api/routes/Routes__Vault__Pointer.py
-  warnings.warn(message, stacklevel=1)
-/tmp/venv312/lib/python3.12/site-packages/fastapi/openapi/utils.py:252: UserWarning: Duplicate Operation ID api_vault_read_get for function read__vault_id at /tmp/sgraph-send-ref/sgraph_ai_app_send/lambda__user/fast_api/routes/Routes__Vault__Pointer.py
-  warnings.warn(message, stacklevel=1)
-/tmp/venv312/lib/python3.12/site-packages/fastapi/openapi/utils.py:252: UserWarning: Duplicate Operation ID api_vault_read-base64_get for function read_base64__vault_id at /tmp/sgraph-send-ref/sgraph_ai_app_send/lambda__user/fast_api/routes/Routes__Vault__Pointer.py
-  warnings.warn(message, stacklevel=1)
-/tmp/venv312/lib/python3.12/site-packages/fastapi/openapi/utils.py:252: UserWarning: Duplicate Operation ID api_vault_delete_delete for function delete__vault_id at /tmp/sgraph-send-ref/sgraph_ai_app_send/lambda__user/fast_api/routes/Routes__Vault__Pointer.py
-  warnings.warn(message, stacklevel=1)
-  ✓ api_reachable: PASS — server up
-  ✓ api_auth_and_create: PASS — transfer_id=1ec12177f536
-  ✓ api_encrypt_upload: PASS — 107 bytes uploaded
-  ✓ api_complete: PASS — transfer marked complete
-  ✓ api_download: PASS — 107 bytes match upload
-
 === SUITE 1 (upload+download): 5/5 passed ===
+  ✓ api_reachable: PASS — HTTP 200
+  ✓ api_auth_and_create: PASS — HTTP 200 — tid=b53c193f58a2…
+  ✓ api_encrypt_upload: PASS — HTTP 200 — 122 bytes uploaded
+  ✓ api_complete: PASS — HTTP 200
+  ✓ browser_decrypt: PASS — state='complete'
 Suite1 exit: 0
 ```
 
