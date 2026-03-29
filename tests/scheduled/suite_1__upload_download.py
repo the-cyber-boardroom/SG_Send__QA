@@ -4,7 +4,7 @@ Runs against https://send.sgraph.ai using SG_SEND_ACCESS_TOKEN.
 All checks are recorded as SKIP if the token is absent.
 
 Steps (each reported independently):
-  api_reachable      — unauthenticated GET to live site root
+  api_reachable       — unauthenticated GET to live site root
   api_auth_and_create — POST /api/transfers/create with access token
   api_encrypt_upload  — client-side AES-256-GCM encrypt + POST binary payload
   api_complete        — POST /api/transfers/complete

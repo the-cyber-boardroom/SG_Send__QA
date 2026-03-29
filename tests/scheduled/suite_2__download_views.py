@@ -4,10 +4,10 @@ Uploads one encrypted transfer via API, then verifies three download view
 modes all render correctly in the browser: browse, gallery, and viewer.
 
 Steps:
-  api_upload          — create + encrypt + upload + complete via API
-  browser_browse_view — /en-gb/browse/#tid/key → send-download.state = 'complete'
-  browser_gallery_view— /en-gb/gallery/#tid/key → page loads without error
-  browser_viewer_view — /en-gb/view/#tid/key    → page loads without error
+  api_upload           — create + encrypt + upload + complete via API
+  browser_browse_view  — /en-gb/browse/#tid/key  → send-download.state='complete'
+  browser_gallery_view — /en-gb/gallery/#tid/key → page loads without error
+  browser_viewer_view  — /en-gb/view/#tid/key    → page loads without error
 """
 
 import os
@@ -51,7 +51,6 @@ if not TOKEN:
 else:
     ctx = {}
 
-    # Step 1 — Upload via API (same pattern as Suite 1)
     def chk_upload():
         from cryptography.hazmat.primitives.ciphers.aead import AESGCM
         r = httpx.post(f"{LIVE}/api/transfers/create",
@@ -84,39 +83,36 @@ else:
         return f"tid={tid[:16]}…"
     step("api_upload", chk_upload)
 
-    # Steps 2-4 — Check each view mode in the browser
-    def make_browser():
-        kw = {"headless": True}
-        if proxy_config:
-            kw["proxy"] = proxy_config
-        p        = sync_playwright().start()
-        browser  = p.chromium.launch(**kw)
-        bctx     = browser.new_context(viewport={"width": 1280, "height": 720},
-                                       ignore_https_errors=True)
-        bctx.add_init_script(f"localStorage.setItem('sgraph-send-token', '{TOKEN}');")
-        return p, browser, bctx.new_page()
-
     VIEW_MODES = [
-        ("browser_browse_view",   f"/en-gb/browse/"),
-        ("browser_gallery_view",  f"/en-gb/gallery/"),
-        ("browser_viewer_view",   f"/en-gb/view/"),
+        ("browser_browse_view",   "/en-gb/browse/"),
+        ("browser_gallery_view",  "/en-gb/gallery/"),
+        ("browser_viewer_view",   "/en-gb/view/"),
     ]
 
     if "tid" in ctx:
         for step_name, path_prefix in VIEW_MODES:
-            def chk_view(path_prefix=path_prefix, step_name=step_name):
+            def chk_view(path_prefix=path_prefix):
                 url = f"{LIVE}{path_prefix}#{ctx['tid']}/{ctx['key']}"
-                p, browser, page = make_browser()
-                try:
+                kw  = {"headless": True}
+                if proxy_config:
+                    kw["proxy"] = proxy_config
+                with sync_playwright() as p:
+                    browser = p.chromium.launch(**kw)
+                    bctx    = browser.new_context(viewport={"width": 1280, "height": 720},
+                                                  ignore_https_errors=True)
+                    bctx.add_init_script(
+                        f"localStorage.setItem('sgraph-send-token', '{TOKEN}');"
+                    )
+                    page = bctx.new_page()
                     resp = page.goto(url, timeout=25000, wait_until="networkidle")
                     page.wait_for_timeout(3000)
                     if resp is None or not resp.ok:
                         raise RuntimeError(f"HTTP {resp.status if resp else '?'}")
-                    # Check send-download state if present
                     state = page.evaluate(
                         "document.querySelector('send-download')?.state"
                     )
                     body  = page.inner_text("body") or ""
+                    browser.close()
                     error_keywords = ["AccessDenied", "503 ", "502 ",
                                       "Internal Server Error", "not found"]
                     if any(kw in body for kw in error_keywords):
@@ -125,9 +121,6 @@ else:
                     if state:
                         detail += f", state={state!r}"
                     return detail
-                finally:
-                    browser.close()
-                    p.stop()
             step(step_name, chk_view)
     else:
         for name, _ in VIEW_MODES:
