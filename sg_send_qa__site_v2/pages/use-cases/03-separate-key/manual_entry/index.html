@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Manual Entry — SG/Send QA</title>
+    <meta name="description" content="QA documentation for manual_entry — automated Playwright browser test results.">
+
+    <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-site.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-code.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/use-cases/03-separate-key/manual_entry/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <qa-test-page
+                data-use-case="manual_entry"
+                data-group="03-separate-key"
+                data-commit="69a0084fc209209c69c68bac1da9b47f82b3d155"
+                data-version="v0.2.40"
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/69a0084fc209209c69c68bac1da9b47f82b3d155/tests/qa/v030/p1__manual_entry/test__manual_entry.py"
+                data-live-site-url="https://qa.send.sgraph.ai">
+            </qa-test-page>
+
+            <!-- Metadata embedded at generation time — no extra HTTP request needed -->
+            <script type="application/json" id="qa-metadata">
+{
+    "use_case": "manual_entry",
+    "module": "test__manual_entry",
+    "module_doc": "UC-09: Manual token/ID entry form (P1).\n\nTest flow:\n  - Navigate to /en-gb/download/ with no hash fragment\n  - Verify entry form appears (input + \"Decrypt & Download\" button)\n  - Enter a valid friendly token (from a previous upload)\n  - Verify it resolves and decrypts\n  - Enter a bogus token → verify error message\n",
+    "test_target": "qa_server",
+    "tests": [
+        {
+            "method": "test_entry_form_shown_without_hash",
+            "doc": "Navigating to /en-gb/download/ with no hash shows the entry form.",
+            "screenshots": [
+                "01_entry_form"
+            ]
+        },
+        {
+            "method": "test_entry_form_has_decrypt_button",
+            "doc": "Entry form has a Decrypt & Download (or similar) button.",
+            "screenshots": [
+                "02_decrypt_button"
+            ]
+        },
+        {
+            "method": "test_bogus_token_shows_error",
+            "doc": "Entering a bogus token shows an error (not a crash).",
+            "screenshots": [
+                "03_bogus_token_error"
+            ]
+        },
+        {
+            "method": "test_valid_transfer_id_resolves",
+            "doc": "Entering a valid transfer ID resolves and shows the file.",
+            "screenshots": [
+                "04_valid_id_resolved"
+            ]
+        },
+        {
+            "method": "test_hash_navigation_to_download",
+            "doc": "Navigating directly to /en-gb/download/#id/key auto-decrypts (P1).",
+            "screenshots": [
+                "05_direct_hash_nav"
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "name": "01_entry_form",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/01_entry_form.png",
+            "description": "Manual entry form without hash"
+        },
+        {
+            "name": "02_decrypt_button",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/02_decrypt_button.png",
+            "description": "Entry form with decrypt button"
+        },
+        {
+            "name": "03_bogus_token_error",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/03_bogus_token_error.png",
+            "description": "Error after bogus token"
+        },
+        {
+            "name": "04_valid_id_resolved",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/04_valid_id_resolved.png",
+            "description": "Valid transfer ID resolved"
+        },
+        {
+            "name": "05_direct_hash_nav",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/05_direct_hash_nav.png",
+            "description": "Direct hash navigation to download"
+        }
+    ]
+}
+            </script>
+
+            <!-- Test source — syntax highlighted by Pygments at generation time -->
+            <script type="text/qa-source">
+<span class="sd">&quot;&quot;&quot;UC-09: Manual token/ID entry form (P1).</span>
+
+<span class="sd">Test flow:</span>
+<span class="sd">  - Navigate to /en-gb/download/ with no hash fragment</span>
+<span class="sd">  - Verify entry form appears (input + &quot;Decrypt &amp; Download&quot; button)</span>
+<span class="sd">  - Enter a valid friendly token (from a previous upload)</span>
+<span class="sd">  - Verify it resolves and decrypts</span>
+<span class="sd">  - Enter a bogus token → verify error message</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">expect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.qa.v030.browser_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">goto</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">p1</span>
+
+<span class="n">SAMPLE_CONTENT</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;UC-09 manual entry test content.&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestManualEntryForm</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify the manual token/ID entry form at /en-gb/download/ with no hash.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_entry_form_shown_without_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Navigating to /en-gb/download/ with no hash shows the entry form.&quot;&quot;&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/download/&quot;</span><span class="p">)</span>
+        <span class="c1"># Wait for form to render</span>
+        <span class="n">entry_input</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;input[type=&#39;text&#39;], input[type=&#39;search&#39;], input&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="n">entry_input</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;01_entry_form&quot;</span><span class="p">,</span> <span class="s2">&quot;Manual entry form without hash&quot;</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">entry_input</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(),</span> \
+            <span class="s2">&quot;Entry form input not visible at /en-gb/download/ without hash&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_entry_form_has_decrypt_button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Entry form has a Decrypt &amp; Download (or similar) button.&quot;&quot;&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/download/&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;02_decrypt_button&quot;</span><span class="p">,</span> <span class="s2">&quot;Entry form with decrypt button&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;decrypt&quot;</span><span class="p">,</span> <span class="s2">&quot;download&quot;</span><span class="p">,</span> <span class="s2">&quot;open&quot;</span><span class="p">]),</span> \
+            <span class="s2">&quot;No decrypt/download button found on entry form&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_bogus_token_shows_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Entering a bogus token shows an error (not a crash).&quot;&quot;&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/download/&quot;</span><span class="p">)</span>
+
+        <span class="n">entry_input</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;input[type=&#39;text&#39;], input&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">entry_input</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="n">entry_input</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s2">&quot;bogus-token-9999&quot;</span><span class="p">)</span>
+            <span class="n">entry_input</span><span class="o">.</span><span class="n">press</span><span class="p">(</span><span class="s2">&quot;Enter&quot;</span><span class="p">)</span>
+            <span class="c1"># Wait for error feedback to appear</span>
+            <span class="n">error_locator</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+                <span class="s2">&quot;[class*=&#39;error&#39;], [class*=&#39;alert&#39;], [role=&#39;alert&#39;], &quot;</span>
+                <span class="s2">&quot;p:has-text(&#39;error&#39;), p:has-text(&#39;not found&#39;), p:has-text(&#39;invalid&#39;)&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">error_locator</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># fallback: check body text below</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;03_bogus_token_error&quot;</span><span class="p">,</span> <span class="s2">&quot;Error after bogus token&quot;</span><span class="p">)</span>
+
+            <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="c1"># Should show some kind of error feedback</span>
+            <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;not found&quot;</span><span class="p">,</span> <span class="s2">&quot;invalid&quot;</span><span class="p">,</span> <span class="s2">&quot;failed&quot;</span><span class="p">,</span> <span class="s2">&quot;wrong&quot;</span>
+            <span class="p">]),</span> <span class="sa">f</span><span class="s2">&quot;No error shown for bogus token. Page text: </span><span class="si">{</span><span class="n">page_text</span><span class="p">[:</span><span class="mi">300</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_valid_transfer_id_resolves</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Entering a valid transfer ID resolves and shows the file.&quot;&quot;&quot;</span>
+        <span class="c1"># Create a real transfer via API</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">SAMPLE_CONTENT</span><span class="p">,</span> <span class="s2">&quot;uc09-test.txt&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Navigate to entry form and type the transfer ID</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/download/&quot;</span><span class="p">)</span>
+
+        <span class="n">entry_input</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;input[type=&#39;text&#39;], input&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">entry_input</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="c1"># Try the combined hash format (id/key) — what the user would paste</span>
+            <span class="n">entry_input</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">entry_input</span><span class="o">.</span><span class="n">press</span><span class="p">(</span><span class="s2">&quot;Enter&quot;</span><span class="p">)</span>
+            <span class="c1"># Wait for page to advance past the entry form</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">to_contain_text</span><span class="p">(</span>
+                    <span class="n">SAMPLE_CONTENT</span><span class="o">.</span><span class="n">decode</span><span class="p">(),</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">10_000</span>
+                <span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># content might render differently; assertion below handles it</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;04_valid_id_resolved&quot;</span><span class="p">,</span> <span class="s2">&quot;Valid transfer ID resolved&quot;</span><span class="p">)</span>
+
+            <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="c1"># Page should advance (no longer just the entry form)</span>
+            <span class="k">assert</span> <span class="s2">&quot;not found&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">,</span> \
+                <span class="sa">f</span><span class="s2">&quot;Transfer ID did not resolve. Page text: </span><span class="si">{</span><span class="n">page_text</span><span class="p">[:</span><span class="mi">300</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_hash_navigation_to_download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Navigating directly to /en-gb/download/#id/key auto-decrypts (P1).&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">SAMPLE_CONTENT</span><span class="p">,</span> <span class="s2">&quot;uc09-direct.txt&quot;</span><span class="p">)</span>
+
+        <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/download/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;05_direct_hash_nav&quot;</span><span class="p">,</span> <span class="s2">&quot;Direct hash navigation to download&quot;</span><span class="p">)</span>
+
+        <span class="c1"># inner_text avoids false positive from inline JS scripts containing &quot;error&quot;</span>
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">inner_text</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">200</span><span class="p">,</span> \
+            <span class="s2">&quot;Direct hash navigation failed&quot;</span>
+
+            </script>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
+
+</body>
+</html>

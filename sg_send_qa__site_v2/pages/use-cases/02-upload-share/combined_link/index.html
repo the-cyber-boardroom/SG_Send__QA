@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Combined Link — SG/Send QA</title>
+    <meta name="description" content="QA documentation for combined_link — automated Playwright browser test results.">
 
     <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
     <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
@@ -38,11 +39,203 @@
             <qa-test-page
                 data-use-case="combined_link"
                 data-group="02-upload-share"
-                data-version="v0.2.38"
-                data-commit=""
-                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/main/tests/qa/v030/p0__combined_link/test__combined_link.py"
+                data-commit="69a0084fc209209c69c68bac1da9b47f82b3d155"
+                data-version="v0.2.40"
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/69a0084fc209209c69c68bac1da9b47f82b3d155/tests/qa/v030/p0__combined_link/test__combined_link.py"
                 data-live-site-url="https://qa.send.sgraph.ai">
             </qa-test-page>
+
+            <!-- Metadata embedded at generation time — no extra HTTP request needed -->
+            <script type="application/json" id="qa-metadata">
+{
+    "use_case": "combined_link",
+    "module": "test__combined_link",
+    "module_doc": "UC-04: Combined Link share mode (P0).\n\nFlow:\n  1. Upload a file with Combined Link share mode\n  2. Capture the full link (contains #transferId/base64key)\n  3. Open the link in a new tab\n  4. Verify auto-decrypt and content display\n",
+    "tests": [
+        {
+            "method": "test__01__combined_link_upload_and_auto_decrypt",
+            "doc": "Upload with Combined Link, open the link, verify auto-decryption.",
+            "screenshots": [
+                "01_file_selected",
+                "02_share_step",
+                "03_mode_selected",
+                "04_upload_complete",
+                "06_link_captured",
+                "07_auto_decrypted"
+            ]
+        },
+        {
+            "method": "test__02__combined_link_via_api_helper",
+            "doc": "Create an encrypted transfer via API helper, then open the combined link in browser.",
+            "screenshots": [
+                "01_api_created_decrypt"
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "name": "01_file_selected",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/01_file_selected.png",
+            "description": "File selected (delivery step active)",
+            "has_masks": false
+        },
+        {
+            "name": "02_share_step",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/02_share_step.png",
+            "description": "Share mode step",
+            "has_masks": false
+        },
+        {
+            "name": "03_mode_selected",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/03_mode_selected.png",
+            "description": "Combined link selected",
+            "has_masks": false
+        },
+        {
+            "name": "04_upload_complete",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/04_upload_complete.png",
+            "description": "Upload complete",
+            "has_masks": true
+        },
+        {
+            "name": "06_link_captured",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/06_link_captured.png",
+            "description": "Combined link: http://localhost:40245/en-gb/browse/#e88c15dd4b85/N8cfPtMgRse8RNoZipnM3-XR3hDlNc",
+            "has_masks": true
+        },
+        {
+            "name": "07_auto_decrypted",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/07_auto_decrypted.png",
+            "description": "Auto-decrypted content",
+            "has_masks": true
+        },
+        {
+            "name": "01_api_created_decrypt",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/01_api_created_decrypt.png",
+            "description": "Decrypted content from API-created transfer",
+            "has_masks": true
+        }
+    ]
+}
+            </script>
+
+            <!-- Test source — syntax highlighted by Pygments at generation time -->
+            <script type="text/qa-source">
+<span class="sd">&quot;&quot;&quot;UC-04: Combined Link share mode (P0).</span>
+
+<span class="sd">Flow:</span>
+<span class="sd">  1. Upload a file with Combined Link share mode</span>
+<span class="sd">  2. Capture the full link (contains #transferId/base64key)</span>
+<span class="sd">  3. Open the link in a new tab</span>
+<span class="sd">  4. Verify auto-decrypt and content display</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w">                                                    </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest</span><span class="w">                                                   </span><span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sg_send_qa.browser.SG_Send__Browser__Test_Harness</span><span class="w">         </span><span class="kn">import</span> <span class="n">SG_Send__Browser__Test_Harness</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sg_send_qa.utils.QA_Screenshot_Capture</span><span class="w">                    </span><span class="kn">import</span> <span class="n">ScreenshotCapture</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sg_send_qa.utils.QA_Transfer_Helper</span><span class="w">                       </span><span class="kn">import</span> <span class="n">QA_Transfer_Helper</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">p0</span>
+
+<span class="n">SAMPLE_CONTENT</span> <span class="o">=</span> <span class="s2">&quot;Combined link test — UC-04.&quot;</span>
+
+<span class="n">_BASE</span>  <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;sg_send_qa__site&quot;</span> <span class="o">/</span> <span class="s2">&quot;pages&quot;</span> <span class="o">/</span> <span class="s2">&quot;use-cases&quot;</span>
+<span class="n">_GROUP</span> <span class="o">=</span> <span class="s2">&quot;02-upload-share&quot;</span>
+<span class="n">_UC</span>    <span class="o">=</span> <span class="s2">&quot;combined_link&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">test_Combined_Link</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the Combined Link share mode end-to-end.&quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">harness</span> <span class="o">=</span> <span class="n">SG_Send__Browser__Test_Harness</span><span class="p">()</span><span class="o">.</span><span class="n">headless</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">sg_send</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">sg_send</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">set_access_token</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDownClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">teardown</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_shots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">method_doc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="n">shots_dir</span> <span class="o">=</span> <span class="n">_BASE</span> <span class="o">/</span> <span class="n">_GROUP</span> <span class="o">/</span> <span class="n">_UC</span> <span class="o">/</span> <span class="s2">&quot;screenshots&quot;</span>
+        <span class="k">return</span> <span class="n">ScreenshotCapture</span><span class="p">(</span>
+            <span class="n">use_case</span>    <span class="o">=</span> <span class="n">_UC</span><span class="p">,</span>
+            <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;test__combined_link&quot;</span><span class="p">,</span>
+            <span class="n">module_doc</span>  <span class="o">=</span> <span class="vm">__doc__</span><span class="p">,</span>
+            <span class="n">method_name</span> <span class="o">=</span> <span class="n">method_name</span><span class="p">,</span>
+            <span class="n">method_doc</span>  <span class="o">=</span> <span class="n">method_doc</span><span class="p">,</span>
+            <span class="n">shots_dir</span>   <span class="o">=</span> <span class="n">shots_dir</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test__01__combined_link_upload_and_auto_decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload with Combined Link, open the link, verify auto-decryption.&quot;&quot;&quot;</span>
+        <span class="n">shots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shots</span><span class="p">(</span><span class="s2">&quot;test__01__combined_link_upload_and_auto_decrypt&quot;</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">test__01__combined_link_upload_and_auto_decrypt</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">page__root</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__set_file</span><span class="p">(</span><span class="s2">&quot;combined-link-test.txt&quot;</span><span class="p">,</span> <span class="n">SAMPLE_CONTENT</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">(),</span> <span class="s2">&quot;01_file_selected&quot;</span><span class="p">,</span> <span class="s2">&quot;File selected (delivery step active)&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__click_next</span><span class="p">()</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">(),</span> <span class="s2">&quot;02_share_step&quot;</span><span class="p">,</span> <span class="s2">&quot;Share mode step&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__select_share_mode</span><span class="p">(</span><span class="s2">&quot;combined&quot;</span><span class="p">)</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">(),</span> <span class="s2">&quot;03_mode_selected&quot;</span><span class="p">,</span> <span class="s2">&quot;Combined link selected&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__click_next</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__wait_for_complete</span><span class="p">()</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">(),</span> <span class="s2">&quot;04_upload_complete&quot;</span><span class="p">,</span> <span class="s2">&quot;Upload complete&quot;</span><span class="p">)</span>
+
+        <span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">extract__upload_page</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">model</span><span class="o">.</span><span class="n">share_link</span><span class="p">,</span> <span class="s2">&quot;No combined link found after upload&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;#&quot;</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">share_link</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Combined link missing hash fragment: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">share_link</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">hash_part</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">share_link</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">parts</span>     <span class="o">=</span> <span class="n">hash_part</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mi">8</span> <span class="ow">and</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> \
+            <span class="sa">f</span><span class="s2">&quot;Hash should be #&lt;transferId&gt;/&lt;base64key&gt;: #</span><span class="si">{</span><span class="n">hash_part</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">(),</span> <span class="s2">&quot;06_link_captured&quot;</span><span class="p">,</span>
+                      <span class="sa">f</span><span class="s2">&quot;Combined link: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">share_link</span><span class="p">[:</span><span class="mi">80</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Open in new page and verify auto-decrypt</span>
+        <span class="n">download_url</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">share_link</span>
+        <span class="k">if</span> <span class="n">download_url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+            <span class="n">download_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">ui_url</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">download_url</span>
+
+        <span class="n">new_page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">()</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">tests.qa.v030.browser_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">goto</span><span class="p">,</span> <span class="n">wait_for_download_states</span>
+            <span class="n">goto</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="n">download_url</span><span class="p">)</span>
+            <span class="n">wait_for_download_states</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;complete&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">])</span>
+            <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="s2">&quot;07_auto_decrypted&quot;</span><span class="p">,</span> <span class="s2">&quot;Auto-decrypted content&quot;</span><span class="p">)</span>
+            <span class="n">body_text</span> <span class="o">=</span> <span class="n">new_page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">assert</span> <span class="n">SAMPLE_CONTENT</span> <span class="ow">in</span> <span class="n">body_text</span><span class="p">,</span> \
+                <span class="sa">f</span><span class="s2">&quot;Decrypted content not found. Page snippet: </span><span class="si">{</span><span class="n">body_text</span><span class="p">[:</span><span class="mi">300</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">new_page</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test__02__combined_link_via_api_helper</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an encrypted transfer via API helper, then open the combined link in browser.&quot;&quot;&quot;</span>
+        <span class="n">shots</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shots</span><span class="p">(</span><span class="s2">&quot;test__02__combined_link_via_api_helper&quot;</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">test__02__combined_link_via_api_helper</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="n">transfer_helper</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">transfer_helper</span><span class="p">()</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span>    <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span>
+            <span class="n">plaintext</span> <span class="o">=</span> <span class="n">SAMPLE_CONTENT</span><span class="o">.</span><span class="n">encode</span><span class="p">(),</span>
+            <span class="n">filename</span>  <span class="o">=</span> <span class="s2">&quot;api-combined-test.txt&quot;</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">page__browse_with_hash</span><span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">wait_for_download_states</span><span class="p">([</span><span class="s2">&quot;complete&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">])</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">(),</span> <span class="s2">&quot;01_api_created_decrypt&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;Decrypted content from API-created transfer&quot;</span><span class="p">)</span>
+
+        <span class="n">body_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">visible_text</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">SAMPLE_CONTENT</span> <span class="ow">in</span> <span class="n">body_text</span><span class="p">,</span> \
+            <span class="sa">f</span><span class="s2">&quot;API-created transfer did not decrypt. Transfer ID: </span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">()</span>
+
+            </script>
 
         </main>
     </div>
@@ -52,53 +245,13 @@
         copyright="SGraph AI">
     </sg-site-footer>
 
-    <!-- Metadata embedded at generation time (hand-crafted here for validation) -->
-    <script type="application/json" id="qa-metadata">
-{
-    "use_case": "combined_link",
-    "module": "test__combined_link",
-    "module_doc": "UC-04: Combined Link share mode (P0).\n\nFlow:\n  1. Upload a file with Combined Link share mode\n  2. Capture the full link (contains #transferId/base64key)\n  3. Open the link in a new tab\n  4. Verify auto-decrypt and content display\n",
-    "tests": [
-        {
-            "method": "test_combined_link_upload_and_auto_decrypt",
-            "doc": "Upload with Combined Link, open the link, verify auto-decryption.",
-            "screenshots": ["01_file_selected","02_share_step","03_mode_selected","04_upload_complete","06_link_captured","07_auto_decrypted"]
-        },
-        {
-            "method": "test_combined_link_via_api_helper",
-            "doc": "Create an encrypted transfer via API helper, then open the combined link in browser.",
-            "screenshots": ["01_api_created_decrypt"]
-        },
-        {
-            "method": "test__01__combined_link_upload_and_auto_decrypt",
-            "doc": "Upload with Combined Link, open the link, verify auto-decryption.",
-            "screenshots": ["01_file_selected","02_share_step","03_mode_selected","04_upload_complete","06_link_captured","07_auto_decrypted"]
-        },
-        {
-            "method": "test__02__combined_link_via_api_helper",
-            "doc": "Create an encrypted transfer via API helper, then open the combined link in browser.",
-            "screenshots": ["01_api_created_decrypt"]
-        }
-    ],
-    "screenshots": [
-        {"name":"01_file_selected","description":"File selected (delivery step active)","has_masks":false},
-        {"name":"02_share_step","description":"Share mode step","has_masks":false},
-        {"name":"03_mode_selected","description":"Combined link selected","has_masks":false},
-        {"name":"04_upload_complete","description":"Upload complete","has_masks":true},
-        {"name":"06_link_captured","description":"Combined link captured","has_masks":true},
-        {"name":"07_auto_decrypted","description":"Auto-decrypted content","has_masks":true},
-        {"name":"01_api_created_decrypt","description":"Decrypted content from API-created transfer","has_masks":true}
-    ]
-}
-    </script>
-
     <script src="../../../../_common/js/build-info.js"></script>
 
     <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
     <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
     <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
-    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
     <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
 
 </body>
 </html>

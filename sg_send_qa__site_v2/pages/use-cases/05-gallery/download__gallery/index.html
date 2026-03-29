@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Download  Gallery — SG/Send QA</title>
+    <meta name="description" content="QA documentation for download__gallery — automated Playwright browser test results.">
+
+    <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-site.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-code.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/use-cases/05-gallery/download__gallery/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <qa-test-page
+                data-use-case="download__gallery"
+                data-group="05-gallery"
+                data-commit="69a0084fc209209c69c68bac1da9b47f82b3d155"
+                data-version="v0.2.40"
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/69a0084fc209209c69c68bac1da9b47f82b3d155/tests/qa/v030/p1__download__gallery/test__download__gallery.py"
+                data-live-site-url="https://qa.send.sgraph.ai">
+            </qa-test-page>
+
+            <!-- Metadata embedded at generation time — no extra HTTP request needed -->
+            <script type="application/json" id="qa-metadata">
+{
+    "use_case": "download__gallery",
+    "module": "test__download__gallery",
+    "module_doc": "UC-06: Gallery view features (P1).\n\nTest flow:\n  - Verify view mode buttons work (compact / grid / large)\n  - Verify Copy Link, Email, Print, Save locally buttons are present\n  - Verify Info panel toggles\n  - Verify lightbox opens on thumbnail click\n  - Verify lightbox navigation (arrows)\n  - Verify SG/Send branding in lightbox\n",
+    "test_target": "qa_server",
+    "tests": [
+        {
+            "method": "test_gallery_page_loads",
+            "doc": "Gallery page loads without errors for an image-heavy zip.",
+            "screenshots": [
+                "01_gallery_loaded"
+            ]
+        },
+        {
+            "method": "test_view_mode_buttons_present",
+            "doc": "View mode buttons (compact/grid/large) are present in gallery.",
+            "screenshots": [
+                "02_view_controls"
+            ]
+        },
+        {
+            "method": "test_action_buttons_present",
+            "doc": "Copy Link, Email, Save locally, Print buttons are present.",
+            "screenshots": [
+                "03_action_buttons"
+            ]
+        },
+        {
+            "method": "test_info_panel_toggle",
+            "doc": "Info button toggles the info panel showing transfer metadata.",
+            "screenshots": [
+                "04_before_info"
+            ]
+        },
+        {
+            "method": "test_lightbox_opens_on_thumbnail",
+            "doc": "Clicking a thumbnail opens the lightbox.",
+            "screenshots": [
+                "06_before_lightbox"
+            ]
+        },
+        {
+            "method": "test_lightbox_arrow_navigation",
+            "doc": "Arrow buttons navigate between images in the lightbox.",
+            "screenshots": []
+        }
+    ],
+    "screenshots": [
+        {
+            "name": "01_gallery_loaded",
+            "path": "sg_send_qa__site/pages/use-cases/05-gallery/download__gallery/screenshots/01_gallery_loaded.png",
+            "description": "Gallery view loaded"
+        },
+        {
+            "name": "02_view_controls",
+            "path": "sg_send_qa__site/pages/use-cases/05-gallery/download__gallery/screenshots/02_view_controls.png",
+            "description": "View mode controls"
+        },
+        {
+            "name": "03_action_buttons",
+            "path": "sg_send_qa__site/pages/use-cases/05-gallery/download__gallery/screenshots/03_action_buttons.png",
+            "description": "Gallery action buttons"
+        },
+        {
+            "name": "04_before_info",
+            "path": "sg_send_qa__site/pages/use-cases/05-gallery/download__gallery/screenshots/04_before_info.png",
+            "description": "Before info panel toggle"
+        },
+        {
+            "name": "06_before_lightbox",
+            "path": "sg_send_qa__site/pages/use-cases/05-gallery/download__gallery/screenshots/06_before_lightbox.png",
+            "description": "Gallery before lightbox"
+        }
+    ]
+}
+            </script>
+
+            <!-- Test source — syntax highlighted by Pygments at generation time -->
+            <script type="text/qa-source">
+<span class="sd">&quot;&quot;&quot;UC-06: Gallery view features (P1).</span>
+
+<span class="sd">Test flow:</span>
+<span class="sd">  - Verify view mode buttons work (compact / grid / large)</span>
+<span class="sd">  - Verify Copy Link, Email, Print, Save locally buttons are present</span>
+<span class="sd">  - Verify Info panel toggles</span>
+<span class="sd">  - Verify lightbox opens on thumbnail click</span>
+<span class="sd">  - Verify lightbox navigation (arrows)</span>
+<span class="sd">  - Verify SG/Send branding in lightbox</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">expect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.qa.v030.browser_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">goto</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">p1</span>
+
+<span class="n">_PNG_HEADER</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x89</span><span class="s1">PNG</span><span class="se">\r\n\x1a\n</span><span class="s1">&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x00\x00\r</span><span class="s1">IHDR</span><span class="se">\x00\x00\x00\x01\x00\x00\x00\x01</span><span class="s1">&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x08\x02\x00\x00\x00\x90</span><span class="s1">wS</span><span class="se">\xde</span><span class="s1">&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x00\x00\x0c</span><span class="s1">IDATx</span><span class="se">\x9c</span><span class="s1">c</span><span class="se">\xf8\x0f\x00\x00\x01\x01\x00\x05\x18\xd8</span><span class="s1">N&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x00\x00\x00</span><span class="s1">IEND</span><span class="se">\xae</span><span class="s1">B`</span><span class="se">\x82</span><span class="s1">&#39;</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_image_zip</span><span class="p">():</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;photos/photo1.png&quot;</span><span class="p">,</span> <span class="n">_PNG_HEADER</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;photos/photo2.png&quot;</span><span class="p">,</span> <span class="n">_PNG_HEADER</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;photos/photo3.png&quot;</span><span class="p">,</span> <span class="n">_PNG_HEADER</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;photos/photo4.png&quot;</span><span class="p">,</span> <span class="n">_PNG_HEADER</span><span class="p">)</span>
+    <span class="n">buf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestGalleryViewFeatures</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify gallery view UI features for an image-heavy zip.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_open_gallery</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">):</span>
+        <span class="n">zip_bytes</span> <span class="o">=</span> <span class="n">_make_image_zip</span><span class="p">()</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">zip_bytes</span><span class="p">,</span> <span class="s2">&quot;photos.zip&quot;</span><span class="p">)</span>
+        <span class="n">gallery_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/gallery/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">gallery_url</span><span class="p">)</span>
+        <span class="c1"># Wait for page content to be present</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">not_to_be_empty</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_gallery_page_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gallery page loads without errors for an image-heavy zip.&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_gallery</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;01_gallery_loaded&quot;</span><span class="p">,</span> <span class="s2">&quot;Gallery view loaded&quot;</span><span class="p">)</span>
+
+        <span class="c1"># inner_text() only returns visible text — text_content() also picks up</span>
+        <span class="c1"># inline script bodies (e.g. service worker mocks with {&quot;error&quot;:&quot;blocked&quot;})</span>
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">inner_text</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="s2">&quot;Gallery page shows error&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_view_mode_buttons_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;View mode buttons (compact/grid/large) are present in gallery.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_gallery</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="c1"># Look for view mode controls</span>
+        <span class="n">view_controls</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;button[title*=&#39;compact&#39;], button[title*=&#39;grid&#39;], button[title*=&#39;large&#39;], &quot;</span>
+            <span class="s2">&quot;[class*=&#39;view-mode&#39;], [class*=&#39;layout&#39;]&quot;</span>
+        <span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;02_view_controls&quot;</span><span class="p">,</span> <span class="s2">&quot;View mode controls&quot;</span><span class="p">)</span>
+        <span class="c1"># At least one view mode control should exist</span>
+        <span class="k">assert</span> <span class="n">view_controls</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text_content</span><span class="p">(),</span> \
+            <span class="s2">&quot;No view mode controls found&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_action_buttons_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Copy Link, Email, Save locally, Print buttons are present.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_gallery</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;03_action_buttons&quot;</span><span class="p">,</span> <span class="s2">&quot;Gallery action buttons&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">page_text_lower</span> <span class="o">=</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="c1"># At least some action buttons should be present</span>
+        <span class="n">found_actions</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">kw</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">,</span> <span class="s2">&quot;save&quot;</span><span class="p">,</span> <span class="s2">&quot;print&quot;</span><span class="p">,</span> <span class="s2">&quot;download&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text_lower</span>
+        <span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">found_actions</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> \
+            <span class="sa">f</span><span class="s2">&quot;No action buttons found (copy/email/save/print). Page text: </span><span class="si">{</span><span class="n">page_text</span><span class="p">[:</span><span class="mi">500</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_info_panel_toggle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Info button toggles the info panel showing transfer metadata.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_gallery</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="n">info_btn</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;button:has-text(&#39;Info&#39;), button[title*=&#39;info&#39;], [class*=&#39;info-btn&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;04_before_info&quot;</span><span class="p">,</span> <span class="s2">&quot;Before info panel toggle&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">info_btn</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">):</span>
+            <span class="n">info_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="c1"># Wait for panel content to appear</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;05_info_panel_open&quot;</span><span class="p">,</span> <span class="s2">&quot;Info panel open&quot;</span><span class="p">)</span>
+
+            <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="c1"># Info panel should show transfer metadata</span>
+            <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="s2">&quot;encrypt&quot;</span><span class="p">,</span> <span class="s2">&quot;transfer&quot;</span><span class="p">]),</span> \
+                <span class="s2">&quot;Info panel does not show transfer metadata&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_lightbox_opens_on_thumbnail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clicking a thumbnail opens the lightbox.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_gallery</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="c1"># Click the first thumbnail image</span>
+        <span class="n">thumbnail</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;img[class*=&#39;thumb&#39;], img[class*=&#39;gallery&#39;], .thumbnail img&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">thumbnail</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="c1"># Try clicking any image on the page</span>
+            <span class="n">thumbnail</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;06_before_lightbox&quot;</span><span class="p">,</span> <span class="s2">&quot;Gallery before lightbox&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">thumbnail</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">):</span>
+            <span class="n">thumbnail</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="c1"># Wait for lightbox/overlay to appear</span>
+            <span class="n">lightbox</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+                <span class="s2">&quot;[class*=&#39;lightbox&#39;], [class*=&#39;modal&#39;], [class*=&#39;overlay&#39;], [role=&#39;dialog&#39;]&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">lightbox</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>  <span class="c1"># lightbox may render differently; assertion below handles it</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;07_lightbox_open&quot;</span><span class="p">,</span> <span class="s2">&quot;Lightbox opened&quot;</span><span class="p">)</span>
+
+            <span class="k">assert</span> <span class="n">lightbox</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span> <span class="ow">or</span> \
+                <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text_content</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
+                <span class="s2">&quot;Lightbox did not open after thumbnail click&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_lightbox_arrow_navigation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Arrow buttons navigate between images in the lightbox.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_gallery</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="n">thumbnail</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;img&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">thumbnail</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">):</span>
+            <span class="n">thumbnail</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="c1"># Wait for lightbox to appear</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+                <span class="s2">&quot;[class*=&#39;lightbox&#39;], [class*=&#39;modal&#39;], [class*=&#39;overlay&#39;], [role=&#39;dialog&#39;]&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>
+
+            <span class="c1"># Look for next/prev arrows</span>
+            <span class="n">next_btn</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+                <span class="s2">&quot;button[aria-label*=&#39;next&#39;], button[aria-label*=&#39;Next&#39;], &quot;</span>
+                <span class="s2">&quot;[class*=&#39;next&#39;], [class*=&#39;arrow-right&#39;]&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+            <span class="k">if</span> <span class="n">next_btn</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">):</span>
+                <span class="n">next_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+                <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">)</span>
+                <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;08_lightbox_next&quot;</span><span class="p">,</span> <span class="s2">&quot;Lightbox navigated to next image&quot;</span><span class="p">)</span>
+
+            </script>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
+
+</body>
+</html>

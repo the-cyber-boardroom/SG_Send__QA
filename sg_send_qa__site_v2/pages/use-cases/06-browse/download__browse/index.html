@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Download  Browse — SG/Send QA</title>
+    <meta name="description" content="QA documentation for download__browse — automated Playwright browser test results.">
+
+    <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-site.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-code.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/use-cases/06-browse/download__browse/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <qa-test-page
+                data-use-case="download__browse"
+                data-group="06-browse"
+                data-commit="69a0084fc209209c69c68bac1da9b47f82b3d155"
+                data-version="v0.2.40"
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/69a0084fc209209c69c68bac1da9b47f82b3d155/tests/qa/v030/p1__download__browse/test__download__browse.py"
+                data-live-site-url="https://qa.send.sgraph.ai">
+            </qa-test-page>
+
+            <!-- Metadata embedded at generation time — no extra HTTP request needed -->
+            <script type="application/json" id="qa-metadata">
+{
+    "use_case": "download__browse",
+    "module": "test__download__browse",
+    "module_doc": "UC-07: Browse view features (P1).\n\nTest flow:\n  - Verify folder tree renders with expand/collapse controls\n  - Verify file click opens preview tab in right panel\n  - Verify keyboard navigation: j/k moves through files, s saves\n  - Verify Share tab shows URL + copy + email\n  - Verify Info tab shows file counts by type, encryption info\n  - Verify \"Save locally\" downloads the zip\n  - Verify print button is present\n",
+    "test_target": "qa_server",
+    "tests": [
+        {
+            "method": "test_browse_page_loads",
+            "doc": "Browse page loads without errors.",
+            "screenshots": [
+                "01_browse_loaded"
+            ]
+        },
+        {
+            "method": "test_folder_tree_present",
+            "doc": "Folder tree is rendered in the left panel.",
+            "screenshots": [
+                "02_folder_tree"
+            ]
+        },
+        {
+            "method": "test_file_click_opens_preview",
+            "doc": "Clicking a file in the tree opens a preview in the right panel.",
+            "screenshots": []
+        },
+        {
+            "method": "test_share_tab_present",
+            "doc": "Share tab shows URL, copy, and email actions.",
+            "screenshots": []
+        },
+        {
+            "method": "test_info_tab_present",
+            "doc": "Info tab shows file counts and encryption info.",
+            "screenshots": []
+        },
+        {
+            "method": "test_save_locally_button_present",
+            "doc": "Save locally button is present in browse view.",
+            "screenshots": [
+                "06_save_button"
+            ]
+        },
+        {
+            "method": "test_keyboard_navigation_j_k",
+            "doc": "Keyboard j/k navigate through files in browse view (P2).",
+            "screenshots": [
+                "07_keyboard_j",
+                "08_keyboard_k"
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "name": "01_browse_loaded",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/01_browse_loaded.png",
+            "description": "Browse view loaded"
+        },
+        {
+            "name": "02_folder_tree",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/02_folder_tree.png",
+            "description": "Folder tree in browse view"
+        },
+        {
+            "name": "06_save_button",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/06_save_button.png",
+            "description": "Save locally button"
+        },
+        {
+            "name": "07_keyboard_j",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/07_keyboard_j.png",
+            "description": "After pressing j"
+        },
+        {
+            "name": "08_keyboard_k",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/08_keyboard_k.png",
+            "description": "After pressing k"
+        }
+    ]
+}
+            </script>
+
+            <!-- Test source — syntax highlighted by Pygments at generation time -->
+            <script type="text/qa-source">
+<span class="sd">&quot;&quot;&quot;UC-07: Browse view features (P1).</span>
+
+<span class="sd">Test flow:</span>
+<span class="sd">  - Verify folder tree renders with expand/collapse controls</span>
+<span class="sd">  - Verify file click opens preview tab in right panel</span>
+<span class="sd">  - Verify keyboard navigation: j/k moves through files, s saves</span>
+<span class="sd">  - Verify Share tab shows URL + copy + email</span>
+<span class="sd">  - Verify Info tab shows file counts by type, encryption info</span>
+<span class="sd">  - Verify &quot;Save locally&quot; downloads the zip</span>
+<span class="sd">  - Verify print button is present</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">p1</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_folder_zip</span><span class="p">():</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;docs/readme.md&quot;</span><span class="p">,</span> <span class="s2">&quot;# Readme</span><span class="se">\n\n</span><span class="s2">This is the readme.&quot;</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;docs/notes.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;Some notes here.&quot;</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;docs/sub/extra.md&quot;</span><span class="p">,</span> <span class="s2">&quot;# Extra</span><span class="se">\n\n</span><span class="s2">Extra content.&quot;</span><span class="p">)</span>
+    <span class="n">buf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestBrowseViewFeatures</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify browse view UI features for a folder zip.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_open_browse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">):</span>
+        <span class="n">zip_bytes</span> <span class="o">=</span> <span class="n">_make_folder_zip</span><span class="p">()</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">zip_bytes</span><span class="p">,</span> <span class="s2">&quot;docs.zip&quot;</span><span class="p">)</span>
+        <span class="n">browse_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/browse/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="n">browse_url</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">3000</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_browse_page_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Browse page loads without errors.&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_browse</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;01_browse_loaded&quot;</span><span class="p">,</span> <span class="s2">&quot;Browse view loaded&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span>
+            <span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;browse&quot;</span><span class="p">,</span> <span class="s2">&quot;folder&quot;</span><span class="p">,</span> <span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="s2">&quot;tree&quot;</span><span class="p">]</span>
+        <span class="p">),</span> <span class="s2">&quot;Browse page shows error&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_folder_tree_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Folder tree is rendered in the left panel.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_browse</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="c1"># Tree items or folder navigation elements</span>
+        <span class="n">tree</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;[class*=&#39;tree&#39;], [class*=&#39;folder&#39;], [class*=&#39;sidebar&#39;], &quot;</span>
+            <span class="s2">&quot;nav li, ul li a[href]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;02_folder_tree&quot;</span><span class="p">,</span> <span class="s2">&quot;Folder tree in browse view&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Either tree or file listing should be present</span>
+        <span class="k">assert</span> <span class="n">tree</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text_content</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_file_click_opens_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clicking a file in the tree opens a preview in the right panel.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_browse</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="c1"># Click the first file link in the tree</span>
+        <span class="n">file_link</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;a[href*=&#39;#&#39;], [class*=&#39;file&#39;], [class*=&#39;tree-item&#39;]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">file_link</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="n">file_link</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;03_file_preview&quot;</span><span class="p">,</span> <span class="s2">&quot;File preview after click&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_share_tab_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Share tab shows URL, copy, and email actions.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_browse</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="n">share_tab</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;button:has-text(&#39;Share&#39;), a:has-text(&#39;Share&#39;), [class*=&#39;share-tab&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">share_tab</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="n">share_tab</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;04_share_tab&quot;</span><span class="p">,</span> <span class="s2">&quot;Share tab content&quot;</span><span class="p">)</span>
+
+            <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">,</span> <span class="s2">&quot;link&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">]),</span> \
+                <span class="s2">&quot;Share tab does not show copy/email/link options&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_info_tab_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Info tab shows file counts and encryption info.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_browse</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="n">info_tab</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;button:has-text(&#39;Info&#39;), a:has-text(&#39;Info&#39;), [class*=&#39;info-tab&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">info_tab</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="n">info_tab</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;05_info_tab&quot;</span><span class="p">,</span> <span class="s2">&quot;Info tab content&quot;</span><span class="p">)</span>
+
+            <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;file&quot;</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="s2">&quot;encrypt&quot;</span><span class="p">]),</span> \
+                <span class="s2">&quot;Info tab does not show file/size/encryption info&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_save_locally_button_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save locally button is present in browse view.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_browse</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;06_save_button&quot;</span><span class="p">,</span> <span class="s2">&quot;Save locally button&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;save&quot;</span><span class="p">,</span> <span class="s2">&quot;download&quot;</span><span class="p">]),</span> \
+            <span class="s2">&quot;No save/download button found in browse view&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_keyboard_navigation_j_k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Keyboard j/k navigate through files in browse view (P2).&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_browse</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="c1"># Focus the page body and press j/k</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">keyboard</span><span class="o">.</span><span class="n">press</span><span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;07_keyboard_j&quot;</span><span class="p">,</span> <span class="s2">&quot;After pressing j&quot;</span><span class="p">)</span>
+
+        <span class="n">page</span><span class="o">.</span><span class="n">keyboard</span><span class="o">.</span><span class="n">press</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;08_keyboard_k&quot;</span><span class="p">,</span> <span class="s2">&quot;After pressing k&quot;</span><span class="p">)</span>
+        <span class="c1"># Keyboard nav may or may not be implemented — test is documentation</span>
+
+            </script>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
+
+</body>
+</html>

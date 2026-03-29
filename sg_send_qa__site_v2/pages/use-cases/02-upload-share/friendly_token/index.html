@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Friendly Token — SG/Send QA</title>
+    <meta name="description" content="QA documentation for friendly_token — automated Playwright browser test results.">
+
+    <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-site.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-code.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/use-cases/02-upload-share/friendly_token/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <qa-test-page
+                data-use-case="friendly_token"
+                data-group="02-upload-share"
+                data-commit="69a0084fc209209c69c68bac1da9b47f82b3d155"
+                data-version="v0.2.40"
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/69a0084fc209209c69c68bac1da9b47f82b3d155/tests/qa/v030/p0__friendly_token/test__friendly_token.py"
+                data-live-site-url="https://qa.send.sgraph.ai">
+            </qa-test-page>
+
+            <!-- Metadata embedded at generation time — no extra HTTP request needed -->
+            <script type="application/json" id="qa-metadata">
+{
+    "use_case": "friendly_token",
+    "module": "test__friendly_token",
+    "module_doc": "UC-03: Friendly Token — Simple Token share mode (P0).\n\nThis was a P0 bug — critical to test.\n\nFlow:\n  1. Upload a file with Simple Token share mode\n  2. Capture the friendly token (word-word-NNNN format)\n  3. Open a new tab to /en-gb/browse/#<friendly-token>\n  4. Verify the token resolves and content decrypts\n",
+    "tests": [
+        {
+            "method": "test__01__friendly_token_upload_and_resolve",
+            "doc": "Upload with Simple Token mode, then resolve the friendly token in a new tab.",
+            "screenshots": [
+                "01_file_selected",
+                "02_simple_token_selected",
+                "03_upload_complete",
+                "05_token_captured",
+                "06_token_resolved"
+            ]
+        },
+        {
+            "method": "test__02__friendly_token_format",
+            "doc": "Verify the friendly token matches the word-word-NNNN pattern.",
+            "screenshots": [
+                "01_file_selected",
+                "02_simple_token_selected",
+                "03_upload_complete"
+            ]
+        },
+        {
+            "method": "test__03__friendly_token_resolves_in_new_tab",
+            "doc": "Upload with Simple Token, then open the token in a new browser tab.",
+            "screenshots": [
+                "01_file_selected",
+                "02_simple_token_selected",
+                "03_upload_complete",
+                "05_token_resolved"
+            ]
+        },
+        {
+            "method": "test__04__friendly_token_no_key_in_url_after_decrypt",
+            "doc": "After decryption, the friendly token remains in the URL (by design).",
+            "screenshots": [
+                "01_file_selected",
+                "02_simple_token_selected",
+                "03_upload_complete",
+                "05_hash_after_decrypt"
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "name": "05_hash_cleared",
+            "path": "sg_send_qa__site/pages/use-cases/friendly_token/screenshots/05_hash_cleared.png",
+            "description": "URL after decrypt: http://localhost:10062/en-gb/browse/#terra-chain-5022"
+        },
+        {
+            "name": "05_token_captured",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
+            "description": "Token: brave-bonus-1431",
+            "has_masks": true
+        },
+        {
+            "name": "06_token_resolved",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
+            "description": "Token 'brave-bonus-1431' resolved",
+            "has_masks": true
+        },
+        {
+            "name": "05_token_resolved",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
+            "description": "Token 'tiger-topaz-4775'",
+            "has_masks": true
+        },
+        {
+            "name": "01_file_selected",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/01_file_selected.png",
+            "description": "File selected (delivery step active)",
+            "has_masks": false
+        },
+        {
+            "name": "02_simple_token_selected",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/02_simple_token_selected.png",
+            "description": "Simple Token selected",
+            "has_masks": false
+        },
+        {
+            "name": "03_upload_complete",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/03_upload_complete.png",
+            "description": "Upload complete",
+            "has_masks": true
+        },
+        {
+            "name": "05_hash_after_decrypt",
+            "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
+            "description": "URL after decrypt: http://localhost:50899//en-gb/browse/#humor-terra-6389",
+            "has_masks": true
+        }
+    ]
+}
+            </script>
+
+            <!-- Test source — syntax highlighted by Pygments at generation time -->
+            <script type="text/qa-source">
+<span class="sd">&quot;&quot;&quot;UC-03: Friendly Token — Simple Token share mode (P0).</span>
+
+<span class="sd">This was a P0 bug — critical to test.</span>
+
+<span class="sd">Flow:</span>
+<span class="sd">  1. Upload a file with Simple Token share mode</span>
+<span class="sd">  2. Capture the friendly token (word-word-NNNN format)</span>
+<span class="sd">  3. Open a new tab to /en-gb/browse/#&lt;friendly-token&gt;</span>
+<span class="sd">  4. Verify the token resolves and content decrypts</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w">                                                    </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unittest</span><span class="w">                                                   </span><span class="kn">import</span> <span class="n">TestCase</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sg_send_qa.browser.SG_Send__Browser__Test_Harness</span><span class="w">         </span><span class="kn">import</span> <span class="n">SG_Send__Browser__Test_Harness</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sg_send_qa.utils.QA_Screenshot_Capture</span><span class="w">                    </span><span class="kn">import</span> <span class="n">ScreenshotCapture</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">p0</span>
+
+<span class="n">SAMPLE_CONTENT</span> <span class="o">=</span> <span class="s2">&quot;Friendly token test — UC-03.&quot;</span>
+<span class="n">TOKEN_PATTERN</span>  <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\b[a-z]+-[a-z]+-\d</span><span class="si">{4}</span><span class="s2">\b&quot;</span><span class="p">)</span>
+
+<span class="n">_BASE</span>  <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;sg_send_qa__site&quot;</span> <span class="o">/</span> <span class="s2">&quot;pages&quot;</span> <span class="o">/</span> <span class="s2">&quot;use-cases&quot;</span>
+<span class="n">_GROUP</span> <span class="o">=</span> <span class="s2">&quot;02-upload-share&quot;</span>
+<span class="n">_UC</span>    <span class="o">=</span> <span class="s2">&quot;friendly_token&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">test_Friendly_Token</span><span class="p">(</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the Simple Token (friendly token) share mode end-to-end.&quot;&quot;&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUpClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">harness</span> <span class="o">=</span> <span class="n">SG_Send__Browser__Test_Harness</span><span class="p">()</span><span class="o">.</span><span class="n">headless</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">sg_send</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">sg_send</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">set_access_token</span><span class="p">()</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDownClass</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">teardown</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_shots</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">method_doc</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="n">shots_dir</span> <span class="o">=</span> <span class="n">_BASE</span> <span class="o">/</span> <span class="n">_GROUP</span> <span class="o">/</span> <span class="n">_UC</span> <span class="o">/</span> <span class="s2">&quot;screenshots&quot;</span>
+        <span class="k">return</span> <span class="n">ScreenshotCapture</span><span class="p">(</span>
+            <span class="n">use_case</span>    <span class="o">=</span> <span class="n">_UC</span><span class="p">,</span>
+            <span class="n">module_name</span> <span class="o">=</span> <span class="s2">&quot;test__friendly_token&quot;</span><span class="p">,</span>
+            <span class="n">module_doc</span>  <span class="o">=</span> <span class="vm">__doc__</span><span class="p">,</span>
+            <span class="n">method_name</span> <span class="o">=</span> <span class="n">method_name</span><span class="p">,</span>
+            <span class="n">method_doc</span>  <span class="o">=</span> <span class="n">method_doc</span><span class="p">,</span>
+            <span class="n">shots_dir</span>   <span class="o">=</span> <span class="n">shots_dir</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_upload_with_simple_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">shots</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;token-test.txt&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload a file with Simple Token mode and return the friendly token string.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">page__root</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__set_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">SAMPLE_CONTENT</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">(),</span> <span class="s2">&quot;01_file_selected&quot;</span><span class="p">,</span> <span class="s2">&quot;File selected (delivery step active)&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__click_next</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__select_share_mode</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">)</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">(),</span> <span class="s2">&quot;02_simple_token_selected&quot;</span><span class="p">,</span> <span class="s2">&quot;Simple Token selected&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__click_next</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__wait_for_complete</span><span class="p">()</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">(),</span> <span class="s2">&quot;03_upload_complete&quot;</span><span class="p">,</span> <span class="s2">&quot;Upload complete&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">upload__get_friendly_token</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test__01__friendly_token_upload_and_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload with Simple Token mode, then resolve the friendly token in a new tab.&quot;&quot;&quot;</span>
+        <span class="n">shots</span>         <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shots</span><span class="p">(</span><span class="s2">&quot;test__01__friendly_token_upload_and_resolve&quot;</span><span class="p">,</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">test__01__friendly_token_upload_and_resolve</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="n">friendly_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_with_simple_token</span><span class="p">(</span><span class="n">shots</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">friendly_token</span><span class="p">,</span> <span class="s2">&quot;No friendly token found after upload&quot;</span>
+        <span class="k">assert</span> <span class="n">TOKEN_PATTERN</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">friendly_token</span><span class="p">),</span> \
+            <span class="sa">f</span><span class="s2">&quot;Token does not match word-word-NNNN pattern: </span><span class="si">{</span><span class="n">friendly_token</span><span class="si">!r}</span><span class="s2">&quot;</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">(),</span> <span class="s2">&quot;05_token_captured&quot;</span><span class="p">,</span>
+                      <span class="sa">f</span><span class="s2">&quot;Token: </span><span class="si">{</span><span class="n">friendly_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Resolve in new page</span>
+        <span class="n">new_page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">()</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">tests.qa.v030.browser_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">goto</span><span class="p">,</span> <span class="n">wait_for_download_states</span>
+            <span class="n">goto</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">ui_url</span><span class="p">()</span><span class="si">}</span><span class="s2">/en-gb/browse/#</span><span class="si">{</span><span class="n">friendly_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">wait_for_download_states</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;complete&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">])</span>
+            <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="s2">&quot;06_token_resolved&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Token &#39;</span><span class="si">{</span><span class="n">friendly_token</span><span class="si">}</span><span class="s2">&#39; resolved&quot;</span><span class="p">)</span>
+            <span class="n">resolve_text</span> <span class="o">=</span> <span class="n">new_page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">assert</span> <span class="s2">&quot;not found&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolve_text</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> \
+                <span class="sa">f</span><span class="s2">&quot;Token resolution failed — &#39;not found&#39; error. Token: </span><span class="si">{</span><span class="n">friendly_token</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">new_page</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test__02__friendly_token_format</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify the friendly token matches the word-word-NNNN pattern.&quot;&quot;&quot;</span>
+        <span class="n">shots</span>          <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shots</span><span class="p">(</span><span class="s2">&quot;test__02__friendly_token_format&quot;</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">test__02__friendly_token_format</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="n">friendly_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_with_simple_token</span><span class="p">(</span><span class="n">shots</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;format-test.txt&quot;</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">friendly_token</span><span class="p">,</span> <span class="s2">&quot;No friendly token found after upload&quot;</span>
+        <span class="n">parts</span> <span class="o">=</span> <span class="n">friendly_token</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span>        <span class="sa">f</span><span class="s2">&quot;Token should have 3 parts: </span><span class="si">{</span><span class="n">friendly_token</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">assert</span> <span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">(),</span>     <span class="sa">f</span><span class="s2">&quot;First part should be a word: </span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">assert</span> <span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isalpha</span><span class="p">(),</span>     <span class="sa">f</span><span class="s2">&quot;Second part should be a word: </span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">assert</span> <span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span><span class="p">(),</span>     <span class="sa">f</span><span class="s2">&quot;Third part should be digits: </span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="mi">4</span><span class="p">,</span>     <span class="sa">f</span><span class="s2">&quot;Third part should be 4 digits: </span><span class="si">{</span><span class="n">parts</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test__03__friendly_token_resolves_in_new_tab</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload with Simple Token, then open the token in a new browser tab.&quot;&quot;&quot;</span>
+        <span class="n">shots</span>          <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shots</span><span class="p">(</span><span class="s2">&quot;test__03__friendly_token_resolves_in_new_tab&quot;</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">test__03__friendly_token_resolves_in_new_tab</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="n">friendly_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_with_simple_token</span><span class="p">(</span><span class="n">shots</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;resolve-test.txt&quot;</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">friendly_token</span><span class="p">,</span> <span class="s2">&quot;No friendly token found after upload&quot;</span>
+        <span class="n">new_page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">()</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">tests.qa.v030.browser_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">goto</span><span class="p">,</span> <span class="n">wait_for_download_states</span>
+            <span class="n">goto</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">ui_url</span><span class="p">()</span><span class="si">}</span><span class="s2">/en-gb/browse/#</span><span class="si">{</span><span class="n">friendly_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">wait_for_download_states</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;complete&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">])</span>
+            <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="s2">&quot;05_token_resolved&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Token &#39;</span><span class="si">{</span><span class="n">friendly_token</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="n">resolve_text</span> <span class="o">=</span> <span class="n">new_page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">assert</span> <span class="s2">&quot;not found&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolve_text</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> \
+                <span class="sa">f</span><span class="s2">&quot;Token resolution failed — this is the P0 bug. Token: </span><span class="si">{</span><span class="n">friendly_token</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">assert</span> <span class="n">SAMPLE_CONTENT</span> <span class="ow">in</span> <span class="n">resolve_text</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">resolve_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">,</span> \
+                <span class="s2">&quot;Token did not resolve to decrypted content&quot;</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">new_page</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test__04__friendly_token_no_key_in_url_after_decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;After decryption, the friendly token remains in the URL (by design).&quot;&quot;&quot;</span>
+        <span class="n">shots</span>          <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_shots</span><span class="p">(</span><span class="s2">&quot;test__04__friendly_token_no_key_in_url_after_decrypt&quot;</span><span class="p">,</span>
+                                     <span class="bp">self</span><span class="o">.</span><span class="n">test__04__friendly_token_no_key_in_url_after_decrypt</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+        <span class="n">friendly_token</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_upload_with_simple_token</span><span class="p">(</span><span class="n">shots</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;url-test.txt&quot;</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">friendly_token</span><span class="p">,</span> <span class="s2">&quot;No friendly token found&quot;</span>
+        <span class="n">new_page</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sg_send</span><span class="o">.</span><span class="n">raw_page</span><span class="p">()</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">from</span><span class="w"> </span><span class="nn">tests.qa.v030.browser_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">goto</span><span class="p">,</span> <span class="n">wait_for_download_states</span>
+            <span class="n">goto</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">harness</span><span class="o">.</span><span class="n">ui_url</span><span class="p">()</span><span class="si">}</span><span class="s2">/en-gb/browse/#</span><span class="si">{</span><span class="n">friendly_token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">wait_for_download_states</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;complete&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">])</span>
+            <span class="n">final_url</span> <span class="o">=</span> <span class="n">new_page</span><span class="o">.</span><span class="n">url</span>
+            <span class="n">shots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">new_page</span><span class="p">,</span> <span class="s2">&quot;05_hash_after_decrypt&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;URL after decrypt: </span><span class="si">{</span><span class="n">final_url</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;#&quot;</span> <span class="ow">in</span> <span class="n">final_url</span><span class="p">:</span>
+                <span class="n">hash_fragment</span> <span class="o">=</span> <span class="n">final_url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;#&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">assert</span> <span class="n">TOKEN_PATTERN</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">hash_fragment</span><span class="p">)</span> <span class="ow">or</span> <span class="n">hash_fragment</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> \
+                    <span class="sa">f</span><span class="s2">&quot;URL hash is neither a friendly token nor empty: </span><span class="si">{</span><span class="n">hash_fragment</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">new_page</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">save_metadata</span><span class="p">()</span>
+
+            </script>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
+
+</body>
+</html>

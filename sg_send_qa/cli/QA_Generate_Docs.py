@@ -371,6 +371,243 @@ class QA_Generate_Docs(Type_Safe):
         else:
             print(f"  Unchanged:  {path}")
 
+    # ═══════════════════════════════════════════════════════════════════════════
+    # V2 generator — Web Components site (sg_send_qa__site_v2/)
+    #
+    # All methods below are NEW. Nothing above this line is modified.
+    # The v2 generator reads from sg_send_qa__site/ (screenshots + metadata)
+    # and writes HTML into sg_send_qa__site_v2/.
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    site_v2_dir   : str = "sg_send_qa__site_v2"
+    live_site_url : str = "https://qa.send.sgraph.ai"
+
+    @property
+    def use_cases_v2_dir(self) -> Path:
+        return Path(self.site_v2_dir) / "pages" / "use-cases"
+
+    @property
+    def data_v2_dir(self) -> Path:
+        return Path(self.site_v2_dir) / "_data"
+
+    @property
+    def template_path(self) -> Path:
+        return Path(self.site_v2_dir) / "_common" / "templates" / "test-page.html"
+
+    # ---------------------------------------------------------------- helpers
+
+    def _deduplicate_tests(self, tests: list) -> list:
+        """Remove duplicate test methods caused by old/new naming convention.
+
+        Old style:  test_combined_link_upload_and_auto_decrypt
+        New style:  test__01__combined_link_upload_and_auto_decrypt
+
+        Strips __NN__ from new-style names to detect duplicates.
+        When both exist, keeps only the __NN__ prefixed (newer) version.
+        """
+        import re
+        by_norm: dict = {}
+        for t in tests:
+            norm = re.sub(r'__\d+__', '_', t['method'])
+            by_norm.setdefault(norm, []).append(t)
+
+        result = []
+        for group in by_norm.values():
+            if len(group) == 1:
+                result.append(group[0])
+            else:
+                # prefer the one with __NN__ pattern
+                prefixed = next((t for t in group if re.search(r'__\d+__', t['method'])), None)
+                result.append(prefixed or group[0])
+        return result
+
+    def _highlight_python(self, source: str) -> str:
+        """Return syntax-highlighted HTML for Python source (Pygments).
+
+        Falls back to plain <code> block if Pygments is not available.
+        """
+        try:
+            from pygments import highlight
+            from pygments.lexers import PythonLexer
+            from pygments.formatters import HtmlFormatter
+            return highlight(source, PythonLexer(), HtmlFormatter(nowrap=True))
+        except ImportError:
+            import html as html_mod
+            return f'<code class="language-python">{html_mod.escape(source)}</code>'
+
+    def _common_prefix(self, page_path: Path, v2_root: Path) -> str:
+        """Calculate relative path from page_path to v2_root/_common/.
+
+        e.g. pages/use-cases/02-upload-share/combined_link/index.html
+             → ../../../../_common/
+        """
+        # Depth = number of path components from v2_root to page (excluding filename)
+        rel = page_path.parent.relative_to(v2_root)
+        depth = len(rel.parts)
+        return '../' * depth + '_common/'
+
+    def _get_commit_sha(self) -> str:
+        """Return current git HEAD SHA (short), or empty string."""
+        try:
+            sha = subprocess.getoutput("git rev-parse HEAD").strip()
+            return sha[:40] if sha and 'fatal' not in sha else ''
+        except Exception:
+            return ''
+
+    def _get_version(self) -> str:
+        try:
+            return Path("sg_send_qa/version").read_text().strip()
+        except Exception:
+            return ''
+
+    # -------------------------------------------------------------- scaffold v2
+
+    def scaffold_page_v2(self, uc_dir: Path, name: str, group_id: str,
+                          metadata: dict | None, commit_sha: str = '',
+                          version: str = '') -> str | None:
+        """Generate an HTML page for the v2 Web Components site.
+
+        Reads the HTML template, substitutes placeholders, embeds metadata
+        and highlighted source inline. Returns the HTML string.
+        Returns None if template is missing.
+        """
+        import html as html_mod, json as json_mod
+
+        if not self.template_path.exists():
+            print(f"  WARN: template not found at {self.template_path} — skipping v2 generation")
+            return None
+
+        template = self.template_path.read_text()
+        v2_root  = Path(self.site_v2_dir)
+
+        # Page output path (to calculate common_prefix)
+        page_path = self.use_cases_v2_dir / group_id / name / "index.html"
+        common_prefix = self._common_prefix(page_path, v2_root)
+
+        title = self.title_from_name(name)
+        permalink = f"/pages/use-cases/{group_id}/{name}/"
+
+        # Build GitHub URL for the test file
+        test_file = self._find_test_file(name)
+        test_path = ''
+        if test_file:
+            try:
+                test_path = str(test_file.relative_to(Path('.')))
+            except ValueError:
+                test_path = str(test_file)
+
+        # Embed metadata JSON (deduplicated)
+        if metadata:
+            meta_copy = dict(metadata)
+            meta_copy['tests'] = self._deduplicate_tests(metadata.get('tests', []))
+            metadata_json = json_mod.dumps(meta_copy, indent=4, ensure_ascii=False)
+        else:
+            metadata_json = '{}'
+
+        # Embed syntax-highlighted source
+        source_highlighted = ''
+        if test_file and test_file.exists():
+            source = test_file.read_text()
+            source_highlighted = self._highlight_python(source)
+
+        html = template.format(
+            title              = html_mod.escape(title),
+            use_case           = html_mod.escape(name),
+            group              = html_mod.escape(group_id),
+            commit_sha         = html_mod.escape(commit_sha),
+            version            = html_mod.escape(version),
+            test_path          = html_mod.escape(test_path),
+            permalink          = html_mod.escape(permalink),
+            common_prefix      = common_prefix,
+            metadata_json      = metadata_json,
+            source_highlighted = source_highlighted,
+        )
+        return html
+
+    # -------------------------------------------------------------- generate v2
+
+    def process_use_case_v2(self, uc_dir: Path, group_id: str,
+                             commit_sha: str, version: str) -> tuple:
+        """Generate v2 HTML page for a single use case. Returns (name, title, shot_count)."""
+        name     = uc_dir.name
+        title    = self.title_from_name(name)
+        metadata = self.read_metadata(uc_dir)
+
+        out_path = self.use_cases_v2_dir / group_id / name / "index.html"
+
+        html = self.scaffold_page_v2(uc_dir, name, group_id, metadata,
+                                      commit_sha=commit_sha, version=version)
+        if html is None:
+            return (name, title, 0, group_id)
+
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        existing = out_path.read_text() if out_path.exists() else None
+        if existing == html:
+            print(f"  Unchanged:  {out_path}")
+        else:
+            out_path.write_text(html)
+            action = "Generated " if existing is None else "Refreshed "
+            print(f"  {action}: {out_path}")
+
+        shot_dir   = uc_dir / "screenshots"
+        shot_count = (len([p for p in shot_dir.glob("*.png")
+                           if "__deterministic" not in p.name])
+                      if shot_dir.exists() else 0)
+        return (name, title, shot_count, group_id)
+
+    def _copy_data_v2(self) -> None:
+        """Copy/update qa_sidebar.json and qa_summary.json into v2 _data/ dir."""
+        self.data_v2_dir.mkdir(parents=True, exist_ok=True)
+        for fname in ("qa_sidebar.json", "qa_summary.json"):
+            src = Path(self.site_dir) / "_data" / fname
+            dst = self.data_v2_dir / fname
+            if src.exists():
+                content = src.read_text()
+                if not dst.exists() or dst.read_text() != content:
+                    dst.write_text(content)
+                    print(f"  Copied:     {dst}")
+                else:
+                    print(f"  Unchanged:  {dst}")
+
+    def generate_v2(self) -> list:
+        """Walk use-cases dir, generate HTML pages into sg_send_qa__site_v2/.
+
+        Reads from:  sg_send_qa__site/pages/use-cases/
+        Writes to:   sg_send_qa__site_v2/pages/use-cases/
+
+        The existing generator (generate()) is NOT called or modified.
+        Both can run simultaneously.
+        """
+        self.use_cases_v2_dir.mkdir(parents=True, exist_ok=True)
+
+        commit_sha = self._get_commit_sha()
+        version    = self._get_version()
+
+        print(f"\n[generate_v2] site_v2={self.site_v2_dir}  commit={commit_sha[:8] or 'unknown'}  version={version or 'unknown'}")
+        print(f"  Source:     {self.use_cases_dir}")
+        print(f"  Output:     {self.use_cases_v2_dir}\n")
+
+        all_use_cases = []
+        groups_data   = []
+
+        for group_dir, manifest in self.discover_groups():
+            group_id = group_dir.name
+            members  = []
+            print(f"  Group: {group_id}")
+            for uc_dir in self.discover_members(group_dir):
+                entry = self.process_use_case_v2(uc_dir, group_id, commit_sha, version)
+                members.append(entry)
+                all_use_cases.append(entry)
+            groups_data.append((group_dir, manifest, members))
+
+        # Copy data files so sidebar + dashboard have current data
+        print("\n  Data files:")
+        self._copy_data_v2()
+
+        total = len(all_use_cases)
+        print(f"\n[generate_v2] Done — {total} pages written to {self.site_v2_dir}/\n")
+        return all_use_cases
+
     def write_summary_data(self, groups_data: list) -> None:
         """Write _data/qa_summary.json for Jekyll dashboard rendering."""
         self.data_dir.mkdir(parents=True, exist_ok=True)

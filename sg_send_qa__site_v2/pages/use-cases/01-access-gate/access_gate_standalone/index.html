@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Access Gate Standalone — SG/Send QA</title>
+    <meta name="description" content="QA documentation for access_gate_standalone — automated Playwright browser test results.">
+
+    <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-site.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-code.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/use-cases/01-access-gate/access_gate_standalone/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <qa-test-page
+                data-use-case="access_gate_standalone"
+                data-group="01-access-gate"
+                data-commit="69a0084fc209209c69c68bac1da9b47f82b3d155"
+                data-version="v0.2.40"
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/69a0084fc209209c69c68bac1da9b47f82b3d155/tests/qa/v030/p1__access_gate__standalone/test__access_gate_standalone.py"
+                data-live-site-url="https://qa.send.sgraph.ai">
+            </qa-test-page>
+
+            <!-- Metadata embedded at generation time — no extra HTTP request needed -->
+            <script type="application/json" id="qa-metadata">
+{
+    "use_case": "access_gate_standalone",
+    "module": "test__access_gate_standalone",
+    "module_doc": "Standalone access gate test: UC-10 (P1).\n\nMerged from tests/standalone/ into v030 as part of Phase 2 refactoring.\nUses the shared v030 fixtures (QA server, UI server, screenshots).\n\nScreenshots are saved to:\n    sg_send_qa__site/pages/use-cases/access_gate_standalone/screenshots/\n",
+    "test_target": "qa_server",
+    "tests": [
+        {
+            "method": "test_upload_accessible_with_token",
+            "doc": "Providing the correct access token grants access to the upload zone.",
+            "screenshots": [
+                "01_landing"
+            ]
+        },
+        {
+            "method": "test_wrong_token_shows_error",
+            "doc": "Providing a wrong access token shows an error.",
+            "screenshots": []
+        },
+        {
+            "method": "test_upload_zone_visible_without_gate",
+            "doc": "If no gate is configured, upload zone is immediately visible.",
+            "screenshots": [
+                "04_no_gate"
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "name": "01_landing",
+            "path": "sg_send_qa__site/pages/use-cases/01-access-gate/access_gate_standalone/screenshots/01_landing.png",
+            "description": "Landing page (may show gate or upload zone)"
+        },
+        {
+            "name": "04_no_gate",
+            "path": "sg_send_qa__site/pages/use-cases/01-access-gate/access_gate_standalone/screenshots/04_no_gate.png",
+            "description": "Upload zone without gate"
+        }
+    ]
+}
+            </script>
+
+            <!-- Test source — syntax highlighted by Pygments at generation time -->
+            <script type="text/qa-source">
+<span class="sd">&quot;&quot;&quot;Standalone access gate test: UC-10 (P1).</span>
+
+<span class="sd">Merged from tests/standalone/ into v030 as part of Phase 2 refactoring.</span>
+<span class="sd">Uses the shared v030 fixtures (QA server, UI server, screenshots).</span>
+
+<span class="sd">Screenshots are saved to:</span>
+<span class="sd">    sg_send_qa__site/pages/use-cases/access_gate_standalone/screenshots/</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">p1</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestAccessGate</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify the access token gate on the upload page.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_upload_accessible_with_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">send_server</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Providing the correct access token grants access to the upload zone.&quot;&quot;&quot;</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;01_landing&quot;</span><span class="p">,</span> <span class="s2">&quot;Landing page (may show gate or upload zone)&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check if access gate is present</span>
+        <span class="n">gate_input</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#access-token-input&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gate_input</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">):</span>
+            <span class="n">gate_input</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">send_server</span><span class="o">.</span><span class="n">access_token</span><span class="p">)</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#access-token-submit&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;02_after_token&quot;</span><span class="p">,</span> <span class="s2">&quot;After entering access token&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Upload zone should now be visible</span>
+        <span class="n">file_input</span>  <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#file-input&quot;</span><span class="p">)</span>
+        <span class="n">page_text</span>   <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">has_upload</span>  <span class="o">=</span> <span class="n">file_input</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="n">has_keyword</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;upload&quot;</span><span class="p">,</span> <span class="s2">&quot;drop&quot;</span><span class="p">,</span> <span class="s2">&quot;browse&quot;</span><span class="p">,</span> <span class="s2">&quot;choose&quot;</span><span class="p">])</span>
+
+        <span class="k">assert</span> <span class="n">has_upload</span> <span class="ow">or</span> <span class="n">has_keyword</span><span class="p">,</span> \
+            <span class="s2">&quot;Upload zone not visible after providing valid access token&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_wrong_token_shows_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">send_server</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Providing a wrong access token shows an error.&quot;&quot;&quot;</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+
+        <span class="n">gate_input</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#access-token-input&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gate_input</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">):</span>
+            <span class="n">gate_input</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="s2">&quot;wrong-token-12345-xxxxx&quot;</span><span class="p">)</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#access-token-submit&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;03_wrong_token&quot;</span><span class="p">,</span> <span class="s2">&quot;Wrong token response&quot;</span><span class="p">)</span>
+
+            <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span>
+                <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;invalid&quot;</span><span class="p">,</span> <span class="s2">&quot;wrong&quot;</span><span class="p">,</span> <span class="s2">&quot;incorrect&quot;</span><span class="p">,</span> <span class="s2">&quot;denied&quot;</span>
+            <span class="p">])</span> <span class="ow">or</span> <span class="n">gate_input</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(),</span> \
+                <span class="s2">&quot;No error shown for wrong access token&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_upload_zone_visible_without_gate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">send_server</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If no gate is configured, upload zone is immediately visible.&quot;&quot;&quot;</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+
+        <span class="n">gate_input</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#access-token-input&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gate_input</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">2000</span><span class="p">):</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;Access gate is active; testing gated flow in other tests&quot;</span><span class="p">)</span>
+
+        <span class="n">file_input</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#file-input&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;04_no_gate&quot;</span><span class="p">,</span> <span class="s2">&quot;Upload zone without gate&quot;</span><span class="p">)</span>
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">file_input</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;upload&quot;</span><span class="p">,</span> <span class="s2">&quot;drop&quot;</span><span class="p">,</span> <span class="s2">&quot;browse&quot;</span>
+        <span class="p">]),</span> <span class="s2">&quot;Upload zone not visible (and no gate present)&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestAccessGateHealthCheck</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;API health check — no browser needed.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_health_endpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">send_server</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Health endpoint returns 200.&quot;&quot;&quot;</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">httpx</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">httpx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">send_server</span><span class="o">.</span><span class="n">server_url</span><span class="si">}</span><span class="s2">/info/health&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">==</span> <span class="mi">200</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Health check failed: </span><span class="si">{</span><span class="n">r</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            </script>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
+
+</body>
+</html>

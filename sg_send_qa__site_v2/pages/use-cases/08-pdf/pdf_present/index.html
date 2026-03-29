@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pdf Present — SG/Send QA</title>
+    <meta name="description" content="QA documentation for pdf_present — automated Playwright browser test results.">
+
+    <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-site.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-code.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/use-cases/08-pdf/pdf_present/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <qa-test-page
+                data-use-case="pdf_present"
+                data-group="08-pdf"
+                data-commit="69a0084fc209209c69c68bac1da9b47f82b3d155"
+                data-version="v0.2.40"
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/69a0084fc209209c69c68bac1da9b47f82b3d155/tests/qa/v030/p2__pdf_present/test__pdf_present.py"
+                data-live-site-url="https://qa.send.sgraph.ai">
+            </qa-test-page>
+
+            <!-- Metadata embedded at generation time — no extra HTTP request needed -->
+            <script type="application/json" id="qa-metadata">
+{
+    "use_case": "pdf_present",
+    "module": "test__pdf_present",
+    "module_doc": "UC-06 (P2): PDF lightbox — Present mode and 'f' fullscreen shortcut.\n\nTest flow:\n  - Upload a minimal valid PDF as part of a zip\n  - Open the gallery view\n  - Click the PDF thumbnail to open it in the lightbox\n  - Verify a \"Present\" button appears (PDF-specific control)\n  - Click Present and verify the viewer enters present/fullscreen mode\n  - Verify the 'f' keyboard shortcut also triggers the present mode\n  - Verify the 's' keyboard shortcut saves / downloads the current file\n\nThese tests are P2 — they verify progressive-enhancement behaviour and do not\nblock deployment if failing.\n",
+    "test_target": "qa_server",
+    "tests": [
+        {
+            "method": "test_pdf_lightbox_opens",
+            "doc": "Clicking the PDF thumbnail opens the lightbox without error.",
+            "screenshots": [
+                "01_pdf_lightbox"
+            ]
+        },
+        {
+            "method": "test_present_button_visible_for_pdf",
+            "doc": "A 'Present' button appears in the lightbox when viewing a PDF.",
+            "screenshots": [
+                "02_present_button"
+            ]
+        },
+        {
+            "method": "test_present_button_click_enters_fullscreen",
+            "doc": "Clicking the Present button enters full-screen / presentation mode.",
+            "screenshots": []
+        },
+        {
+            "method": "test_f_shortcut_triggers_present",
+            "doc": "The 'f' keyboard shortcut triggers present / fullscreen mode.",
+            "screenshots": [
+                "05_before_f_shortcut",
+                "06_after_f_shortcut"
+            ]
+        },
+        {
+            "method": "test_s_key_triggers_save",
+            "doc": "Pressing 's' when a file is selected triggers save/download.",
+            "screenshots": [
+                "01_file_selected",
+                "02_s_key_pressed"
+            ]
+        },
+        {
+            "method": "test_j_key_moves_selection_down",
+            "doc": "'j' key moves file selection down in browse view.",
+            "screenshots": []
+        },
+        {
+            "method": "test_k_key_moves_selection_up",
+            "doc": "'k' key moves file selection up in browse view.",
+            "screenshots": []
+        }
+    ],
+    "screenshots": [
+        {
+            "name": "01_pdf_lightbox",
+            "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/01_pdf_lightbox.png",
+            "description": "PDF opened in lightbox"
+        },
+        {
+            "name": "02_present_button",
+            "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/02_present_button.png",
+            "description": "Present button in PDF lightbox"
+        },
+        {
+            "name": "05_before_f_shortcut",
+            "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/05_before_f_shortcut.png",
+            "description": "Before 'f' shortcut"
+        },
+        {
+            "name": "06_after_f_shortcut",
+            "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/06_after_f_shortcut.png",
+            "description": "After 'f' shortcut"
+        },
+        {
+            "name": "01_file_selected",
+            "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/01_file_selected.png",
+            "description": "File selected in browse"
+        },
+        {
+            "name": "02_s_key_pressed",
+            "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/02_s_key_pressed.png",
+            "description": "'s' key pressed (no download dialog)"
+        }
+    ]
+}
+            </script>
+
+            <!-- Test source — syntax highlighted by Pygments at generation time -->
+            <script type="text/qa-source">
+<span class="sd">&quot;&quot;&quot;UC-06 (P2): PDF lightbox — Present mode and &#39;f&#39; fullscreen shortcut.</span>
+
+<span class="sd">Test flow:</span>
+<span class="sd">  - Upload a minimal valid PDF as part of a zip</span>
+<span class="sd">  - Open the gallery view</span>
+<span class="sd">  - Click the PDF thumbnail to open it in the lightbox</span>
+<span class="sd">  - Verify a &quot;Present&quot; button appears (PDF-specific control)</span>
+<span class="sd">  - Click Present and verify the viewer enters present/fullscreen mode</span>
+<span class="sd">  - Verify the &#39;f&#39; keyboard shortcut also triggers the present mode</span>
+<span class="sd">  - Verify the &#39;s&#39; keyboard shortcut saves / downloads the current file</span>
+
+<span class="sd">These tests are P2 — they verify progressive-enhancement behaviour and do not</span>
+<span class="sd">block deployment if failing.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">expect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.qa.v030.browser_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">goto</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">p2</span>
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Minimal valid single-page PDF (no fonts, no images, 1×1 pt white page)</span>
+<span class="c1"># Generated offline and embedded as bytes to avoid external dependencies.</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="n">_MINIMAL_PDF</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sa">b</span><span class="s2">&quot;%PDF-1.4</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;1 0 obj</span><span class="se">\n</span><span class="s2">&lt;&lt; /Type /Catalog /Pages 2 0 R &gt;&gt;</span><span class="se">\n</span><span class="s2">endobj</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;2 0 obj</span><span class="se">\n</span><span class="s2">&lt;&lt; /Type /Pages /Kids [3 0 R] /Count 1 &gt;&gt;</span><span class="se">\n</span><span class="s2">endobj</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;3 0 obj</span><span class="se">\n</span><span class="s2">&lt;&lt; /Type /Page /Parent 2 0 R &quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;/MediaBox [0 0 72 72] &quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;/Resources &lt;&lt; &gt;&gt; &quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;/Contents 4 0 R &gt;&gt;</span><span class="se">\n</span><span class="s2">endobj</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;4 0 obj</span><span class="se">\n</span><span class="s2">&lt;&lt; /Length 0 &gt;&gt;</span><span class="se">\n</span><span class="s2">stream</span><span class="se">\n</span><span class="s2">endstream</span><span class="se">\n</span><span class="s2">endobj</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;xref</span><span class="se">\n</span><span class="s2">0 5</span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;0000000000 65535 f </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;0000000009 00000 n </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;0000000058 00000 n </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;0000000115 00000 n </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;0000000266 00000 n </span><span class="se">\n</span><span class="s2">&quot;</span>
+    <span class="sa">b</span><span class="s2">&quot;trailer</span><span class="se">\n</span><span class="s2">&lt;&lt; /Size 5 /Root 1 0 R &gt;&gt;</span><span class="se">\n</span><span class="s2">startxref</span><span class="se">\n</span><span class="s2">317</span><span class="se">\n</span><span class="si">%%</span><span class="s2">EOF</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_pdf_zip</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a zip containing the minimal PDF plus a dummy image.&quot;&quot;&quot;</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;documents/report.pdf&quot;</span><span class="p">,</span> <span class="n">_MINIMAL_PDF</span><span class="p">)</span>
+        <span class="c1"># Add a second file so the gallery isn&#39;t in single-file mode</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;documents/notes.txt&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;notes content&quot;</span><span class="p">)</span>
+    <span class="n">buf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestPDFPresentMode</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify PDF-specific lightbox controls in the gallery view.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_open_pdf_lightbox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload a PDF zip, open gallery, click the PDF thumbnail.&quot;&quot;&quot;</span>
+        <span class="n">zip_bytes</span> <span class="o">=</span> <span class="n">_make_pdf_zip</span><span class="p">()</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">zip_bytes</span><span class="p">,</span> <span class="s2">&quot;documents.zip&quot;</span><span class="p">)</span>
+        <span class="n">gallery_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/gallery/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">gallery_url</span><span class="p">)</span>
+        <span class="c1"># Wait for page content to load</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">not_to_be_empty</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+
+        <span class="c1"># Click any thumbnail to open the lightbox (PDF should be first)</span>
+        <span class="n">thumb</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;img[class*=&#39;thumb&#39;], img[class*=&#39;gallery&#39;], .thumbnail img, img&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">thumb</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5_000</span><span class="p">):</span>
+            <span class="n">thumb</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="c1"># Wait for lightbox/modal to appear</span>
+            <span class="n">lightbox</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+                <span class="s2">&quot;[class*=&#39;lightbox&#39;], [class*=&#39;modal&#39;], [class*=&#39;overlay&#39;], &quot;</span>
+                <span class="s2">&quot;[role=&#39;dialog&#39;], [class*=&#39;viewer&#39;], iframe&quot;</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+            <span class="n">lightbox</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5_000</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_pdf_lightbox_opens</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clicking the PDF thumbnail opens the lightbox without error.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_pdf_lightbox</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;01_pdf_lightbox&quot;</span><span class="p">,</span> <span class="s2">&quot;PDF opened in lightbox&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Lightbox or a full-size viewer should be visible</span>
+        <span class="n">lightbox</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;[class*=&#39;lightbox&#39;], [class*=&#39;modal&#39;], [class*=&#39;overlay&#39;], &quot;</span>
+            <span class="s2">&quot;[role=&#39;dialog&#39;], [class*=&#39;viewer&#39;], iframe&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">assert</span> <span class="n">lightbox</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5_000</span><span class="p">)</span> <span class="ow">or</span> \
+            <span class="s2">&quot;pdf&quot;</span> <span class="ow">in</span> <span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> \
+            <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">text_content</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> \
+            <span class="s2">&quot;Lightbox did not open for PDF thumbnail&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_present_button_visible_for_pdf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A &#39;Present&#39; button appears in the lightbox when viewing a PDF.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_pdf_lightbox</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="n">present_btn</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;button:has-text(&#39;Present&#39;), button[title*=&#39;resent&#39;], &quot;</span>
+            <span class="s2">&quot;[class*=&#39;present&#39;], [aria-label*=&#39;resent&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;02_present_button&quot;</span><span class="p">,</span> <span class="s2">&quot;Present button in PDF lightbox&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">present_btn</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3_000</span><span class="p">):</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span>
+                <span class="s2">&quot;Present button not found — PDF viewer may not support present mode &quot;</span>
+                <span class="s2">&quot;or this file type did not trigger it&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">assert</span> <span class="n">present_btn</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(),</span> <span class="s2">&quot;Present button is not visible for PDF in lightbox&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_present_button_click_enters_fullscreen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Clicking the Present button enters full-screen / presentation mode.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_pdf_lightbox</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="n">present_btn</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;button:has-text(&#39;Present&#39;), button[title*=&#39;resent&#39;], &quot;</span>
+            <span class="s2">&quot;[class*=&#39;present&#39;], [aria-label*=&#39;resent&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">present_btn</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3_000</span><span class="p">):</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;Present button not found — skipping fullscreen test&quot;</span><span class="p">)</span>
+
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;03_before_present&quot;</span><span class="p">,</span> <span class="s2">&quot;Before present mode&quot;</span><span class="p">)</span>
+        <span class="n">present_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+
+        <span class="c1"># Wait for fullscreen indicator to appear</span>
+        <span class="n">fullscreen_indicators</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;[class*=&#39;fullscreen&#39;], [class*=&#39;present-mode&#39;], [class*=&#39;slideshow&#39;], &quot;</span>
+            <span class="s2">&quot;[data-mode*=&#39;present&#39;], [class*=&#39;full-screen&#39;]&quot;</span>
+        <span class="p">)</span>
+        <span class="n">fullscreen_indicators</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5_000</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;04_after_present&quot;</span><span class="p">,</span> <span class="s2">&quot;After present button clicked&quot;</span><span class="p">)</span>
+
+        <span class="n">body_classes</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;document.body.className&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">fullscreen_indicators</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="s2">&quot;full&quot;</span> <span class="ow">in</span> <span class="n">body_classes</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> \
+            <span class="s2">&quot;present&quot;</span> <span class="ow">in</span> <span class="n">body_classes</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> \
+            <span class="s2">&quot;No fullscreen/present-mode indicator found after clicking Present&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_f_shortcut_triggers_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The &#39;f&#39; keyboard shortcut triggers present / fullscreen mode.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_pdf_lightbox</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;05_before_f_shortcut&quot;</span><span class="p">,</span> <span class="s2">&quot;Before &#39;f&#39; shortcut&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Press &#39;f&#39; — the brief says this should trigger present/fullscreen</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">keyboard</span><span class="o">.</span><span class="n">press</span><span class="p">(</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Wait for a fullscreen-like indicator</span>
+        <span class="n">fullscreen_indicators</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;[class*=&#39;fullscreen&#39;], [class*=&#39;present-mode&#39;], [class*=&#39;slideshow&#39;], &quot;</span>
+            <span class="s2">&quot;[data-mode*=&#39;present&#39;], [class*=&#39;full-screen&#39;]&quot;</span>
+        <span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">fullscreen_indicators</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">3_000</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>  <span class="c1"># shortcut may not be implemented</span>
+
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;06_after_f_shortcut&quot;</span><span class="p">,</span> <span class="s2">&quot;After &#39;f&#39; shortcut&quot;</span><span class="p">)</span>
+
+        <span class="n">body_classes</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;document.body.className&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">is_fullscreen_api</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s2">&quot;!!document.fullscreenElement&quot;</span><span class="p">)</span>
+
+        <span class="n">feature_active</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">fullscreen_indicators</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="ow">or</span> <span class="s2">&quot;full&quot;</span> <span class="ow">in</span> <span class="n">body_classes</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="ow">or</span> <span class="s2">&quot;present&quot;</span> <span class="ow">in</span> <span class="n">body_classes</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="ow">or</span> <span class="n">is_fullscreen_api</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">feature_active</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;&#39;f&#39; shortcut fullscreen/present mode not implemented in this UI version&quot;</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestBrowseSKeyShortcut</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;UC-07: &#39;s&#39; key saves (downloads) the currently selected file in browse view.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_open_browse_with_files</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload a multi-file zip and open browse view.&quot;&quot;&quot;</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+            <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;docs/file1.txt&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;first file content&quot;</span><span class="p">)</span>
+            <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;docs/file2.txt&quot;</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;second file content&quot;</span><span class="p">)</span>
+            <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;docs/file3.md&quot;</span><span class="p">,</span>  <span class="sa">b</span><span class="s2">&quot;# Markdown</span><span class="se">\n</span><span class="s2">some content&quot;</span><span class="p">)</span>
+        <span class="n">buf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">zip_bytes</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">zip_bytes</span><span class="p">,</span> <span class="s2">&quot;docs.zip&quot;</span><span class="p">)</span>
+        <span class="n">browse_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/browse/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">browse_url</span><span class="p">)</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">not_to_be_empty</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_s_key_triggers_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pressing &#39;s&#39; when a file is selected triggers save/download.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_browse_with_files</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="c1"># Click the first file in the tree to select it</span>
+        <span class="n">file_item</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;[class*=&#39;file&#39;], [class*=&#39;tree-item&#39;], [class*=&#39;list-item&#39;], li&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">file_item</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5_000</span><span class="p">):</span>
+            <span class="n">file_item</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="c1"># Wait for selection to register</span>
+            <span class="n">file_item</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">)</span>
+
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;01_file_selected&quot;</span><span class="p">,</span> <span class="s2">&quot;File selected in browse&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Set up download listener before pressing &#39;s&#39;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">page</span><span class="o">.</span><span class="n">expect_download</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5_000</span><span class="p">)</span> <span class="k">as</span> <span class="n">download_info</span><span class="p">:</span>
+                <span class="n">page</span><span class="o">.</span><span class="n">keyboard</span><span class="o">.</span><span class="n">press</span><span class="p">(</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+
+            <span class="n">download</span> <span class="o">=</span> <span class="n">download_info</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;02_download_triggered&quot;</span><span class="p">,</span> <span class="s2">&quot;Download triggered by &#39;s&#39; key&quot;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">download</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;&#39;s&#39; key did not trigger a file download&quot;</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># &#39;s&#39; shortcut not implemented — verify at least no visible error</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;02_s_key_pressed&quot;</span><span class="p">,</span> <span class="s2">&quot;&#39;s&#39; key pressed (no download dialog)&quot;</span><span class="p">)</span>
+            <span class="c1"># inner_text avoids false positive from inline scripts with {&quot;error&quot;:&quot;...&quot;}</span>
+            <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">inner_text</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> \
+                <span class="s2">&quot;&#39;s&#39; key caused an error in browse view&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_j_key_moves_selection_down</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&#39;j&#39; key moves file selection down in browse view.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_browse_with_files</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="n">file_items</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;[class*=&#39;file&#39;], [class*=&#39;tree-item&#39;], [class*=&#39;list-item&#39;], li&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_items</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;Not enough files to test j/k navigation&quot;</span><span class="p">)</span>
+
+        <span class="n">file_items</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;03_first_selected&quot;</span><span class="p">,</span> <span class="s2">&quot;First file selected&quot;</span><span class="p">)</span>
+
+        <span class="n">page</span><span class="o">.</span><span class="n">keyboard</span><span class="o">.</span><span class="n">press</span><span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;04_after_j&quot;</span><span class="p">,</span> <span class="s2">&quot;After &#39;j&#39; key — selection moved down&quot;</span><span class="p">)</span>
+
+        <span class="n">body_after</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">body_after</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Page is empty after &#39;j&#39; keypress&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_k_key_moves_selection_up</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&#39;k&#39; key moves file selection up in browse view.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_browse_with_files</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="n">file_items</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;[class*=&#39;file&#39;], [class*=&#39;tree-item&#39;], [class*=&#39;list-item&#39;], li&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_items</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">pytest</span><span class="o">.</span><span class="n">skip</span><span class="p">(</span><span class="s2">&quot;Not enough files to test j/k navigation&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Go to the second item first</span>
+        <span class="n">file_items</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">keyboard</span><span class="o">.</span><span class="n">press</span><span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;05_second_selected&quot;</span><span class="p">,</span> <span class="s2">&quot;Second file selected&quot;</span><span class="p">)</span>
+
+        <span class="n">page</span><span class="o">.</span><span class="n">keyboard</span><span class="o">.</span><span class="n">press</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;06_after_k&quot;</span><span class="p">,</span> <span class="s2">&quot;After &#39;k&#39; key — selection moved up&quot;</span><span class="p">)</span>
+
+        <span class="n">body_after</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">body_after</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Page is empty after &#39;k&#39; keypress&quot;</span>
+
+            </script>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
+
+</body>
+</html>

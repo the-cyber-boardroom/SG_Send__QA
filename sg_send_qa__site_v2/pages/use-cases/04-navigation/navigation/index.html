@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Navigation — SG/Send QA</title>
+    <meta name="description" content="QA documentation for navigation — automated Playwright browser test results.">
+
+    <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-site.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-code.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/use-cases/04-navigation/navigation/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <qa-test-page
+                data-use-case="navigation"
+                data-group="04-navigation"
+                data-commit="69a0084fc209209c69c68bac1da9b47f82b3d155"
+                data-version="v0.2.40"
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/69a0084fc209209c69c68bac1da9b47f82b3d155/tests/qa/v030/p1__navigation/test__navigation.py"
+                data-live-site-url="https://qa.send.sgraph.ai">
+            </qa-test-page>
+
+            <!-- Metadata embedded at generation time — no extra HTTP request needed -->
+            <script type="application/json" id="qa-metadata">
+{
+    "use_case": "navigation",
+    "module": "test__navigation",
+    "module_doc": "UC-11: Route handling + mode switching (P1).\n\nTest flow:\n  - Upload a zip with images via API\n  - Navigate to /gallery/#hash → verify gallery view\n  - Navigate to /browse/#hash → verify browse view\n  - Navigate to /view/#hash → verify single file view\n  - Navigate to /v/#hash → verify same as /view/ (short URL)\n  - Navigate to /download/#hash → verify auto-detect mode\n  - Verify gallery \"Folder view\" link → navigates to /browse/ preserving hash\n  - Verify browse \"Gallery view\" link → navigates to /gallery/ preserving hash\n",
+    "test_target": "qa_server",
+    "tests": [
+        {
+            "method": "test_gallery_route",
+            "doc": "GET /en-gb/gallery/#hash loads gallery view.",
+            "screenshots": [
+                "01_gallery_route"
+            ]
+        },
+        {
+            "method": "test_browse_route",
+            "doc": "GET /en-gb/browse/#hash loads browse view.",
+            "screenshots": [
+                "02_browse_route"
+            ]
+        },
+        {
+            "method": "test_view_route",
+            "doc": "GET /en-gb/view/#hash loads single-file viewer.",
+            "screenshots": [
+                "03_view_route"
+            ]
+        },
+        {
+            "method": "test_short_v_route",
+            "doc": "/en-gb/v/#hash is equivalent to /en-gb/view/#hash.",
+            "screenshots": [
+                "04_short_v_route"
+            ]
+        },
+        {
+            "method": "test_download_route_auto_detect",
+            "doc": "/en-gb/download/#hash auto-detects mode and decrypts.",
+            "screenshots": [
+                "05_download_auto"
+            ]
+        },
+        {
+            "method": "test_gallery_to_browse_hash_preserved",
+            "doc": "Gallery 'Folder view' link navigates to /browse/ (hash preserved if supported).",
+            "screenshots": [
+                "06_gallery_to_browse"
+            ]
+        },
+        {
+            "method": "test_browse_to_gallery_hash_preserved",
+            "doc": "Browse 'Gallery view' link navigates to /gallery/ (hash preserved if supported).",
+            "screenshots": [
+                "07_browse_to_gallery"
+            ]
+        },
+        {
+            "method": "test_copy_link_includes_key",
+            "doc": "Copy Link button in gallery/browse includes the key in the URL (P1).",
+            "screenshots": [
+                "08_copy_link"
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "name": "01_gallery_route",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/01_gallery_route.png",
+            "description": "Gallery route loaded"
+        },
+        {
+            "name": "02_browse_route",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/02_browse_route.png",
+            "description": "Browse route loaded"
+        },
+        {
+            "name": "03_view_route",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/03_view_route.png",
+            "description": "View route loaded"
+        },
+        {
+            "name": "04_short_v_route",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/04_short_v_route.png",
+            "description": "Short /v/ route loaded"
+        },
+        {
+            "name": "05_download_auto",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/05_download_auto.png",
+            "description": "Download route auto-detect"
+        },
+        {
+            "name": "06_gallery_to_browse",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/06_gallery_to_browse.png",
+            "description": "Gallery → browse"
+        },
+        {
+            "name": "07_browse_to_gallery",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/07_browse_to_gallery.png",
+            "description": "Browse → gallery"
+        },
+        {
+            "name": "08_copy_link",
+            "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/08_copy_link.png",
+            "description": "Copy Link button clicked"
+        }
+    ]
+}
+            </script>
+
+            <!-- Test source — syntax highlighted by Pygments at generation time -->
+            <script type="text/qa-source">
+<span class="sd">&quot;&quot;&quot;UC-11: Route handling + mode switching (P1).</span>
+
+<span class="sd">Test flow:</span>
+<span class="sd">  - Upload a zip with images via API</span>
+<span class="sd">  - Navigate to /gallery/#hash → verify gallery view</span>
+<span class="sd">  - Navigate to /browse/#hash → verify browse view</span>
+<span class="sd">  - Navigate to /view/#hash → verify single file view</span>
+<span class="sd">  - Navigate to /v/#hash → verify same as /view/ (short URL)</span>
+<span class="sd">  - Navigate to /download/#hash → verify auto-detect mode</span>
+<span class="sd">  - Verify gallery &quot;Folder view&quot; link → navigates to /browse/</span>
+<span class="sd">  - Verify browse &quot;Gallery view&quot; link → navigates to /gallery/</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">p1</span>
+
+<span class="n">_PNG_HEADER</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x89</span><span class="s1">PNG</span><span class="se">\r\n\x1a\n</span><span class="s1">&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x00\x00\r</span><span class="s1">IHDR</span><span class="se">\x00\x00\x00\x01\x00\x00\x00\x01</span><span class="s1">&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x08\x02\x00\x00\x00\x90</span><span class="s1">wS</span><span class="se">\xde</span><span class="s1">&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x00\x00\x0c</span><span class="s1">IDATx</span><span class="se">\x9c</span><span class="s1">c</span><span class="se">\xf8\x0f\x00\x00\x01\x01\x00\x05\x18\xd8</span><span class="s1">N&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x00\x00\x00</span><span class="s1">IEND</span><span class="se">\xae</span><span class="s1">B`</span><span class="se">\x82</span><span class="s1">&#39;</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_zip</span><span class="p">():</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;archive/img1.png&quot;</span><span class="p">,</span> <span class="n">_PNG_HEADER</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;archive/img2.png&quot;</span><span class="p">,</span> <span class="n">_PNG_HEADER</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;archive/img3.png&quot;</span><span class="p">,</span> <span class="n">_PNG_HEADER</span><span class="p">)</span>
+    <span class="n">buf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_open_route</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Navigate to a download/gallery/browse route and wait for it to settle.</span>
+
+<span class="sd">    Uses networkidle (consistent with browse/gallery/viewer tests that pass in CI).</span>
+<span class="sd">    SG/Send renders all visible content in shadow DOM, so body.textContent is</span>
+<span class="sd">    always empty — do NOT use expect(body).not_to_be_empty() here.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">page</span><span class="o">.</span><span class="n">goto</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+    <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestRouteHandling</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify that all download routes load correctly and preserve hash.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_make_transfer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">):</span>
+        <span class="n">zip_bytes</span> <span class="o">=</span> <span class="n">_make_zip</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">zip_bytes</span><span class="p">,</span> <span class="s2">&quot;archive.zip&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_gallery_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;GET /en-gb/gallery/#hash loads gallery view.&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_transfer</span><span class="p">(</span><span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">_open_route</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/gallery/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;01_gallery_route&quot;</span><span class="p">,</span> <span class="s2">&quot;Gallery route loaded&quot;</span><span class="p">)</span>
+
+        <span class="c1"># inner_text avoids false positive from inline scripts containing &quot;error&quot;</span>
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">inner_text</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_browse_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;GET /en-gb/browse/#hash loads browse view.&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_transfer</span><span class="p">(</span><span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">_open_route</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/browse/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;02_browse_route&quot;</span><span class="p">,</span> <span class="s2">&quot;Browse route loaded&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">inner_text</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_view_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;GET /en-gb/view/#hash loads single-file viewer.&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;plain text content&quot;</span><span class="p">,</span> <span class="s2">&quot;note.txt&quot;</span><span class="p">)</span>
+        <span class="n">_open_route</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/view/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;03_view_route&quot;</span><span class="p">,</span> <span class="s2">&quot;View route loaded&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">inner_text</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_short_v_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;/en-gb/v/#hash is equivalent to /en-gb/view/#hash.&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;short url test content&quot;</span><span class="p">,</span> <span class="s2">&quot;note.txt&quot;</span><span class="p">)</span>
+        <span class="n">_open_route</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/v/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;04_short_v_route&quot;</span><span class="p">,</span> <span class="s2">&quot;Short /v/ route loaded&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">inner_text</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_download_route_auto_detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;/en-gb/download/#hash auto-detects mode and decrypts.&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_transfer</span><span class="p">(</span><span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">_open_route</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/download/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;05_download_auto&quot;</span><span class="p">,</span> <span class="s2">&quot;Download route auto-detect&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">inner_text</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_gallery_to_browse_hash_preserved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gallery &#39;Folder view&#39; link navigates to /browse/ (hash preserved if supported).&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_transfer</span><span class="p">(</span><span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">_open_route</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/gallery/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">browse_link</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;a:has-text(&#39;Folder view&#39;), a:has-text(&#39;Browse&#39;), a[href*=&#39;browse&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">browse_link</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="n">browse_link</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;06_gallery_to_browse&quot;</span><span class="p">,</span> <span class="s2">&quot;Gallery → browse&quot;</span><span class="p">)</span>
+
+            <span class="n">current_url</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">url</span>
+            <span class="k">assert</span> <span class="s2">&quot;/browse/&quot;</span> <span class="ow">in</span> <span class="n">current_url</span><span class="p">,</span> \
+                <span class="sa">f</span><span class="s2">&quot;Gallery→browse navigation failed: </span><span class="si">{</span><span class="n">current_url</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="c1"># Hash preservation depends on UI version — not asserted here</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_browse_to_gallery_hash_preserved</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Browse &#39;Gallery view&#39; link navigates to /gallery/ (hash preserved if supported).&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_transfer</span><span class="p">(</span><span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">_open_route</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/browse/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">gallery_link</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;a:has-text(&#39;Gallery view&#39;), a:has-text(&#39;Gallery&#39;), a[href*=&#39;gallery&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">gallery_link</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="n">gallery_link</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_load_state</span><span class="p">(</span><span class="s2">&quot;networkidle&quot;</span><span class="p">)</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;07_browse_to_gallery&quot;</span><span class="p">,</span> <span class="s2">&quot;Browse → gallery&quot;</span><span class="p">)</span>
+
+            <span class="n">current_url</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">url</span>
+            <span class="k">assert</span> <span class="s2">&quot;/gallery/&quot;</span> <span class="ow">in</span> <span class="n">current_url</span><span class="p">,</span> \
+                <span class="sa">f</span><span class="s2">&quot;Browse→gallery navigation failed: </span><span class="si">{</span><span class="n">current_url</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="c1"># Hash preservation depends on UI version — not asserted here</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_copy_link_includes_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Copy Link button in gallery/browse includes the key in the URL (P1).&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_make_transfer</span><span class="p">(</span><span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">_open_route</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/gallery/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Look for Copy Link button or URL input</span>
+        <span class="n">copy_btn</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;button:has-text(&#39;Copy&#39;), button:has-text(&#39;Copy Link&#39;), [class*=&#39;copy&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">copy_btn</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">):</span>
+            <span class="n">copy_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;08_copy_link&quot;</span><span class="p">,</span> <span class="s2">&quot;Copy Link button clicked&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Check that any URL input shown contains the hash</span>
+        <span class="n">url_input</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;input[readonly], input[value*=&#39;#&#39;]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">url_input</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">):</span>
+            <span class="n">url_value</span> <span class="o">=</span> <span class="n">url_input</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">assert</span> <span class="s2">&quot;#&quot;</span> <span class="ow">in</span> <span class="n">url_value</span><span class="p">,</span> \
+                <span class="sa">f</span><span class="s2">&quot;Copy Link URL missing hash fragment (key not included): </span><span class="si">{</span><span class="n">url_value</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            </script>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
+
+</body>
+</html>

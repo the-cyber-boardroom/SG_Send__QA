@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Upload  Folder — SG/Send QA</title>
+    <meta name="description" content="QA documentation for upload__folder — automated Playwright browser test results.">
+
+    <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-site.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-code.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/use-cases/06-browse/upload__folder/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <qa-test-page
+                data-use-case="upload__folder"
+                data-group="06-browse"
+                data-commit="69a0084fc209209c69c68bac1da9b47f82b3d155"
+                data-version="v0.2.40"
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/69a0084fc209209c69c68bac1da9b47f82b3d155/tests/qa/v030/p1__upload__folder/test__upload__folder.py"
+                data-live-site-url="https://qa.send.sgraph.ai">
+            </qa-test-page>
+
+            <!-- Metadata embedded at generation time — no extra HTTP request needed -->
+            <script type="application/json" id="qa-metadata">
+{
+    "use_case": "upload__folder",
+    "module": "test__upload__folder",
+    "module_doc": "UC-02: Folder upload → gallery + browse view (P1).\n\nTest flow:\n  1. Upload a folder containing 3+ images and a markdown file\n  2. Verify gallery mode is auto-selected (3+ images triggers gallery)\n  3. Verify thumbnail grid renders with correct file count\n  4. Click a thumbnail → verify lightbox opens\n  5. Close lightbox → click \"Folder view\" link\n  6. Verify browse view loads with folder tree\n  7. Click a file in the tree → verify it opens in preview\n  8. Click \"Gallery view\" → verify it switches back\n",
+    "test_target": "qa_server",
+    "tests": [
+        {
+            "method": "test_upload_zip_and_gallery_view",
+            "doc": "Upload a zip with 3+ images; verify gallery mode is shown.",
+            "screenshots": [
+                "01_upload_page",
+                "02_file_selected",
+                "03_share_step",
+                "04_upload_done",
+                "05_download_gallery"
+            ]
+        },
+        {
+            "method": "test_gallery_thumbnail_grid",
+            "doc": "Create a zip upload via API, open gallery, verify thumbnail grid.",
+            "screenshots": [
+                "06_gallery_thumbnails"
+            ]
+        },
+        {
+            "method": "test_browse_view_folder_tree",
+            "doc": "Open browse view for the zip; verify folder tree is present.",
+            "screenshots": [
+                "07_browse_view"
+            ]
+        },
+        {
+            "method": "test_mode_switch_preserves_hash",
+            "doc": "Gallery ↔ browse mode switching preserves the hash fragment.",
+            "screenshots": [
+                "08_switched_to_browse"
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "name": "01_upload_page",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/01_upload_page.png",
+            "description": "Upload page loaded"
+        },
+        {
+            "name": "02_file_selected",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/02_file_selected.png",
+            "description": "Zip file selected — delivery step"
+        },
+        {
+            "name": "03_share_step",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/03_share_step.png",
+            "description": "Share mode step"
+        },
+        {
+            "name": "04_upload_done",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/04_upload_done.png",
+            "description": "Upload complete — link shown"
+        },
+        {
+            "name": "05_download_gallery",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/05_download_gallery.png",
+            "description": "Gallery view after zip download"
+        },
+        {
+            "name": "06_gallery_thumbnails",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/06_gallery_thumbnails.png",
+            "description": "Gallery thumbnail grid"
+        },
+        {
+            "name": "07_browse_view",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/07_browse_view.png",
+            "description": "Browse view with folder tree"
+        },
+        {
+            "name": "08_switched_to_browse",
+            "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/08_switched_to_browse.png",
+            "description": "Switched to browse view"
+        }
+    ]
+}
+            </script>
+
+            <!-- Test source — syntax highlighted by Pygments at generation time -->
+            <script type="text/qa-source">
+<span class="sd">&quot;&quot;&quot;UC-02: Folder upload → gallery + browse view (P1).</span>
+
+<span class="sd">Test flow:</span>
+<span class="sd">  1. Upload a folder containing 3+ images and a markdown file</span>
+<span class="sd">  2. Verify gallery mode is auto-selected (3+ images triggers gallery)</span>
+<span class="sd">  3. Verify thumbnail grid renders with correct file count</span>
+<span class="sd">  4. Click a thumbnail → verify lightbox opens</span>
+<span class="sd">  5. Close lightbox → click &quot;Folder view&quot; link</span>
+<span class="sd">  6. Verify browse view loads with folder tree</span>
+<span class="sd">  7. Click a file in the tree → verify it opens in preview</span>
+<span class="sd">  8. Click &quot;Gallery view&quot; → verify it switches back</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">expect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.qa.v030.browser_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">goto</span><span class="p">,</span> <span class="n">handle_access_gate</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">p1</span>
+
+<span class="c1"># Minimal 1×1 PNG bytes (valid PNG, tiny file)</span>
+<span class="n">_PNG_HEADER</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x89</span><span class="s1">PNG</span><span class="se">\r\n\x1a\n</span><span class="s1">&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x00\x00\r</span><span class="s1">IHDR</span><span class="se">\x00\x00\x00\x01\x00\x00\x00\x01</span><span class="s1">&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x08\x02\x00\x00\x00\x90</span><span class="s1">wS</span><span class="se">\xde</span><span class="s1">&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x00\x00\x0c</span><span class="s1">IDATx</span><span class="se">\x9c</span><span class="s1">c</span><span class="se">\xf8\x0f\x00\x00\x01\x01\x00\x05\x18\xd8</span><span class="s1">N&#39;</span>
+    <span class="sa">b</span><span class="s1">&#39;</span><span class="se">\x00\x00\x00\x00</span><span class="s1">IEND</span><span class="se">\xae</span><span class="s1">B`</span><span class="se">\x82</span><span class="s1">&#39;</span>
+<span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_folder_zip</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build an in-memory zip with 3 PNG images + 1 markdown file.&quot;&quot;&quot;</span>
+    <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zf</span><span class="p">:</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;my-folder/image1.png&quot;</span><span class="p">,</span> <span class="n">_PNG_HEADER</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;my-folder/image2.png&quot;</span><span class="p">,</span> <span class="n">_PNG_HEADER</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;my-folder/image3.png&quot;</span><span class="p">,</span> <span class="n">_PNG_HEADER</span><span class="p">)</span>
+        <span class="n">zf</span><span class="o">.</span><span class="n">writestr</span><span class="p">(</span><span class="s2">&quot;my-folder/readme.md&quot;</span><span class="p">,</span> <span class="s2">&quot;# Test folder</span><span class="se">\n\n</span><span class="s2">This is a test.&quot;</span><span class="p">)</span>
+    <span class="n">buf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestFolderUpload</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Upload a folder zip and verify gallery + browse views.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_upload_zip_and_gallery_view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">send_server</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload a zip with 3+ images; verify gallery mode is shown.&quot;&quot;&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/&quot;</span><span class="p">)</span>
+        <span class="n">handle_access_gate</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">send_server</span><span class="o">.</span><span class="n">access_token</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;01_upload_page&quot;</span><span class="p">,</span> <span class="s2">&quot;Upload page loaded&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Feed the zip file</span>
+        <span class="n">zip_bytes</span> <span class="o">=</span> <span class="n">_make_folder_zip</span><span class="p">()</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#file-input&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_input_files</span><span class="p">({</span>
+            <span class="s2">&quot;name&quot;</span>    <span class="p">:</span> <span class="s2">&quot;my-folder.zip&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;mimeType&quot;</span><span class="p">:</span> <span class="s2">&quot;application/zip&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;buffer&quot;</span>  <span class="p">:</span> <span class="n">zip_bytes</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="c1"># Wait for wizard to auto-advance to delivery step</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#upload-next-btn&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;02_file_selected&quot;</span><span class="p">,</span> <span class="s2">&quot;Zip file selected — delivery step&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Delivery → Share mode</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#upload-next-btn&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;[data-mode]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;03_share_step&quot;</span><span class="p">,</span> <span class="s2">&quot;Share mode step&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Select combined link — auto-advances to confirm step</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s1">&#39;[data-mode=&quot;combined&quot;]&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">wait_for_timeout</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>  <span class="c1"># let confirm step transition settle</span>
+
+        <span class="c1"># Confirm → Encrypt &amp; Upload — done step shows link as &lt;a href&gt;</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;#upload-next-btn&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;a[href*=&#39;#&#39;]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;attached&quot;</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">20_000</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;04_upload_done&quot;</span><span class="p">,</span> <span class="s2">&quot;Upload complete — link shown&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Extract download URL</span>
+        <span class="n">download_url</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;a[href*=&#39;#&#39;]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">&quot;href&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">download_url</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;input[readonly]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">el</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">if</span> <span class="s2">&quot;#&quot;</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                    <span class="n">download_url</span> <span class="o">=</span> <span class="n">val</span>
+                    <span class="k">break</span>
+
+        <span class="k">assert</span> <span class="n">download_url</span><span class="p">,</span> <span class="s2">&quot;No download link found after folder upload&quot;</span>
+
+        <span class="k">if</span> <span class="n">download_url</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">):</span>
+            <span class="n">download_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}{</span><span class="n">download_url</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Open the download page — expect gallery view (3 images auto-select gallery)</span>
+        <span class="n">dl_page</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">new_page</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">goto</span><span class="p">(</span><span class="n">dl_page</span><span class="p">,</span> <span class="n">download_url</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">dl_page</span><span class="p">,</span> <span class="s2">&quot;05_download_gallery&quot;</span><span class="p">,</span> <span class="s2">&quot;Gallery view after zip download&quot;</span><span class="p">)</span>
+
+            <span class="n">page_text</span> <span class="o">=</span> <span class="n">dl_page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;gallery&quot;</span><span class="p">,</span> <span class="s2">&quot;image&quot;</span><span class="p">,</span> <span class="s2">&quot;thumbnail&quot;</span><span class="p">,</span> <span class="s2">&quot;photo&quot;</span><span class="p">]),</span> \
+                <span class="s2">&quot;Gallery view not detected for image-heavy zip&quot;</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">dl_page</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_gallery_thumbnail_grid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a zip upload via API, open gallery, verify thumbnail grid.&quot;&quot;&quot;</span>
+        <span class="n">zip_bytes</span> <span class="o">=</span> <span class="n">_make_folder_zip</span><span class="p">()</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">zip_bytes</span><span class="p">,</span> <span class="s2">&quot;my-folder.zip&quot;</span><span class="p">)</span>
+
+        <span class="n">gallery_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/gallery/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">gallery_url</span><span class="p">)</span>
+        <span class="c1"># Wait for the body to contain meaningful content</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">not_to_be_empty</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;06_gallery_thumbnails&quot;</span><span class="p">,</span> <span class="s2">&quot;Gallery thumbnail grid&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;gallery&quot;</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> \
+            <span class="s2">&quot;Gallery page shows error instead of content&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_browse_view_folder_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Open browse view for the zip; verify folder tree is present.&quot;&quot;&quot;</span>
+        <span class="n">zip_bytes</span> <span class="o">=</span> <span class="n">_make_folder_zip</span><span class="p">()</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">zip_bytes</span><span class="p">,</span> <span class="s2">&quot;my-folder.zip&quot;</span><span class="p">)</span>
+
+        <span class="n">browse_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/browse/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">browse_url</span><span class="p">)</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">not_to_be_empty</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;07_browse_view&quot;</span><span class="p">,</span> <span class="s2">&quot;Browse view with folder tree&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">&quot;browse&quot;</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> \
+            <span class="s2">&quot;Browse page shows error instead of content&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_mode_switch_preserves_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Gallery ↔ browse mode switching preserves the hash fragment.&quot;&quot;&quot;</span>
+        <span class="n">zip_bytes</span> <span class="o">=</span> <span class="n">_make_folder_zip</span><span class="p">()</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">zip_bytes</span><span class="p">,</span> <span class="s2">&quot;my-folder.zip&quot;</span><span class="p">)</span>
+        <span class="n">expected_hash</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Start at gallery</span>
+        <span class="n">gallery_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/gallery/</span><span class="si">{</span><span class="n">expected_hash</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">gallery_url</span><span class="p">)</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">not_to_be_empty</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+
+        <span class="c1"># Look for &quot;Folder view&quot; / &quot;Browse&quot; link and click it</span>
+        <span class="n">browse_link</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;a:has-text(&#39;Folder view&#39;), a:has-text(&#39;Browse&#39;), a[href*=&#39;browse&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">browse_link</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5_000</span><span class="p">):</span>
+            <span class="n">browse_link</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">not_to_be_empty</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;08_switched_to_browse&quot;</span><span class="p">,</span> <span class="s2">&quot;Switched to browse view&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Verify navigation reached browse (hash preservation depends on UI version)</span>
+            <span class="n">current_url</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">url</span>
+            <span class="k">assert</span> <span class="s2">&quot;/browse/&quot;</span> <span class="ow">in</span> <span class="n">current_url</span><span class="p">,</span> \
+                <span class="sa">f</span><span class="s2">&quot;Mode switch did not navigate to browse: </span><span class="si">{</span><span class="n">current_url</span><span class="si">}</span><span class="s2">&quot;</span>
+
+            </script>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
+
+</body>
+</html>

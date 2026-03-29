@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Download  Viewer — SG/Send QA</title>
+    <meta name="description" content="QA documentation for download__viewer — automated Playwright browser test results.">
+
+    <link rel="icon" type="image/svg+xml" href="../../../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-site.css">
+    <link rel="stylesheet" href="../../../../_common/css/qa-code.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/use-cases/07-viewer/download__viewer/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <qa-test-page
+                data-use-case="download__viewer"
+                data-group="07-viewer"
+                data-commit="69a0084fc209209c69c68bac1da9b47f82b3d155"
+                data-version="v0.2.40"
+                data-github-url="https://github.com/the-cyber-boardroom/SG_Send__qa/blob/69a0084fc209209c69c68bac1da9b47f82b3d155/tests/qa/v030/p1__download__viewer/test__download__viewer.py"
+                data-live-site-url="https://qa.send.sgraph.ai">
+            </qa-test-page>
+
+            <!-- Metadata embedded at generation time — no extra HTTP request needed -->
+            <script type="application/json" id="qa-metadata">
+{
+    "use_case": "download__viewer",
+    "module": "test__download__viewer",
+    "module_doc": "UC-08: Single file viewer (P1).\n\nTest flow:\n  - Upload a markdown file via API, open the download/view link\n  - Verify markdown renders (or content displays)\n  - Verify Share button toggles share panel with download link\n  - Verify Copy copies the URL with key intact\n  - Verify Print button is present\n  - Verify Save locally downloads the file\n",
+    "test_target": "qa_server",
+    "tests": [
+        {
+            "method": "test_viewer_page_loads",
+            "doc": "Single-file viewer loads without errors.",
+            "screenshots": [
+                "01_viewer_loaded"
+            ]
+        },
+        {
+            "method": "test_markdown_content_displayed",
+            "doc": "Markdown file content is decrypted and displayed.",
+            "screenshots": [
+                "02_content"
+            ]
+        },
+        {
+            "method": "test_share_button_present",
+            "doc": "Share button is present and toggles the share panel.",
+            "screenshots": [
+                "03_before_share",
+                "04_share_panel"
+            ]
+        },
+        {
+            "method": "test_copy_url_contains_key",
+            "doc": "The share URL shown in the panel contains the key (hash fragment).",
+            "screenshots": [
+                "05_url_with_key"
+            ]
+        },
+        {
+            "method": "test_save_locally_button_present",
+            "doc": "Save locally button is present in the viewer.",
+            "screenshots": [
+                "06_save_button"
+            ]
+        },
+        {
+            "method": "test_short_url_v_route",
+            "doc": "Short URL /en-gb/v/ works the same as /en-gb/view/.",
+            "screenshots": [
+                "07_short_url_v"
+            ]
+        }
+    ],
+    "screenshots": [
+        {
+            "name": "01_viewer_loaded",
+            "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/01_viewer_loaded.png",
+            "description": "Single file viewer loaded"
+        },
+        {
+            "name": "02_content",
+            "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/02_content.png",
+            "description": "Decrypted markdown content"
+        },
+        {
+            "name": "03_before_share",
+            "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/03_before_share.png",
+            "description": "Before share panel"
+        },
+        {
+            "name": "04_share_panel",
+            "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/04_share_panel.png",
+            "description": "Share panel opened"
+        },
+        {
+            "name": "05_url_with_key",
+            "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/05_url_with_key.png",
+            "description": "URL input with key"
+        },
+        {
+            "name": "06_save_button",
+            "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/06_save_button.png",
+            "description": "Save locally button"
+        },
+        {
+            "name": "07_short_url_v",
+            "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/07_short_url_v.png",
+            "description": "Short /v/ route loads viewer"
+        }
+    ]
+}
+            </script>
+
+            <!-- Test source — syntax highlighted by Pygments at generation time -->
+            <script type="text/qa-source">
+<span class="sd">&quot;&quot;&quot;UC-08: Single file viewer (P1).</span>
+
+<span class="sd">Test flow:</span>
+<span class="sd">  - Upload a markdown file via API, open the download/view link</span>
+<span class="sd">  - Verify markdown renders (or content displays)</span>
+<span class="sd">  - Verify Share button toggles share panel with download link</span>
+<span class="sd">  - Verify Copy copies the URL with key intact</span>
+<span class="sd">  - Verify Print button is present</span>
+<span class="sd">  - Verify Save locally downloads the file</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">playwright.sync_api</span><span class="w"> </span><span class="kn">import</span> <span class="n">expect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tests.qa.v030.browser_helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">goto</span>
+
+<span class="n">pytestmark</span> <span class="o">=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">p1</span>
+
+<span class="n">MARKDOWN_CONTENT</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;&quot;# UC-08 Test Document</span>
+
+<span class="s2">This is a **markdown** file used for the single-file viewer test.</span>
+
+<span class="s2">## Section 1</span>
+
+<span class="s2">- Item A</span>
+<span class="s2">- Item B</span>
+<span class="s2">- Item C</span>
+
+<span class="s2">## Section 2</span>
+
+<span class="s2">Some *italic* and `inline code`.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TestSingleFileViewer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify the single-file viewer for a markdown upload.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_open_viewer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">route</span><span class="o">=</span><span class="s2">&quot;view&quot;</span><span class="p">):</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="n">transfer_helper</span><span class="o">.</span><span class="n">upload_encrypted</span><span class="p">(</span><span class="n">MARKDOWN_CONTENT</span><span class="p">,</span> <span class="s2">&quot;test-doc.md&quot;</span><span class="p">)</span>
+        <span class="n">view_url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ui_url</span><span class="si">}</span><span class="s2">/en-gb/</span><span class="si">{</span><span class="n">route</span><span class="si">}</span><span class="s2">/#</span><span class="si">{</span><span class="n">tid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">key_b64</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">goto</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">view_url</span><span class="p">)</span>
+        <span class="c1"># Wait for page content to be present — JS decryption takes a moment</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">not_to_be_empty</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">10_000</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_viewer_page_loads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Single-file viewer loads without errors.&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_viewer</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;01_viewer_loaded&quot;</span><span class="p">,</span> <span class="s2">&quot;Single file viewer loaded&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">,</span> \
+            <span class="s2">&quot;Viewer page shows error or is empty&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_markdown_content_displayed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Markdown file content is decrypted and displayed.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_viewer</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;02_content&quot;</span><span class="p">,</span> <span class="s2">&quot;Decrypted markdown content&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="c1"># The document heading or content should appear</span>
+        <span class="k">assert</span> <span class="s2">&quot;UC-08 Test Document&quot;</span> <span class="ow">in</span> <span class="n">page_text</span> <span class="ow">or</span> <span class="s2">&quot;Section 1&quot;</span> <span class="ow">in</span> <span class="n">page_text</span><span class="p">,</span> \
+            <span class="sa">f</span><span class="s2">&quot;Markdown content not found in viewer. Page text: </span><span class="si">{</span><span class="n">page_text</span><span class="p">[:</span><span class="mi">300</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_share_button_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Share button is present and toggles the share panel.&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_viewer</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;03_before_share&quot;</span><span class="p">,</span> <span class="s2">&quot;Before share panel&quot;</span><span class="p">)</span>
+
+        <span class="n">share_btn</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;button:has-text(&#39;Share&#39;), [class*=&#39;share-btn&#39;], [title*=&#39;share&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">share_btn</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="n">share_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="c1"># Wait for share panel content to appear</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">)</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;04_share_panel&quot;</span><span class="p">,</span> <span class="s2">&quot;Share panel opened&quot;</span><span class="p">)</span>
+
+            <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;copy&quot;</span><span class="p">,</span> <span class="s2">&quot;link&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">]),</span> \
+                <span class="s2">&quot;Share panel does not show link/copy options&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_copy_url_contains_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The share URL shown in the panel contains the key (hash fragment).&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_viewer</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+
+        <span class="n">share_btn</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span>
+            <span class="s2">&quot;button:has-text(&#39;Share&#39;), [class*=&#39;share-btn&#39;]&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">share_btn</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">5000</span><span class="p">):</span>
+            <span class="n">share_btn</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+            <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">state</span><span class="o">=</span><span class="s2">&quot;visible&quot;</span><span class="p">)</span>
+
+        <span class="c1"># URL input in share panel</span>
+        <span class="n">url_input</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">locator</span><span class="p">(</span><span class="s2">&quot;input[readonly], input[value*=&#39;#&#39;]&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span>
+        <span class="k">if</span> <span class="n">url_input</span><span class="o">.</span><span class="n">is_visible</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">3000</span><span class="p">):</span>
+            <span class="n">url_value</span> <span class="o">=</span> <span class="n">url_input</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+            <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;05_url_with_key&quot;</span><span class="p">,</span> <span class="s2">&quot;URL input with key&quot;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="s2">&quot;#&quot;</span> <span class="ow">in</span> <span class="n">url_value</span><span class="p">,</span> \
+                <span class="sa">f</span><span class="s2">&quot;Share URL missing hash (key not included): </span><span class="si">{</span><span class="n">url_value</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">assert</span> <span class="n">tid</span> <span class="ow">in</span> <span class="n">url_value</span><span class="p">,</span> \
+                <span class="sa">f</span><span class="s2">&quot;Share URL missing transfer ID: </span><span class="si">{</span><span class="n">url_value</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_save_locally_button_present</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save locally button is present in the viewer.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_open_viewer</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;06_save_button&quot;</span><span class="p">,</span> <span class="s2">&quot;Save locally button&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">any</span><span class="p">(</span><span class="n">kw</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">kw</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;save&quot;</span><span class="p">,</span> <span class="s2">&quot;download&quot;</span><span class="p">]),</span> \
+            <span class="s2">&quot;No save/download button found in single-file viewer&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_short_url_v_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">screenshots</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Short URL /en-gb/v/ works the same as /en-gb/view/.&quot;&quot;&quot;</span>
+        <span class="n">tid</span><span class="p">,</span> <span class="n">key_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_viewer</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">ui_url</span><span class="p">,</span> <span class="n">transfer_helper</span><span class="p">,</span> <span class="n">route</span><span class="o">=</span><span class="s2">&quot;v&quot;</span><span class="p">)</span>
+        <span class="n">screenshots</span><span class="o">.</span><span class="n">capture</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="s2">&quot;07_short_url_v&quot;</span><span class="p">,</span> <span class="s2">&quot;Short /v/ route loads viewer&quot;</span><span class="p">)</span>
+
+        <span class="n">page_text</span> <span class="o">=</span> <span class="n">page</span><span class="o">.</span><span class="n">text_content</span><span class="p">(</span><span class="s2">&quot;body&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">page_text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">page_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">,</span> \
+            <span class="s2">&quot;/v/ short route shows error or is empty&quot;</span>
+
+            </script>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-sidebar.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-test-page.js"></script>
+    <script type="module" src="../../../../_common/js/components/qa-screenshot-step.js"></script>
+
+</body>
+</html>
