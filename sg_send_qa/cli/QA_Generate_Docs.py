@@ -109,18 +109,25 @@ class QA_Generate_Docs(Type_Safe):
         CI run.  No timestamp is included; Jekyll's jekyll-last-modified-at plugin
         reads git history at build time and displays the page's last-modified date.
 
+        Both the SHA and the version are read from the commit where the test file
+        last changed — neither value changes until the test itself is modified.
+
         Core principle: if no code changed, no generated file should change.
         """
         if test_file:
-            raw = subprocess.getoutput(f"git log -1 --format=%H -- {test_file}").strip()
-            sha = raw[:8] if raw else "unknown"
+            sha_full = subprocess.getoutput(f"git log -1 --format=%H -- {test_file}").strip()
+            sha      = sha_full[:8] if sha_full else "unknown"
+            # Read the version from that same commit — not from current HEAD —
+            # so a version bump alone never changes this line.
+            version  = (subprocess.getoutput(f"git show {sha_full}:sg_send_qa/version 2>/dev/null").strip()
+                        if sha_full else "unknown") or "unknown"
         else:
-            sha = subprocess.getoutput("git rev-parse HEAD").strip()[:8]
-
-        try:
-            version = Path("sg_send_qa/version").read_text().strip()
-        except Exception:
-            version = "unknown"
+            sha_full = subprocess.getoutput("git rev-parse HEAD").strip()
+            sha      = sha_full[:8]
+            try:
+                version = Path("sg_send_qa/version").read_text().strip()
+            except Exception:
+                version = "unknown"
 
         return f"> Test source at commit [`{sha}`]({GITHUB_REPO}/commit/{sha}) · {version}\n\n"
 
