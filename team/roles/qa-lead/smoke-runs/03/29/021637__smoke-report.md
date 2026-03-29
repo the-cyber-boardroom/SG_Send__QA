@@ -9,38 +9,47 @@
 
 | Suite | Passed | Failed | Status |
 |-------|--------|--------|--------|
-| Live smoke (7) | 0 | 7 | ❌ |
+| Live smoke (7) | 6 | 1 | ❌ |
 
 ## Overall: FAIL
 
 ## Failures
 
-All 7 checks failed with **HTTP 407 Proxy Authentication Required**.
+### upload_wizard — HTTP 403
 
-The test environment requires proxy authentication to reach `send.sgraph.ai`.
-This is an infrastructure/network issue in the CI sandbox — not a defect in
-SG/Send itself. The live site cannot be reached from this environment without
-proxy credentials.
+`GET https://send.sgraph.ai/en-gb/send/` returned **HTTP 403 Forbidden**.
+
+All other routes (root, download, gallery, browse, viewer, invalid_hash) returned HTTP 200.
+
+The access token (`SG_SEND_ACCESS_TOKEN=sg-send__team__qa`) was injected into
+`localStorage` via `add_init_script` before any navigation. The 403 on `/en-gb/send/`
+suggests the upload wizard route enforces server-side auth that the localStorage token
+alone does not satisfy, or the token is invalid/expired for this route.
+
+**Action required:** Investigate whether `/en-gb/send/` requires a different auth
+mechanism, or whether the token needs to be sent as a request header rather than
+stored in localStorage.
 
 ## Live Site Detail
 
 ```
+Proxy: 21.0.0.25:15004
 SG_SEND_ACCESS_TOKEN: set (17 chars)
 
-=== LIVE SITE: 0/7 passed ===
-  ✗ root: FAIL — HTTP 407 · https://send.sgraph.ai/
-  ✗ upload_wizard: FAIL — HTTP 407 · https://send.sgraph.ai/en-gb/send/
-  ✗ download_entry: FAIL — HTTP 407 · https://send.sgraph.ai/en-gb/download/
-  ✗ gallery_route: FAIL — HTTP 407 · https://send.sgraph.ai/en-gb/gallery/
-  ✗ browse_route: FAIL — HTTP 407 · https://send.sgraph.ai/en-gb/browse/
-  ✗ viewer_route: FAIL — HTTP 407 · https://send.sgraph.ai/en-gb/view/
-  ✗ invalid_hash: FAIL — HTTP 407 · https://send.sgraph.ai/en-gb/download/#bogus123/fakekey==
+=== LIVE SITE: 6/7 passed ===
+  ✓ root: PASS — HTTP 200 · https://send.sgraph.ai/en-gb/
+  ✗ upload_wizard: FAIL — HTTP 403 · https://send.sgraph.ai/en-gb/send/
+  ✓ download_entry: PASS — HTTP 200 · https://send.sgraph.ai/en-gb/download/
+  ✓ gallery_route: PASS — HTTP 200 · https://send.sgraph.ai/en-gb/gallery/
+  ✓ browse_route: PASS — HTTP 200 · https://send.sgraph.ai/en-gb/browse/
+  ✓ viewer_route: PASS — HTTP 200 · https://send.sgraph.ai/en-gb/view/
+  ✓ invalid_hash: PASS — HTTP 200 · https://send.sgraph.ai/en-gb/download/#bogus123/fakekey==
 ```
 
 ## Environment Notes
 
 - Python 3.12 venv: OK
-- Playwright / Chromium: installed successfully
+- Playwright / Chromium: OK
 - SG/Send reference clone: OK
-- Import verification (`Setup OK`): passed
-- Network: **BLOCKED** — HTTP 407 on all outbound requests to send.sgraph.ai
+- Import verification (`Setup OK`): OK
+- Network: proxy (`21.0.0.25:15004`) with TLS interception — `ignore_https_errors=True` required for Playwright
