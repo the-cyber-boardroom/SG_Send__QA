@@ -40,12 +40,15 @@ class test_SG_Send__Browser__Pages__Upload(TestCase):                           
         with self.sg_send as _:
             assert type(_) is SG_Send__Browser__Pages
             _.page__root()
-            state_before = 'idle'
             _.upload__set_file(SAMPLE_FILENAME, SAMPLE_CONTENT.encode())
             state_after = _.upload_state()
             assert state_after in ('file-ready', 'choosing-delivery')               # wizard advanced past idle
-            assert self.sm_utils.validate_transition(self.upload_sm,                # graph edge validated
-                                                     state_before, state_after)
+            # Graph edge: idle → file-ready is always the first transition.
+            # The UI may auto-advance through file-ready before we can observe it,
+            # so validate the two edges separately rather than idle → state_after.
+            assert self.sm_utils.validate_transition(self.upload_sm, 'idle', 'file-ready')
+            if state_after != 'file-ready':
+                assert self.sm_utils.validate_transition(self.upload_sm, 'file-ready', state_after)
 
     def test__02__upload__click_next__to_share_step(self):                           # Next advances to share mode selection
         state_before = self.sg_send.upload_state()
