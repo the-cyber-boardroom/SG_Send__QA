@@ -6,7 +6,7 @@ auto_generated: true
 
 # Access Gate
 
-> Test source at commit [`9cb6ccf7`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/9cb6ccf7) · v0.2.43
+> Test source at commit [`9cb6ccf7`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/9cb6ccf7) · v0.2.44
 
 Automated browser test for the **access gate** workflow.
 

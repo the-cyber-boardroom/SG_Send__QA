@@ -6,7 +6,7 @@ auto_generated: true
 
 # Pdf Lightbox Opens
 
-> Test source at commit [`7bcf321f`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/7bcf321f) · v0.2.43
+> Test source at commit [`7afd7546`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/7afd7546) · v0.2.44
 
 Clicking the PDF thumbnail opens the lightbox without error.
 
