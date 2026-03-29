@@ -6,7 +6,7 @@ auto_generated: true
 
 # Upload  Folder
 
-> Test source at commit [`807336ab`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/807336ab) · v0.2.41
+> Test source at commit [`807336ab`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/807336ab) · v0.2.42
 
 UC-02: Folder upload → gallery + browse view (P1).
 

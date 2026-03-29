@@ -6,7 +6,7 @@ auto_generated: true
 
 # Copy Link Includes Key
 
-> Test source at commit [`c4e729e4`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/c4e729e4) · v0.2.41
+> Test source at commit [`edcee92f`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/edcee92f) · v0.2.42
 
 Copy Link button in gallery/browse includes the key in the URL (P1).
 
