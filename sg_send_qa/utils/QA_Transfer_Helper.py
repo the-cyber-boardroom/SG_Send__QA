@@ -34,8 +34,9 @@ class QA_Transfer_Helper(Type_Safe):
     # SGMETA magic bytes — 6 bytes, matches JS upload-constants.js
     SGMETA_MAGIC: bytes = bytes([0x53, 0x47, 0x4D, 0x45, 0x54, 0x41])
 
-    api_url      : str = ""
-    access_token : str = ""
+    api_url      : str   = ""
+    access_token : str   = ""
+    timeout      : float = 30.0   # seconds; default httpx 5s is too short through an egress proxy
 
     def _headers(self) -> dict:
         headers = {}
@@ -50,6 +51,7 @@ class QA_Transfer_Helper(Type_Safe):
             f"{self.api_url}/api/transfers/create",
             json    = {"file_size_bytes": len(payload), "content_type_hint": content_type},
             headers = self._headers(),
+            timeout = self.timeout,
         )
         create_resp.raise_for_status()
         tid = create_resp.json()["transfer_id"]
@@ -58,11 +60,13 @@ class QA_Transfer_Helper(Type_Safe):
             f"{self.api_url}/api/transfers/upload/{tid}",
             content = payload,
             headers = {**self._headers(), "content-type": "application/octet-stream"},
+            timeout = self.timeout,
         ).raise_for_status()
 
         httpx.post(
             f"{self.api_url}/api/transfers/complete/{tid}",
             headers = self._headers(),
+            timeout = self.timeout,
         ).raise_for_status()
 
         return tid
