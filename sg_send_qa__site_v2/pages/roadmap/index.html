@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Roadmap — SG/Send QA</title>
+    <meta name="description" content="Planned test coverage, upcoming use cases, and future improvements for the SG/Send QA site.">
+
+    <link rel="icon" type="image/svg+xml" href="../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../_common/css/qa-site.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/roadmap/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <h1>QA Roadmap</h1>
+            <p>
+                Planned test coverage expansion, site improvements, and infrastructure work
+                for the SG/Send QA platform.
+            </p>
+
+            <h2>In Progress</h2>
+
+            <div class="qa-pipeline-step">
+                <div class="step-num">▶</div>
+                <div class="step-body">
+                    <h3>Web Components site (v2)</h3>
+                    <p>
+                        Migrating from Jekyll + GitHub Pages to a Web Components static site
+                        deployed to S3/CloudFront. Aurora dark theme, sidebar navigation,
+                        screenshot galleries, syntax-highlighted test source.
+                        <strong>Sessions 1–3 complete.</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="qa-pipeline-step">
+                <div class="step-num">▶</div>
+                <div class="step-body">
+                    <h3>S3/CloudFront deployment</h3>
+                    <p>
+                        CI pipeline deploys the v2 site to S3 on every push.
+                        CloudFront distribution pending configuration at
+                        <code>qa-v2.send.sgraph.ai</code>.
+                    </p>
+                </div>
+            </div>
+
+            <h2>Planned — Test Coverage</h2>
+
+            <table>
+                <thead>
+                    <tr><th>Group</th><th>Use Case</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>01 Access Gate</td><td>All existing tests</td><td>✓ Covered</td></tr>
+                    <tr><td>02 Upload &amp; Share</td><td>All existing tests</td><td>✓ Covered</td></tr>
+                    <tr><td>03 Download &amp; View</td><td>All existing tests</td><td>✓ Covered</td></tr>
+                    <tr><td>04 Expiry</td><td>All existing tests</td><td>✓ Covered</td></tr>
+                    <tr><td>05 Security</td><td>All existing tests</td><td>✓ Covered</td></tr>
+                    <tr><td>06 Error Handling</td><td>All existing tests</td><td>✓ Covered</td></tr>
+                    <tr><td>07 Admin</td><td>All existing tests</td><td>✓ Covered</td></tr>
+                    <tr><td>08 Performance</td><td>All existing tests</td><td>✓ Covered</td></tr>
+                    <tr><td>—</td><td>Visual regression (screenshot diff)</td><td>Planned</td></tr>
+                    <tr><td>—</td><td>Multi-file upload scenarios</td><td>Planned</td></tr>
+                    <tr><td>—</td><td>Mobile viewport tests (375px)</td><td>Planned</td></tr>
+                    <tr><td>—</td><td>Accessibility (axe-core)</td><td>Planned</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Planned — Infrastructure</h2>
+
+            <table>
+                <thead>
+                    <tr><th>Item</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>S3 bucket prefix <code>websites/sgraph-qa-send/</code></td><td>Pending</td></tr>
+                    <tr><td>CloudFront distribution for <code>qa-v2.send.sgraph.ai</code></td><td>Pending</td></tr>
+                    <tr><td>ACM certificate (<code>us-east-1</code>)</td><td>Pending</td></tr>
+                    <tr><td>Route53 CNAME → CloudFront</td><td>Pending</td></tr>
+                    <tr><td>Jekyll site cutover / redirect</td><td>Blocked on v2 verification</td></tr>
+                    <tr><td>Lambda trigger on SG/Send deploy</td><td>Future</td></tr>
+                </tbody>
+            </table>
+
+            <h2>Planned — Site Features</h2>
+
+            <table>
+                <thead>
+                    <tr><th>Feature</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Screenshot lightbox (click to enlarge)</td><td>Planned</td></tr>
+                    <tr><td>Test history / per-use-case trend chart</td><td>Planned</td></tr>
+                    <tr><td>Search across all use cases</td><td>Planned</td></tr>
+                    <tr><td>Flaky test detector (pass rate over time)</td><td>Planned</td></tr>
+                    <tr><td>Change request tracker integration</td><td>Planned</td></tr>
+                </tbody>
+            </table>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../_common/js/components/qa-sidebar.js"></script>
+
+</body>
+</html>

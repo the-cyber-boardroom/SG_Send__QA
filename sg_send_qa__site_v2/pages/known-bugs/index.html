@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Known Bugs — SG/Send QA</title>
+    <meta name="description" content="Known issues and confirmed bugs in the SG/Send platform, tracked with test evidence.">
+
+    <link rel="icon" type="image/svg+xml" href="../../_common/favicon.svg">
+    <link rel="stylesheet" href="../../_common/fonts/fonts.css">
+    <link rel="stylesheet" href="../../_common/css/design-tokens.css">
+    <link rel="stylesheet" href="../../_common/css/shared-components.css">
+    <link rel="stylesheet" href="../../_common/css/qa-site.css">
+</head>
+<body>
+
+    <sg-site-header
+        site="QA"
+        home-url="https://qa.send.sgraph.ai"
+        nav-items='[
+            {"label":"Dashboard","href":"/pages/dashboard/"},
+            {"label":"Pipeline",  "href":"/pages/pipeline/"},
+            {"label":"Roadmap",   "href":"/pages/roadmap/"},
+            {"label":"Known Bugs","href":"/pages/known-bugs/"},
+            {"label":"SG/Send",   "href":"https://send.sgraph.ai","external":true},
+            {"label":"GitHub",    "href":"https://github.com/the-cyber-boardroom/SG_Send__qa","external":true}
+        ]'>
+    </sg-site-header>
+
+    <div class="qa-content-wrapper">
+
+        <div class="qa-sidebar-slot">
+            <qa-sidebar data-current="/pages/known-bugs/"></qa-sidebar>
+        </div>
+
+        <main class="qa-main">
+
+            <h1>Known Bugs</h1>
+            <p>
+                Confirmed issues in the SG/Send platform, captured by automated tests.
+                Each entry links to the test and screenshot evidence that first detected the issue.
+            </p>
+
+            <p>
+                Bug tests follow the pattern: a test that expects the <em>correct</em> behaviour
+                is written first, it fails (documenting the bug), and the test is marked
+                <code>xfail</code> until the fix ships. When the fix ships, <code>xfail</code>
+                is removed and the test goes green.
+            </p>
+
+            <h2>Active Bugs</h2>
+
+            <p class="qa-nav-meta" style="color: var(--color-text-muted);">
+                No confirmed active bugs at this time. Issues are tracked as they are
+                detected by the automated test suite.
+            </p>
+
+            <h2>Recently Fixed</h2>
+
+            <p class="qa-nav-meta" style="color: var(--color-text-muted);">
+                No recently fixed bugs on record yet.
+            </p>
+
+            <h2>How Bugs Are Tracked</h2>
+
+            <ol>
+                <li>
+                    <strong>Detection</strong> — An automated test fails, or a manual observation
+                    raises a concern. A screenshot captures the broken state.
+                </li>
+                <li>
+                    <strong>Bug test written</strong> — A test is written that asserts the
+                    <em>correct</em> behaviour. It fails intentionally. The test is marked
+                    <code>@pytest.mark.xfail(reason="bug #NNN — description")</code>.
+                </li>
+                <li>
+                    <strong>Tracked here</strong> — The bug is listed on this page with a link
+                    to the test file, the GitHub issue, and the screenshot evidence.
+                </li>
+                <li>
+                    <strong>Fix shipped</strong> — When SG/Send fixes the bug and the test goes
+                    green, <code>xfail</code> is removed. The bug moves to "Recently Fixed".
+                </li>
+            </ol>
+
+            <h2>Reporting a Bug</h2>
+            <p>
+                Open an issue on the
+                <a href="https://github.com/the-cyber-boardroom/SG_Send__qa" target="_blank" rel="noopener">
+                    SG/Send QA GitHub repository
+                </a>
+                with steps to reproduce and, if possible, a screenshot.
+            </p>
+
+        </main>
+    </div>
+
+    <sg-site-footer
+        brand-desc="Automated QA for SG/Send"
+        copyright="SGraph AI">
+    </sg-site-footer>
+
+    <script src="../../_common/js/build-info.js"></script>
+
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-header/v1/v1.0/v1.0.2/sg-site-header.js"></script>
+    <script type="module" src="https://dev.tools.sgraph.ai/components/site-footer/v1/v1.0/v1.0.0/sg-site-footer.js"></script>
+    <script type="module" src="../../_common/js/components/qa-sidebar.js"></script>
+
+</body>
+</html>
