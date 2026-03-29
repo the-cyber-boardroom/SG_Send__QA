@@ -16,18 +16,28 @@
 
 ## Failures
 
-### api_upload — FAIL
-```
-The read operation timed out
-```
+### api_upload — FAIL (root cause identified and fixed)
 
-Suite 1 (`api_upload`) failed with a network timeout when attempting to upload
-via the SG/Send API. The token is present (17 chars) but the upload HTTP
-request timed out. This is likely a transient network issue or the API is
-rate-limiting/unavailable at the time of the run.
+**Error:** `The read operation timed out`
 
-`browser_download_decrypt` was not attempted because the upload step failed to
-produce a transfer ID.
+**Root cause:** `QA_Transfer_Helper` uses `httpx.post()` for three API calls
+(create → upload → complete). The `httpx` default timeout is **5 seconds**.
+Through the Claude cloud egress proxy (`21.0.0.21:15004`), which performs TLS
+interception, the upload round-trip consistently exceeds this limit.
+
+Note: `curl` and Playwright are unaffected — curl reads proxy env vars
+natively and Playwright has its own configured timeout. Only `httpx` was
+silent about the proxy-induced latency.
+
+**Fix applied:** Added `timeout: float = 30.0` field to `QA_Transfer_Helper`
+and passed it to all three httpx calls (create, upload, complete). The
+briefing now constructs the helper with `timeout=30.0` explicitly.
+
+**Verified:** Suite 1 re-run after the fix passed 2/2 — `api_upload` PASS,
+`browser_download_decrypt` PASS (`send-download.state = 'complete'`).
+
+`browser_download_decrypt` was skipped in this run because the upload timed
+out before producing a transfer ID.
 
 ## Suite 1 Detail
 
