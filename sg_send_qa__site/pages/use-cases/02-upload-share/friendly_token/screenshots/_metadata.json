@@ -93,19 +93,19 @@
     {
       "name": "05_token_captured",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
-      "description": "Token: brave-bonus-1431",
+      "description": "Token: spell-delta-9887",
       "has_masks": true
     },
     {
       "name": "06_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
-      "description": "Token 'brave-bonus-1431' resolved",
+      "description": "Token 'spell-delta-9887' resolved",
       "has_masks": true
     },
     {
       "name": "05_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
-      "description": "Token 'tiger-topaz-4775'",
+      "description": "Token 'glow-tango-6784'",
       "has_masks": true
     },
     {
@@ -129,7 +129,7 @@
     {
       "name": "05_hash_after_decrypt",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
-      "description": "URL after decrypt: http://localhost:50899//en-gb/browse/#humor-terra-6389",
+      "description": "URL after decrypt: http://localhost:46243//en-gb/browse/#delta-union-1293",
       "has_masks": true
     }
   ]
