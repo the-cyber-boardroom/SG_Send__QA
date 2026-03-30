@@ -9,6 +9,14 @@ Test flow:
   6. Verify browse view loads with folder tree
   7. Click a file in the tree → verify it opens in preview
   8. Click "Gallery view" → verify it switches back
+
+v0.3.1 notes:
+  - Gallery folder naming changed: v0.3.1 uses __gallery__{8-char-hash}
+    instead of v0.3.0's _gallery.{16-char-hash}. These tests do not inspect
+    the internal zip structure, so they pass for both naming conventions.
+  - Gallery view is NOT patched by v0.3.1 (browse-only overlay), so gallery
+    behaviour is identical to v0.3.0.
+  - Gallery rename backward-compatibility is tested in tests/qa/v031/p3__gallery_rename/.
 """
 
 import pytest

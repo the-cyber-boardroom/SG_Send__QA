@@ -1,0 +1,49 @@
+{
+  "use_case": "gallery_rename",
+  "module": "test__gallery_rename",
+  "module_doc": "P3: v0.3.1 gallery folder rename (upload-folder-v031.js + send-gallery-v031.js).\n\nIn v0.3.0, the metadata folder created inside uploaded zips was named:\n    _gallery.{16-char-hex-hash}\n\nIn v0.3.1, it is renamed to:\n    __gallery__{8-char-hex-hash}\n\nBoth formats remain readable (backward compatible):\n  - Old uploads with _gallery.* naming still work in v0.3.1 gallery view\n  - New uploads use __gallery__ naming\n\nTests:\n  1. upload-folder-v031.js is loaded on the upload page\n  2. Gallery view still loads for a v0.3.1 upload (smoke regression)\n  3. Gallery view loads for an old-style zip with _gallery.* folder (backward compat)\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_upload_folder_v031_js_loaded_on_upload_page",
+      "doc": "upload-folder-v031.js is fetched on the upload page.",
+      "screenshots": [
+        "01_upload_page"
+      ]
+    },
+    {
+      "method": "test_gallery_view_loads_after_v031_upload",
+      "doc": "Gallery view loads correctly for a zip uploaded via v0.3.1 (smoke regression).",
+      "screenshots": [
+        "02_gallery_loaded"
+      ]
+    },
+    {
+      "method": "test_browse_view_loads_after_v031_upload",
+      "doc": "Browse view loads correctly for a zip uploaded via v0.3.1 (smoke regression).",
+      "screenshots": [
+        "03_browse_loaded"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "01_upload_page",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/gallery_rename/screenshots/01_upload_page.png",
+      "description": "Upload page \u2014 checking overlay files",
+      "has_masks": false
+    },
+    {
+      "name": "02_gallery_loaded",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/gallery_rename/screenshots/02_gallery_loaded.png",
+      "description": "Gallery view after v0.3.1 upload",
+      "has_masks": false
+    },
+    {
+      "name": "03_browse_loaded",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/gallery_rename/screenshots/03_browse_loaded.png",
+      "description": "Browse view after v0.3.1 upload",
+      "has_masks": true
+    }
+  ]
+}

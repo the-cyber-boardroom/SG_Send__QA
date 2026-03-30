@@ -39,13 +39,17 @@ def _make_zip():
 def _open_route(page, url: str) -> None:
     """Navigate to a download/gallery/browse route and wait for it to settle.
 
-    Uses networkidle (consistent with browse/gallery/viewer tests that pass in CI).
+    CR-001: Uses body[data-ready] (set by SG/Send bootstrap) instead of
+    networkidle — networkidle never resolves on routes with background API calls
+    (e.g. checkToken). After the ready signal, wait_for_timeout(1500) lets JS
+    render shadow DOM content before screenshot/assertion.
+
     SG/Send renders all visible content in shadow DOM, so body.textContent is
     always empty — do NOT use expect(body).not_to_be_empty() here.
     """
-    page.goto(url)
-    page.wait_for_load_state("networkidle")
-    page.wait_for_timeout(2000)
+    page.goto(url, wait_until="commit")
+    page.wait_for_selector("body[data-ready]", timeout=10_000)
+    page.wait_for_timeout(1_500)
 
 
 class TestRouteHandling:
@@ -111,8 +115,8 @@ class TestRouteHandling:
         ).first
         if browse_link.is_visible(timeout=5000):
             browse_link.click()
-            page.wait_for_load_state("networkidle")
-            page.wait_for_timeout(1000)
+            page.wait_for_selector("body[data-ready]", timeout=10_000)
+            page.wait_for_timeout(800)
             screenshots.capture(page, "06_gallery_to_browse", "Gallery → browse")
 
             current_url = page.url
@@ -130,8 +134,8 @@ class TestRouteHandling:
         ).first
         if gallery_link.is_visible(timeout=5000):
             gallery_link.click()
-            page.wait_for_load_state("networkidle")
-            page.wait_for_timeout(1000)
+            page.wait_for_selector("body[data-ready]", timeout=10_000)
+            page.wait_for_timeout(800)
             screenshots.capture(page, "07_browse_to_gallery", "Browse → gallery")
 
             current_url = page.url
