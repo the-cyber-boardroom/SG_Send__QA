@@ -15,11 +15,15 @@ import pytest
 
 pytestmark = [pytest.mark.p0, pytest.mark.v031]
 
-_OVERLAY_FILES = [
+# Files loaded on the browse page
+_BROWSE_OVERLAY_FILES = [
     "send-browse-v031.js",
     "send-browse-v031.css",
     "markdown-parser-v031.js",
     "send-gallery-v031.js",
+]
+# Files loaded on the upload page
+_UPLOAD_OVERLAY_FILES = [
     "upload-folder-v031.js",
 ]
 
@@ -50,7 +54,7 @@ class TestVersionGate:
         )
 
     def test_browse_overlay_files_loaded(self, page, ui_url, transfer_helper, screenshots):
-        """All 5 v0.3.1 overlay files are fetched with HTTP 200 on the browse page."""
+        """4 browse overlay files are fetched with HTTP 200 on the browse page."""
         import zipfile, io
         buf = io.BytesIO()
         with zipfile.ZipFile(buf, "w") as zf:
@@ -68,12 +72,34 @@ class TestVersionGate:
         page.on("response", _on_response)
         page.goto(f"{ui_url}/en-gb/browse/#{tid}/{key_b64}")
         page.wait_for_selector("body[data-ready]", timeout=10_000)
-        page.wait_for_timeout(1_000)  # allow deferred script loads
+        page.wait_for_timeout(1_000)
 
-        screenshots.capture(page, "03_network_overlays", "Browse page with overlay files")
+        screenshots.capture(page, "03_network_browse_overlays", "Browse page overlay files")
 
-        missing = [f for f in _OVERLAY_FILES if f not in loaded_200]
+        missing = [f for f in _BROWSE_OVERLAY_FILES if f not in loaded_200]
         assert not missing, (
-            f"v0.3.1 overlay files not loaded (HTTP 200) on browse page: {missing}. "
-            "These files are required — without them the page falls back to v0.3.0."
+            f"v0.3.1 browse overlay files not loaded (HTTP 200): {missing}. "
+            "Without these the browse page falls back to v0.3.0 behaviour."
+        )
+
+    def test_upload_overlay_files_loaded(self, page, ui_url, screenshots):
+        """upload-folder-v031.js is fetched with HTTP 200 on the upload page."""
+        loaded_200 = set()
+
+        def _on_response(response):
+            filename = response.url.split("/")[-1].split("?")[0]
+            if response.status == 200:
+                loaded_200.add(filename)
+
+        page.on("response", _on_response)
+        page.goto(f"{ui_url}/en-gb/")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
+        page.wait_for_timeout(500)
+
+        screenshots.capture(page, "04_network_upload_overlays", "Upload page overlay files")
+
+        missing = [f for f in _UPLOAD_OVERLAY_FILES if f not in loaded_200]
+        assert not missing, (
+            f"v0.3.1 upload overlay files not loaded (HTTP 200): {missing}. "
+            "Without upload-folder-v031.js the gallery folder rename is not active."
         )

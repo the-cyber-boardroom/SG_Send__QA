@@ -245,11 +245,23 @@ class TestBrowseV031:
 
         notes_item = page.locator(".sb-tree__file[data-path='NOTES.md']").first
         notes_item.click()
-        page.wait_for_timeout(1_000)
+        # Button is created hidden and shown once markdown content renders.
+        # wait_for_function polls until any .sb-file__view-source has non-zero layout height.
+        page.wait_for_function(
+            """() => {
+                const btns = document.querySelectorAll('.sb-file__view-source');
+                return Array.from(btns).some(
+                    b => b.offsetParent !== null && b.getBoundingClientRect().height > 0
+                );
+            }""",
+            timeout=8_000
+        )
 
-        source_btn = page.locator(".sb-file__view-source").first
-        assert source_btn.is_visible(timeout=3_000), (
-            "BRW-006: No .sb-file__view-source button found for markdown file. "
+        # Two .sb-file__view-source buttons may exist (one per open tab): the inactive
+        # tab's button is hidden. Use :visible pseudo-class to get the active one.
+        source_btn = page.locator(".sb-file__view-source:visible").first
+        assert source_btn.is_visible(), (
+            "BRW-006: No visible .sb-file__view-source button found for markdown file. "
             "send-browse-v031.js should add a Source toggle to markdown files."
         )
 
@@ -376,12 +388,18 @@ class TestBrowseV031:
 
         csv_item = page.locator(".sb-tree__file[data-path='data/data.csv']").first
         csv_item.click()
-        page.wait_for_timeout(1_000)
+        page.wait_for_function(
+            """() => {
+                const el = document.querySelector('.sb-file__csv');
+                return el && el.offsetParent !== null && el.getBoundingClientRect().height > 0;
+            }""",
+            timeout=8_000
+        )
         screenshots.capture(page, "brw012_01_csv_rendered", "data.csv opened — should be table")
 
         # Check for .sb-file__csv container (the table wrapper)
         csv_div = page.locator(".sb-file__csv").first
-        assert csv_div.is_visible(timeout=3_000), (
+        assert csv_div.is_visible(), (
             "BRW-012: .sb-file__csv container not found. "
             "CSV should render as a styled table, not plain text."
         )
@@ -392,8 +410,17 @@ class TestBrowseV031:
             "BRW-012: No <table> inside .sb-file__csv — CSV table was not generated"
 
         # Source toggle should be present
-        source_btn = page.locator(".sb-file__view-source").first
-        assert source_btn.is_visible(timeout=2_000), \
+        page.wait_for_function(
+            """() => {
+                const btns = document.querySelectorAll('.sb-file__view-source');
+                return Array.from(btns).some(
+                    b => b.offsetParent !== null && b.getBoundingClientRect().height > 0
+                );
+            }""",
+            timeout=8_000
+        )
+        source_btn = page.locator(".sb-file__view-source:visible").first
+        assert source_btn.is_visible(), \
             "BRW-012: No source toggle button found for CSV file"
 
         # Toggle to source view — should show raw CSV text
@@ -418,11 +445,17 @@ class TestBrowseV031:
 
         html_item = page.locator(".sb-tree__file[data-path='data/dashboard.html']").first
         html_item.click()
-        page.wait_for_timeout(1_500)
+        page.wait_for_function(
+            """() => {
+                const el = document.querySelector('.sb-file__html-frame');
+                return el && el.offsetParent !== null && el.getBoundingClientRect().height > 0;
+            }""",
+            timeout=8_000
+        )
         screenshots.capture(page, "brw013_01_html_rendered", "dashboard.html — should be iframe")
 
         iframe_el = page.locator(".sb-file__html-frame").first
-        assert iframe_el.is_visible(timeout=3_000), (
+        assert iframe_el.is_visible(), (
             "BRW-013: .sb-file__html-frame not found. "
             "HTML files should render in a sandboxed iframe, not as raw source."
         )
@@ -437,9 +470,18 @@ class TestBrowseV031:
             "This is a security risk — the iframe would be able to access the parent page."
         )
 
-        # Source toggle should be present
-        source_btn = page.locator(".sb-file__view-source").first
-        assert source_btn.is_visible(timeout=2_000), \
+        # Source toggle — wait_for_function polls until visible
+        page.wait_for_function(
+            """() => {
+                const btns = document.querySelectorAll('.sb-file__view-source');
+                return Array.from(btns).some(
+                    b => b.offsetParent !== null && b.getBoundingClientRect().height > 0
+                );
+            }""",
+            timeout=8_000
+        )
+        source_btn = page.locator(".sb-file__view-source:visible").first
+        assert source_btn.is_visible(), \
             "BRW-013: No source toggle button found for HTML file"
 
     # ── BRW-014: Folder links expand tree ────────────────────────────────────
@@ -496,20 +538,23 @@ class TestBrowseV031:
 
         screenshots.capture(page, "brw015_01_many_tabs", "Browse view with 10 tabs open")
 
-        # Tab bar should exist
-        tab_bar = page.locator(".sgl-tab-bar").first
-        assert tab_bar.is_visible(timeout=3_000), (
-            "BRW-015: .sgl-tab-bar not found after opening multiple files. "
+        # .sgl-tab-bar lives inside sg-layout's shadow DOM — page.locator() cannot reach it.
+        # Use page.evaluate to check via shadowRoot instead.
+        tab_bar_exists = page.evaluate("""() => {
+            const sg = document.querySelector('sg-layout');
+            return !!(sg && sg.shadowRoot && sg.shadowRoot.querySelector('.sgl-tab-bar'));
+        }""")
+        assert tab_bar_exists, (
+            "BRW-015: .sgl-tab-bar not found in sg-layout.shadowRoot after opening multiple files. "
             "send-browse-v031.js injects scrollable tab bar styles."
         )
 
         # Tab bar should be scrollable (scrollWidth > clientWidth)
-        is_scrollable = page.evaluate(
-            """() => {
-                const bar = document.querySelector('.sgl-tab-bar');
-                return bar ? bar.scrollWidth > bar.clientWidth : false;
-            }"""
-        )
+        is_scrollable = page.evaluate("""() => {
+            const sg = document.querySelector('sg-layout');
+            const bar = sg && sg.shadowRoot ? sg.shadowRoot.querySelector('.sgl-tab-bar') : null;
+            return bar ? bar.scrollWidth > bar.clientWidth : false;
+        }""")
         assert is_scrollable, (
             "BRW-015: Tab bar is not scrollable even with 10 files open. "
             "Expected scrollWidth > clientWidth for horizontal tab scrolling."
