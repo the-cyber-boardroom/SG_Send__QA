@@ -7,16 +7,12 @@
     {
       "method": "test_browse_page_loads",
       "doc": "Browse page loads without errors.",
-      "screenshots": [
-        "01_browse_loaded"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_folder_tree_present",
       "doc": "Folder tree is rendered in the left panel.\n\n        v0.3.1 / BRW-001: files in subfolders show basename only, not the full\n        zip path. The zip has docs/sub/extra.md \u2014 the tree should show \"extra.md\",\n        not \"docs/sub/extra.md\".\n        ",
-      "screenshots": [
-        "02_folder_tree"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_file_click_opens_preview",
@@ -36,17 +32,12 @@
     {
       "method": "test_save_locally_button_present",
       "doc": "Save locally button is present in browse view.",
-      "screenshots": [
-        "06_save_button"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_keyboard_navigation_j_k",
       "doc": "Keyboard j/k navigate through files in browse view (P2).",
-      "screenshots": [
-        "07_keyboard_j",
-        "08_keyboard_k"
-      ]
+      "screenshots": []
     }
   ],
   "screenshots": [

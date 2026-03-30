@@ -28,34 +28,15 @@
     {
       "method": "test_valid_transfer_id_resolves",
       "doc": "Entering a valid transfer ID resolves and shows the file.",
-      "screenshots": [
-        "04_valid_id_resolved"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_hash_navigation_to_download",
       "doc": "Navigating directly to /en-gb/download/#id/key auto-decrypts (P1).",
-      "screenshots": [
-        "05_direct_hash_nav"
-      ]
+      "screenshots": []
     }
   ],
   "screenshots": [
-    {
-      "name": "01_entry_form",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/01_entry_form.png",
-      "description": "Manual entry form without hash"
-    },
-    {
-      "name": "02_decrypt_button",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/02_decrypt_button.png",
-      "description": "Entry form with decrypt button"
-    },
-    {
-      "name": "03_bogus_token_error",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/03_bogus_token_error.png",
-      "description": "Error after bogus token"
-    },
     {
       "name": "04_valid_id_resolved",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/04_valid_id_resolved.png",
@@ -65,6 +46,24 @@
       "name": "05_direct_hash_nav",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/05_direct_hash_nav.png",
       "description": "Direct hash navigation to download"
+    },
+    {
+      "name": "01_entry_form",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/01_entry_form.png",
+      "description": "Manual entry form without hash",
+      "has_masks": false
+    },
+    {
+      "name": "02_decrypt_button",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/02_decrypt_button.png",
+      "description": "Entry form with decrypt button",
+      "has_masks": false
+    },
+    {
+      "name": "03_bogus_token_error",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/03_bogus_token_error.png",
+      "description": "Error after bogus token",
+      "has_masks": false
     }
   ]
 }

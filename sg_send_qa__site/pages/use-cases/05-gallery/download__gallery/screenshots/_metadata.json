@@ -7,37 +7,27 @@
     {
       "method": "test_gallery_page_loads",
       "doc": "Gallery page loads without errors for an image-heavy zip.",
-      "screenshots": [
-        "01_gallery_loaded"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_view_mode_buttons_present",
       "doc": "View mode buttons (compact/grid/large) are present in gallery.",
-      "screenshots": [
-        "02_view_controls"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_action_buttons_present",
       "doc": "Copy Link, Email, Save locally, Print buttons are present.",
-      "screenshots": [
-        "03_action_buttons"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_info_panel_toggle",
       "doc": "Info button toggles the info panel showing transfer metadata.",
-      "screenshots": [
-        "04_before_info"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_lightbox_opens_on_thumbnail",
       "doc": "Clicking a thumbnail opens the lightbox.",
-      "screenshots": [
-        "06_before_lightbox"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_lightbox_arrow_navigation",

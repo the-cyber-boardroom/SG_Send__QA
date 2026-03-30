@@ -7,16 +7,12 @@
     {
       "method": "test_pdf_lightbox_opens",
       "doc": "Clicking the PDF thumbnail opens the lightbox without error.",
-      "screenshots": [
-        "01_pdf_lightbox"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_present_button_visible_for_pdf",
       "doc": "A 'Present' button appears in the lightbox when viewing a PDF.",
-      "screenshots": [
-        "02_present_button"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_present_button_click_enters_fullscreen",
@@ -26,18 +22,12 @@
     {
       "method": "test_f_shortcut_triggers_present",
       "doc": "The 'f' keyboard shortcut triggers present / fullscreen mode.",
-      "screenshots": [
-        "05_before_f_shortcut",
-        "06_after_f_shortcut"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_s_key_triggers_save",
       "doc": "Pressing 's' when a file is selected triggers save/download.",
-      "screenshots": [
-        "01_file_selected",
-        "02_s_key_pressed"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_j_key_moves_selection_down",
