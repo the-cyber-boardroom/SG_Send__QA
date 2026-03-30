@@ -6,7 +6,7 @@ auto_generated: true
 
 # Share Tab Present
 
-> Test source at commit [`7afd7546`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/7afd7546) · v0.2.44
+> Test source at commit [`6dac4363`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/6dac4363) · v0.2.45
 
 Share tab shows URL, copy, and email actions.
 

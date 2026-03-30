@@ -6,7 +6,7 @@ auto_generated: true
 
 # Manual Entry
 
-> Test source at commit [`17d0c5af`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/17d0c5af) · v0.2.44
+> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
 
 UC-09: Manual token/ID entry form (P1).
 
@@ -171,7 +171,7 @@ class TestManualEntryForm:
         tid, key_b64 = transfer_helper.upload_encrypted(SAMPLE_CONTENT, "uc09-direct.txt")
 
         page.goto(f"{ui_url}/en-gb/download/#{tid}/{key_b64}")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(2000)
         screenshots.capture(page, "05_direct_hash_nav", "Direct hash navigation to download")
 
