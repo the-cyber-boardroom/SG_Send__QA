@@ -20,26 +20,6 @@
       "screenshots": [
         "04_no_gate"
       ]
-    },
-    {
-      "method": "test_upload_accessible_with_token",
-      "doc": "Providing the correct access token grants access to the upload zone.",
-      "screenshots": [
-        "01_landing",
-        "02_after_token"
-      ]
-    },
-    {
-      "method": "test_wrong_token_shows_error",
-      "doc": "Providing a wrong access token shows an error.",
-      "screenshots": []
-    },
-    {
-      "method": "test_upload_zone_visible_without_gate",
-      "doc": "If no gate is configured, upload zone is immediately visible.",
-      "screenshots": [
-        "04_no_gate"
-      ]
     }
   ],
   "screenshots": [
@@ -74,29 +54,21 @@
       "description": "After entering access token"
     },
     {
-      "name": "01_landing",
-      "path": "sg_send_qa__site/pages/use-cases/01-access-gate/access_gate/screenshots/01_landing.png",
-      "description": "Landing page (may show gate or upload zone)"
-    },
-    {
-      "name": "04_no_gate",
-      "path": "sg_send_qa__site/pages/use-cases/01-access-gate/access_gate/screenshots/04_no_gate.png",
-      "description": "Upload zone without gate"
-    },
-    {
-      "name": "01_landing",
-      "path": "sg_send_qa__site/pages/use-cases/access_gate/screenshots/01_landing.png",
-      "description": "Landing page (may show gate or upload zone)"
-    },
-    {
       "name": "02_after_token",
       "path": "sg_send_qa__site/pages/use-cases/access_gate/screenshots/02_after_token.png",
       "description": "After entering access token"
     },
     {
+      "name": "01_landing",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/01-access-gate/access_gate/screenshots/01_landing.png",
+      "description": "Landing page (may show gate or upload zone)",
+      "has_masks": false
+    },
+    {
       "name": "04_no_gate",
-      "path": "sg_send_qa__site/pages/use-cases/access_gate/screenshots/04_no_gate.png",
-      "description": "Upload zone without gate"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/01-access-gate/access_gate/screenshots/04_no_gate.png",
+      "description": "Upload zone without gate",
+      "has_masks": false
     }
   ]
 }

@@ -65,42 +65,50 @@
     {
       "name": "01_gallery_route",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/01_gallery_route.png",
-      "description": "Gallery route loaded"
+      "description": "Gallery route loaded",
+      "has_masks": false
     },
     {
       "name": "02_browse_route",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/02_browse_route.png",
-      "description": "Browse route loaded"
+      "description": "Browse route loaded",
+      "has_masks": false
     },
     {
       "name": "03_view_route",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/03_view_route.png",
-      "description": "View route loaded"
+      "description": "View route loaded",
+      "has_masks": true
     },
     {
       "name": "04_short_v_route",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/04_short_v_route.png",
-      "description": "Short /v/ route loaded"
+      "description": "Short /v/ route loaded",
+      "has_masks": true
     },
     {
       "name": "05_download_auto",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/05_download_auto.png",
-      "description": "Download route auto-detect"
+      "description": "Download route auto-detect",
+      "has_masks": true
     },
     {
       "name": "06_gallery_to_browse",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/06_gallery_to_browse.png",
-      "description": "Gallery \u2192 browse"
+      "description": "Gallery \u2192 browse",
+      "has_masks": false
     },
     {
       "name": "07_browse_to_gallery",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/07_browse_to_gallery.png",
-      "description": "Browse \u2192 gallery"
+      "description": "Browse \u2192 gallery",
+      "has_masks": false
     },
     {
       "name": "08_copy_link",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/08_copy_link.png",
-      "description": "Copy Link button clicked"
+      "description": "Copy Link button clicked",
+      "has_masks": false
     }
   ]
 }

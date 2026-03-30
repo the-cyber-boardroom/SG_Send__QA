@@ -1,0 +1,228 @@
+{
+  "use_case": "browse_v031",
+  "module": "test__browse_v031",
+  "module_doc": "P2: v0.3.1 Browse view \u2014 BRW-001 through BRW-015.\n\nAll 15 browse-view fixes shipped in send-browse-v031.js,\nmarkdown-parser-v031.js, and send-browse-v031.css.\n\nTest zip layout (built by _make_v031_zip):\n    00_start.md             \u2190 root, alphabetically first (BRW-003 auto-open)\n    ACCOUNTANT DEBRIEF.md   \u2190 space in filename (BRW-011 %20 links)\n    NOTES.md                \u2190 markdown: relative link, image ref, %20 link, folder link\n    data/\n        report.md           \u2190 plain markdown\n        data.csv            \u2190 CSV file (BRW-012 table render)\n        dashboard.html      \u2190 HTML with <script> (BRW-013 iframe render)\n        slides.pdf          \u2190 PDF (BRW-002 Present button)\n        sub/\n            deep.md         \u2190 basename test: shows \"deep.md\" not \"data/sub/deep.md\" (BRW-001)\n    images/\n        chart.png           \u2190 referenced by NOTES.md (BRW-005/007 image render)\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_brw001_tree_shows_basenames",
+      "doc": "BRW-001: Files in subfolders show only the filename, not the full path.",
+      "screenshots": [
+        "brw001_01_tree"
+      ]
+    },
+    {
+      "method": "test_brw002_pdf_present_button_in_browse",
+      "doc": "BRW-002: PDF files in browse view show a Present button in the action bar.",
+      "screenshots": [
+        "brw002_01_pdf_open",
+        "brw002_02_md_no_present"
+      ]
+    },
+    {
+      "method": "test_brw003_auto_opens_first_alphabetical_file",
+      "doc": "BRW-003: On first load, the alphabetically first root file is opened automatically.",
+      "screenshots": [
+        "brw003_01_initial_load"
+      ]
+    },
+    {
+      "method": "test_brw004_markdown_relative_links_open_as_tabs",
+      "doc": "BRW-004/BRW-008: Clicking a relative link in markdown opens the target file as a tab.",
+      "screenshots": [
+        "brw004_01_notes_open",
+        "brw004_02_link_clicked"
+      ]
+    },
+    {
+      "method": "test_brw005_markdown_images_render_inline",
+      "doc": "BRW-005/BRW-007: Images referenced in markdown render as <img> tags with blob URLs.",
+      "screenshots": [
+        "brw005_01_notes_with_image"
+      ]
+    },
+    {
+      "method": "test_brw006_markdown_source_toggle",
+      "doc": "BRW-006: Markdown files show a Source toggle button that switches to raw text.",
+      "screenshots": [
+        "brw006_01_rendered_view",
+        "brw006_02_source_view"
+      ]
+    },
+    {
+      "method": "test_brw009_save_locally_downloads_valid_zip",
+      "doc": "BRW-009: Save locally button downloads a valid zip (correct MIME type).",
+      "screenshots": [
+        "brw009_01_before_save",
+        "brw009_02_download_triggered"
+      ]
+    },
+    {
+      "method": "test_brw010_markdown_link_color",
+      "doc": "BRW-010: Links in rendered markdown are blue (#0969da), readable on white.",
+      "screenshots": [
+        "brw010_01_links"
+      ]
+    },
+    {
+      "method": "test_brw011_url_encoded_paths_resolve",
+      "doc": "BRW-011: Links using %20 encoding resolve to files with spaces in their names.",
+      "screenshots": [
+        "brw011_01_notes_with_encoded_link",
+        "brw011_02_after_click"
+      ]
+    },
+    {
+      "method": "test_brw012_csv_renders_as_table",
+      "doc": "BRW-012: CSV files render as a styled table, not plain text.",
+      "screenshots": [
+        "brw012_01_csv_rendered",
+        "brw012_02_csv_source"
+      ]
+    },
+    {
+      "method": "test_brw013_html_renders_in_sandboxed_iframe",
+      "doc": "BRW-013: HTML files render in a sandboxed iframe (allow-scripts, no allow-same-origin).",
+      "screenshots": [
+        "brw013_01_html_rendered"
+      ]
+    },
+    {
+      "method": "test_brw014_folder_links_expand_tree",
+      "doc": "BRW-014: Clicking a folder link in markdown expands the folder in the sidebar.",
+      "screenshots": [
+        "brw014_01_notes_open",
+        "brw014_02_after_folder_link"
+      ]
+    },
+    {
+      "method": "test_brw015_tab_bar_scrollable_with_many_tabs",
+      "doc": "BRW-015: Tab bar is horizontally scrollable when 8+ files are open.",
+      "screenshots": [
+        "brw015_01_many_tabs"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "brw001_01_tree",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw001_01_tree.png",
+      "description": "Folder tree loaded",
+      "has_masks": true
+    },
+    {
+      "name": "brw002_01_pdf_open",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw002_01_pdf_open.png",
+      "description": "PDF opened in browse view",
+      "has_masks": true
+    },
+    {
+      "name": "brw002_02_md_no_present",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw002_02_md_no_present.png",
+      "description": "Markdown \u2014 no Present button",
+      "has_masks": true
+    },
+    {
+      "name": "brw003_01_initial_load",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw003_01_initial_load.png",
+      "description": "Browse view on first load",
+      "has_masks": true
+    },
+    {
+      "name": "brw004_01_notes_open",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw004_01_notes_open.png",
+      "description": "NOTES.md opened \u2014 contains relative link",
+      "has_masks": true
+    },
+    {
+      "name": "brw004_02_link_clicked",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw004_02_link_clicked.png",
+      "description": "After clicking relative link",
+      "has_masks": true
+    },
+    {
+      "name": "brw005_01_notes_with_image",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw005_01_notes_with_image.png",
+      "description": "NOTES.md \u2014 image should render inline",
+      "has_masks": true
+    },
+    {
+      "name": "brw006_01_rendered_view",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw006_01_rendered_view.png",
+      "description": "Markdown rendered view \u2014 button: '</> Source'",
+      "has_masks": true
+    },
+    {
+      "name": "brw006_02_source_view",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw006_02_source_view.png",
+      "description": "After toggle \u2014 button: '\u270e Rendered'",
+      "has_masks": true
+    },
+    {
+      "name": "brw009_01_before_save",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw009_01_before_save.png",
+      "description": "Browse view before Save locally",
+      "has_masks": true
+    },
+    {
+      "name": "brw009_02_download_triggered",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw009_02_download_triggered.png",
+      "description": "Download triggered",
+      "has_masks": true
+    },
+    {
+      "name": "brw010_01_links",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw010_01_links.png",
+      "description": "NOTES.md \u2014 link color check",
+      "has_masks": true
+    },
+    {
+      "name": "brw011_01_notes_with_encoded_link",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw011_01_notes_with_encoded_link.png",
+      "description": "NOTES.md \u2014 %20 encoded link",
+      "has_masks": true
+    },
+    {
+      "name": "brw011_02_after_click",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw011_02_after_click.png",
+      "description": "After clicking %20 encoded link",
+      "has_masks": true
+    },
+    {
+      "name": "brw012_01_csv_rendered",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw012_01_csv_rendered.png",
+      "description": "data.csv opened \u2014 should be table",
+      "has_masks": true
+    },
+    {
+      "name": "brw012_02_csv_source",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw012_02_csv_source.png",
+      "description": "CSV source view",
+      "has_masks": true
+    },
+    {
+      "name": "brw013_01_html_rendered",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw013_01_html_rendered.png",
+      "description": "dashboard.html \u2014 should be iframe",
+      "has_masks": true
+    },
+    {
+      "name": "brw014_01_notes_open",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw014_01_notes_open.png",
+      "description": "NOTES.md \u2014 contains [data/] folder link",
+      "has_masks": true
+    },
+    {
+      "name": "brw014_02_after_folder_link",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw014_02_after_folder_link.png",
+      "description": "After clicking folder link",
+      "has_masks": true
+    },
+    {
+      "name": "brw015_01_many_tabs",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw015_01_many_tabs.png",
+      "description": "Browse view with 10 tabs open",
+      "has_masks": true
+    }
+  ]
+}
