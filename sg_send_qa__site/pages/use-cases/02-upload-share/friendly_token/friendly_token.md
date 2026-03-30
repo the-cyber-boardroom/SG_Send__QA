@@ -6,7 +6,7 @@ auto_generated: true
 
 # Friendly Token
 
-> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.40
+> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.44
 
 UC-03: Friendly Token — Simple Token share mode (P0).
 
@@ -45,7 +45,7 @@ URL after decrypt: http://localhost:10062/en-gb/browse/#terra-chain-5022
 
 ### 05 Token Captured
 
-Token: oak-lily-9350
+Token: zenith-lake-5233
 
 ![05 Token Captured](screenshots/05_token_captured.png)
 
@@ -58,7 +58,7 @@ Token: oak-lily-9350
 
 ### 06 Token Resolved
 
-Token 'oak-lily-9350' resolved
+Token 'zenith-lake-5233' resolved
 
 ![06 Token Resolved](screenshots/06_token_resolved.png)
 
@@ -71,7 +71,7 @@ Token 'oak-lily-9350' resolved
 
 ### 05 Token Resolved
 
-Token 'mercy-medal-3424'
+Token 'agate-scroll-2994'
 
 ![05 Token Resolved](screenshots/05_token_resolved.png)
 
@@ -123,7 +123,7 @@ Upload complete
 
 ### 05 Hash After Decrypt
 
-URL after decrypt: http://localhost:53490//en-gb/browse/#terra-haven-4216
+URL after decrypt: http://localhost:27030//en-gb/browse/#clay-flora-1327
 
 ![05 Hash After Decrypt](screenshots/05_hash_after_decrypt.png)
 
