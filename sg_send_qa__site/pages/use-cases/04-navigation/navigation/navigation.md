@@ -6,7 +6,7 @@ auto_generated: true
 
 # Navigation
 
-> Test source at commit [`17d0c5af`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/17d0c5af) · v0.2.44
+> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
 
 UC-11: Route handling + mode switching (P1).
 
@@ -45,11 +45,25 @@ Gallery route loaded
 
 ![01 Gallery Route](screenshots/01_gallery_route.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![01 Gallery Route — masked](screenshots/01_gallery_route__deterministic.png)
+
+</details>
+
 ### 02 Browse Route
 
 Browse route loaded
 
 ![02 Browse Route](screenshots/02_browse_route.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![02 Browse Route — masked](screenshots/02_browse_route__deterministic.png)
+
+</details>
 
 ### 03 View Route
 
@@ -57,11 +71,25 @@ View route loaded
 
 ![03 View Route](screenshots/03_view_route.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![03 View Route — masked](screenshots/03_view_route__deterministic.png)
+
+</details>
+
 ### 04 Short V Route
 
 Short /v/ route loaded
 
 ![04 Short V Route](screenshots/04_short_v_route.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![04 Short V Route — masked](screenshots/04_short_v_route__deterministic.png)
+
+</details>
 
 ### 05 Download Auto
 
@@ -69,11 +97,25 @@ Download route auto-detect
 
 ![05 Download Auto](screenshots/05_download_auto.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![05 Download Auto — masked](screenshots/05_download_auto__deterministic.png)
+
+</details>
+
 ### 06 Gallery To Browse
 
 Gallery → browse
 
 ![06 Gallery To Browse](screenshots/06_gallery_to_browse.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![06 Gallery To Browse — masked](screenshots/06_gallery_to_browse__deterministic.png)
+
+</details>
 
 ### 07 Browse To Gallery
 
@@ -81,11 +123,25 @@ Browse → gallery
 
 ![07 Browse To Gallery](screenshots/07_browse_to_gallery.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![07 Browse To Gallery — masked](screenshots/07_browse_to_gallery__deterministic.png)
+
+</details>
+
 ### 08 Copy Link
 
 Copy Link button clicked
 
 ![08 Copy Link](screenshots/08_copy_link.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![08 Copy Link — masked](screenshots/08_copy_link__deterministic.png)
+
+</details>
 
 ---
 
@@ -134,13 +190,17 @@ def _make_zip():
 def _open_route(page, url: str) -> None:
     """Navigate to a download/gallery/browse route and wait for it to settle.
 
-    Uses networkidle (consistent with browse/gallery/viewer tests that pass in CI).
+    CR-001: Uses body[data-ready] (set by SG/Send bootstrap) instead of
+    networkidle — networkidle never resolves on routes with background API calls
+    (e.g. checkToken). After the ready signal, wait_for_timeout(1500) lets JS
+    render shadow DOM content before screenshot/assertion.
+
     SG/Send renders all visible content in shadow DOM, so body.textContent is
     always empty — do NOT use expect(body).not_to_be_empty() here.
     """
-    page.goto(url)
-    page.wait_for_load_state("networkidle")
-    page.wait_for_timeout(2000)
+    page.goto(url, wait_until="commit")
+    page.wait_for_selector("body[data-ready]", timeout=10_000)
+    page.wait_for_timeout(1_500)
 
 
 class TestRouteHandling:
@@ -206,8 +266,8 @@ class TestRouteHandling:
         ).first
         if browse_link.is_visible(timeout=5000):
             browse_link.click()
-            page.wait_for_load_state("networkidle")
-            page.wait_for_timeout(1000)
+            page.wait_for_selector("body[data-ready]", timeout=10_000)
+            page.wait_for_timeout(800)
             screenshots.capture(page, "06_gallery_to_browse", "Gallery → browse")
 
             current_url = page.url
@@ -225,8 +285,8 @@ class TestRouteHandling:
         ).first
         if gallery_link.is_visible(timeout=5000):
             gallery_link.click()
-            page.wait_for_load_state("networkidle")
-            page.wait_for_timeout(1000)
+            page.wait_for_selector("body[data-ready]", timeout=10_000)
+            page.wait_for_timeout(800)
             screenshots.capture(page, "07_browse_to_gallery", "Browse → gallery")
 
             current_url = page.url

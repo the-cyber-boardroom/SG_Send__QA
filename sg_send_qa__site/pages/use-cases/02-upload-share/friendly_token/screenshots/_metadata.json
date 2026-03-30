@@ -93,19 +93,19 @@
     {
       "name": "05_token_captured",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
-      "description": "Token: zenith-lake-5233",
+      "description": "Token: mirth-oak-8676",
       "has_masks": true
     },
     {
       "name": "06_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
-      "description": "Token 'zenith-lake-5233' resolved",
+      "description": "Token 'mirth-oak-8676' resolved",
       "has_masks": true
     },
     {
       "name": "05_token_resolved",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
-      "description": "Token 'agate-scroll-2994'",
+      "description": "Token 'chess-pixel-9042'",
       "has_masks": true
     },
     {
@@ -129,7 +129,7 @@
     {
       "name": "05_hash_after_decrypt",
       "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
-      "description": "URL after decrypt: http://localhost:27030//en-gb/browse/#clay-flora-1327",
+      "description": "URL after decrypt: http://localhost:50295//en-gb/browse/#light-oasis-3164",
       "has_masks": true
     }
   ]

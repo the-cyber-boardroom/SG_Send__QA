@@ -6,7 +6,7 @@ auto_generated: true
 
 # Pdf Present
 
-> Test source at commit [`807336ab`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/807336ab) · v0.2.44
+> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
 
 UC-06 (P2): PDF lightbox — Present mode and 'f' fullscreen shortcut.
 
@@ -95,6 +95,12 @@ Test flow:
 
 These tests are P2 — they verify progressive-enhancement behaviour and do not
 block deployment if failing.
+
+v0.3.1 notes:
+  - Gallery view is NOT patched in v0.3.1 — these tests run against the
+    unchanged v0.3.0 gallery view and should continue to pass unmodified.
+  - BRW-002 adds a Present button to the BROWSE view (not gallery).
+    That is tested separately in tests/qa/v031/p2__browse/test__browse_v031.py.
 """
 
 import pytest
