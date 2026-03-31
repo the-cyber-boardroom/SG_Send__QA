@@ -14,7 +14,7 @@ import json
 from pathlib import Path
 from osbot_utils.base_classes.Kwargs_To_Self import Kwargs_To_Self as Type_Safe
 
-
+# todo: separaete to individual classes
 class QA_Config__Target(Type_Safe):
     """One test target (local or production)."""
     user_url  : str = ""
@@ -41,6 +41,7 @@ class QA_Config__Docs(Type_Safe):
     template         : str = "default"
 
 
+# todo: refactor logic to leverage Type_Safe and make this code simpler
 class QA_Config(Type_Safe):
     """Loaded test configuration.
 

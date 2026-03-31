@@ -18,7 +18,8 @@ from osbot_utils.type_safe.Type_Safe        import Type_Safe
 from sg_send_qa.api.Fast_API__QA__Server    import Fast_API__QA__Server
 from sg_send_qa.api.QA_API__Runner          import QA_API__Runner
 
-
+# todo: add tests that use this classes
+#       since at the moment there doesn't seem to be any
 class Fast_API__Test_Objs__QA(Type_Safe):
     fast_api        : Fast_API__QA__Server = None
     fast_api__app   : FastAPI              = None

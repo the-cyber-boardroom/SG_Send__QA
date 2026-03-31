@@ -19,7 +19,7 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
-from osbot_utils.base_classes.Kwargs_To_Self import Kwargs_To_Self as Type_Safe
+from osbot_utils.base_classes.Kwargs_To_Self import Kwargs_To_Self as Type_Safe # todo: we should be using Type_Safe here
 
 GITHUB_REPO = "https://github.com/the-cyber-boardroom/SG_Send__QA"
 
@@ -42,12 +42,12 @@ def _is_auto_generated(md_path: Path) -> bool:
 
 class QA_Generate_Docs(Type_Safe):
     site_dir      : str = "sg_send_qa__site"
-    tests_dir     : str = "tests/qa/v030"
+    tests_dir     : str = "tests/qa/v030"           # todo: we need to take into account that we have more folders now (like v031)
 
     # -------------------------------------------------------------- properties
 
     @property
-    def use_cases_dir(self) -> Path:
+    def use_cases_dir(self) -> Path:                            # replace with Type_Safe Path classes
         return Path(self.site_dir) / "pages" / "use-cases"
 
     @property
@@ -63,7 +63,7 @@ class QA_Generate_Docs(Type_Safe):
     def title_from_name(self, name: str) -> str:
         return name.replace("_", " ").title()
 
-    def read_metadata(self, use_case_dir: Path) -> dict | None:
+    def read_metadata(self, use_case_dir: Path) -> dict | None:     # todo: fix comments location (should not be written as docstings
         """Read _metadata.json from the screenshots subdirectory, if present."""
         meta_path = use_case_dir / "screenshots" / "_metadata.json"
         if meta_path.exists():
@@ -101,6 +101,7 @@ class QA_Generate_Docs(Type_Safe):
             rel = path
         return f"{GITHUB_REPO}/blob/dev/{rel}"
 
+    # todo: the why we do this needs a rething, and we should try to use OSbot_Git
     def _provenance_line(self, test_file: Path | None = None) -> str:
         """Return a stable provenance blockquote for a generated page.
 
@@ -132,7 +133,7 @@ class QA_Generate_Docs(Type_Safe):
         return f"> Test source at commit [`{sha}`]({GITHUB_REPO}/commit/{sha}) · {version}\n\n"
 
     # --------------------------------------------------------------- scaffold
-
+    # todo: reimplement this using Type_Safe classes and schemas (where the template and format is provided by the schema)
     def scaffold_page(self, use_case_dir: Path, name: str, metadata: dict | None,
                       group_name: str = "") -> str:
         """Generate a starter markdown page for a new use case."""

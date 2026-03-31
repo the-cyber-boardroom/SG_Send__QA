@@ -13,7 +13,8 @@ in sg_send_qa/models/__init__.py and remove the alias.
 
 from osbot_utils.base_classes.Kwargs_To_Self import Kwargs_To_Self as Type_Safe
 
-
+# todo: refactor out each class into a separate file
+#       convert str into Type_Safe classes
 class QA_Screenshot(Type_Safe):
     """One captured screenshot: name, filesystem path, human description."""
     name        : str

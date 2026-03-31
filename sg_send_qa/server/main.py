@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pathlib            import Path
 from sg_send_qa.utils.Version import version__sg_send__qa
 
+# todo: refactor this into Fast_API__Serverless class
 app = FastAPI(title="SG/Send QA Test Runner", version=version__sg_send__qa)
 
 repo_root = Path(__file__).parent.parent.parent

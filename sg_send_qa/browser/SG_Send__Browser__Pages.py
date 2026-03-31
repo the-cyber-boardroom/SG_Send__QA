@@ -23,7 +23,7 @@ from sg_send_qa.browser.Schema__Viewer_Page                                     
 DEFAULT__TARGET_SERVER__LOCALHOST = Safe_Str__Url__Server('http://localhost')
 DEFAULT__I18N__LANGUAGE_LOCATION = 'en-gb'
 
-
+# this class needs to be split into smaller classes (specially the code specific to a particular page or flow)
 class SG_Send__Browser__Pages(Type_Safe):
     headless      : bool                     = True
     target_port   : Safe_UInt__Port          = 0        # todo: see why we are getting an  "ValueError: Safe_UInt__Port does not allow None values" (even when this value is set on the ctor call)
@@ -407,6 +407,7 @@ class SG_Send__Browser__Pages(Type_Safe):
             is_gate_visible = self.is_access_gate_visible()                               ,
         )
 
+    # todo: this logic should not be here (i.e. inside this generic SG_Send__Browser__Pages class)
     def extract__download_page(self) -> Schema__Download_Page:                      # snapshot download/decrypt state
         return Schema__Download_Page(
             state                = self.download_state()                          or '',
