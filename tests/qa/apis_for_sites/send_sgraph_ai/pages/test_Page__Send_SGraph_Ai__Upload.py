@@ -38,6 +38,9 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
     def setUpClass(cls):
         cls.upload_page = Page__Send_SGraph_Ai__Upload()
 
+    # @classmethod
+    # def tearDownClass(cls):
+    #     cls.upload_page.harness.teardown()          # todo: ok so this is why we where getting those errors
 
     def test_current_logic(self):
         with self.upload_page as _:
@@ -47,44 +50,6 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
         with self.upload_page as _:
             _.debug_setup_chrome()
 
-    # todo: interesting, when I run the test in the 2nd test method
-    #       I get this error (on the 2nd method)
-    #     def test_debug_setup_chrome(self):
-#         with self.upload_page as _:
-# >           _.debug_setup_chrome()
-#
-# modules/SG_Send__QA/tests/qa/apis_for_sites/send_sgraph_ai/pages/test_Page__Send_SGraph_Ai__Upload.py:48:
-# _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-# modules/SG_Send__QA/sg_send_qa/apis_for_sites/send_sgraph_ai/pages/Page__Send_SGraph_Ai__Upload.py:54: in debug_setup_chrome
-#     self.harness.headless(False).setup()
-# modules/SG_Send__QA/sg_send_qa/browser/SG_Send__Browser__Test_Harness.py:54: in setup
-#     self._start_ui_server(saved_state)
-# modules/SG_Send__QA/sg_send_qa/browser/SG_Send__Browser__Test_Harness.py:168: in _start_ui_server
-#     self.ui_server.__enter__()
-# ../../../Library/Caches/pypoetry/virtualenvs/sgraph-ai-app-send-wR0WO4Cj-py3.12/lib/python3.12/site-packages/osbot_utils/testing/Temp_Web_Server.py:24: in __enter__
-#     self.start()
-# ../../../Library/Caches/pypoetry/virtualenvs/sgraph-ai-app-send-wR0WO4Cj-py3.12/lib/python3.12/site-packages/osbot_utils/testing/Temp_Web_Server.py:74: in start
-#     self.server        = ThreadingHTTPServer((self.host, self.port), handler_config)
-#                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-# /opt/homebrew/Cellar/python@3.12/3.12.8/Frameworks/Python.framework/Versions/3.12/lib/python3.12/socketserver.py:457: in __init__
-#     self.server_bind()
-# /opt/homebrew/Cellar/python@3.12/3.12.8/Frameworks/Python.framework/Versions/3.12/lib/python3.12/http/server.py:136: in server_bind
-#     socketserver.TCPServer.server_bind(self)
-# _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-#
-# self = <http.server.ThreadingHTTPServer object at 0x1090d8d10>
-#
-#     def server_bind(self):
-#         """Called by constructor to bind the socket.
-#
-#         May be overridden.
-#
-#         """
-#         if self.allow_reuse_address and hasattr(socket, "SO_REUSEADDR"):
-#             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-#         if self.allow_reuse_port and hasattr(socket, "SO_REUSEPORT"):
-#             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-# >       self.socket.bind(self.server_address)
-# E       OSError: [Errno 48] Address already in use
-
-
+    def test_debug_inner_calls_of_setup(self):
+        with self.upload_page as _:
+            _.debug_inner_calls_of_setup()
