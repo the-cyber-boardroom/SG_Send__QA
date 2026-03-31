@@ -53,7 +53,7 @@ class test_Friendly_Token(TestCase):        # Validate the Simple Token (friendl
     def _upload_with_simple_token(self, shots, filename="token-test.txt"):
         """Upload a file with Simple Token mode and return the friendly token string."""
         self.sg_send.page__root()
-        self.sg_send.upload__set_file(filename, SAMPLE_CONTENT.encode())
+        self.sg_send.upload__set_file(filename, SAMPLE_CONTENT.encode())        # todo: example of a perforamnce hit that we are having every time we execute this (since these type of test files should be created once per test suite execution, since there are lots of tests that will need it)
         # todo: util class like this should not take screenshots, since the point here is to return a valid simple token
         #       since we want to capture the simple token screenshot, we should capture it on the test that checks that
         shots.capture(self.sg_send.raw_page(), "01_file_selected", "File selected (delivery step active)")          # todo: note how we keep calling "shots.capture(self.sg_send.raw_page()," all the time, this is a good example of code that needs to be refactored since it costs in context reading (for human and LLM)
