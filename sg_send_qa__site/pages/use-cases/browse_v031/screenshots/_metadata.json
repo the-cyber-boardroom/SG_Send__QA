@@ -14,10 +14,7 @@
     {
       "method": "test_brw002_pdf_present_button_in_browse",
       "doc": "BRW-002: PDF files in browse view show a Present button in the action bar.",
-      "screenshots": [
-        "brw002_01_pdf_open",
-        "brw002_02_md_no_present"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw003_auto_opens_first_alphabetical_file",
@@ -29,25 +26,17 @@
     {
       "method": "test_brw004_markdown_relative_links_open_as_tabs",
       "doc": "BRW-004/BRW-008: Clicking a relative link in markdown opens the target file as a tab.",
-      "screenshots": [
-        "brw004_01_notes_open",
-        "brw004_02_link_clicked"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw005_markdown_images_render_inline",
       "doc": "BRW-005/BRW-007: Images referenced in markdown render as <img> tags with blob URLs.",
-      "screenshots": [
-        "brw005_01_notes_with_image"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw006_markdown_source_toggle",
       "doc": "BRW-006: Markdown files show a Source toggle button that switches to raw text.",
-      "screenshots": [
-        "brw006_01_rendered_view",
-        "brw006_02_source_view"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw009_save_locally_downloads_valid_zip",
@@ -60,40 +49,27 @@
     {
       "method": "test_brw010_markdown_link_color",
       "doc": "BRW-010: Links in rendered markdown are blue (#0969da), readable on white.",
-      "screenshots": [
-        "brw010_01_links"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw011_url_encoded_paths_resolve",
       "doc": "BRW-011: Links using %20 encoding resolve to files with spaces in their names.",
-      "screenshots": [
-        "brw011_01_notes_with_encoded_link",
-        "brw011_02_after_click"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw012_csv_renders_as_table",
       "doc": "BRW-012: CSV files render as a styled table, not plain text.",
-      "screenshots": [
-        "brw012_01_csv_rendered",
-        "brw012_02_csv_source"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw013_html_renders_in_sandboxed_iframe",
       "doc": "BRW-013: HTML files render in a sandboxed iframe (allow-scripts, no allow-same-origin).",
-      "screenshots": [
-        "brw013_01_html_rendered"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw014_folder_links_expand_tree",
       "doc": "BRW-014: Clicking a folder link in markdown expands the folder in the sidebar.",
-      "screenshots": [
-        "brw014_01_notes_open",
-        "brw014_02_after_folder_link"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw015_tab_bar_scrollable_with_many_tabs",
@@ -105,12 +81,6 @@
   ],
   "screenshots": [
     {
-      "name": "brw001_01_tree",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw001_01_tree.png",
-      "description": "Folder tree loaded",
-      "has_masks": true
-    },
-    {
       "name": "brw002_01_pdf_open",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw002_01_pdf_open.png",
       "description": "PDF opened in browse view",
@@ -120,12 +90,6 @@
       "name": "brw002_02_md_no_present",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw002_02_md_no_present.png",
       "description": "Markdown \u2014 no Present button",
-      "has_masks": true
-    },
-    {
-      "name": "brw003_01_initial_load",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw003_01_initial_load.png",
-      "description": "Browse view on first load",
       "has_masks": true
     },
     {
@@ -156,18 +120,6 @@
       "name": "brw006_02_source_view",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw006_02_source_view.png",
       "description": "After toggle \u2014 button: '\u270e Rendered'",
-      "has_masks": true
-    },
-    {
-      "name": "brw009_01_before_save",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw009_01_before_save.png",
-      "description": "Browse view before Save locally",
-      "has_masks": true
-    },
-    {
-      "name": "brw009_02_download_triggered",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw009_02_download_triggered.png",
-      "description": "Download triggered",
       "has_masks": true
     },
     {
@@ -216,6 +168,30 @@
       "name": "brw014_02_after_folder_link",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw014_02_after_folder_link.png",
       "description": "After clicking folder link",
+      "has_masks": true
+    },
+    {
+      "name": "brw001_01_tree",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw001_01_tree.png",
+      "description": "Folder tree loaded",
+      "has_masks": true
+    },
+    {
+      "name": "brw003_01_initial_load",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw003_01_initial_load.png",
+      "description": "Browse view on first load",
+      "has_masks": true
+    },
+    {
+      "name": "brw009_01_before_save",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw009_01_before_save.png",
+      "description": "Browse view before Save locally",
+      "has_masks": true
+    },
+    {
+      "name": "brw009_02_download_triggered",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw009_02_download_triggered.png",
+      "description": "Download triggered",
       "has_masks": true
     },
     {

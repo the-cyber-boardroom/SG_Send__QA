@@ -1,0 +1,35 @@
+{
+  "use_case": "bug__download_sgmeta_old_format_not_stripped",
+  "module": "test__bug__download_sgmeta_old_format_not_stripped",
+  "module_doc": "BUG: Download page does not strip old-format SGMETA envelope.\n\nObserved at: dev.send.sgraph.ai/en-gb/download/#help-aunt-2780 (31 March 2026)\nFixed in: v0.20.29 (commit a28e8206 \u2014 \"handle old SGMETA wire format\")\n\nRoot cause:\n  Two SGMETA wire formats exist in the wild:\n\n    New (v0.3.0+): SGMETA[6] + length[4 big-endian] + JSON[length] + content\n    Old (v0.1.x):  SGMETA[6] + \u0000 + JSON[scan to }] + content\n\n  The download page's _extractMetadata only handled the new format. Transfers\n  uploaded with the old format (vault snapshots, older send-upload.js) had their\n  SGMETA envelope NOT stripped \u2014 the user received the raw payload including the\n  SGMETA header, making it a corrupt file.\n\n  The vault-snapshot.zip transfer at #help-aunt-2780 was uploaded with old\n  send-upload.js and therefore used the old wire format. When downloaded via\n  /en-gb/download/, the file started with:\n      SGMETA\u0000{\"filename\": \"vault-snapshot.zip\"}PK...\n  instead of:\n      PK...\n\nFix (a28e8206):\n  Detect the null-byte discriminator (bytes[6] === 0x00) to identify old-format\n  payloads, then brace-count to find the end of the JSON metadata before content.\n\nBug test pattern:\n  PASSES while the bug exists (old-format download starts with SGMETA).\n  FAILS when fixed (download is clean, starts with file content) \u2192 delete this\n  file and add a positive assertion to the main download test suite.\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_p0_bug_old_format_download_starts_with_sgmeta",
+      "doc": "BUG: Old-format transfer download starts with SGMETA (envelope not stripped).\n\n        PASSES while the bug exists (SGMETA present in download).\n        FAILS when fixed (SGMETA stripped, clean content delivered) \u2192 delete this file.\n        ",
+      "screenshots": [
+        "old_sgmeta_bug_01_page",
+        "old_sgmeta_bug_02_content"
+      ]
+    },
+    {
+      "method": "test_p0_bug_old_format_content_not_clean",
+      "doc": "BUG: Old-format download does not deliver clean file content.\n\n        PASSES while the bug exists (content not equal to original plaintext).\n        FAILS when fixed (content IS the original plaintext) \u2192 delete this file.\n        ",
+      "screenshots": []
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "old_sgmeta_bug_01_page",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__download_sgmeta_old_format_not_stripped/screenshots/old_sgmeta_bug_01_page.png",
+      "description": "Download page \u2014 old-format transfer",
+      "has_masks": true
+    },
+    {
+      "name": "old_sgmeta_bug_02_content",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__download_sgmeta_old_format_not_stripped/screenshots/old_sgmeta_bug_02_content.png",
+      "description": "Downloaded: starts_with_SGMETA=False, first_bytes=b'QA regression te'",
+      "has_masks": true
+    }
+  ]
+}

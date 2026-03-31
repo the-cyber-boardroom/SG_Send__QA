@@ -1,0 +1,46 @@
+{
+  "use_case": "bug__download_sgmeta_not_stripped",
+  "module": "test__bug__download_sgmeta_not_stripped",
+  "module_doc": "BUG: Download page serves SGMETA envelope bytes in the downloaded file.\n\nObserved at: /en-gb/download/#<friendly-token>\n\nSymptom (confirmed by QA, 31 March 2026):\n  The download page decrypts the transfer correctly, but the file handed to\n  the browser contains the raw SGMETA envelope prepended to the file content:\n\n      SGMETA{\"filename\": \"vault-snapshot.zip\"}PK...\n\n  The user receives a corrupt file that is the SGMETA-wrapped payload, not\n  the original file.\n\nRoot cause (suspected):\n  The download page's decrypt path calls something like:\n      blob = new Blob([decryptedBuffer]);\n  rather than:\n      blob = new Blob([stripSGMETA(decryptedBuffer)]);\n\n  The SGMETA format is:\n      magic(6 bytes: 0x53 0x47 0x4D 0x45 0x54 0x41)\n    + length(4 bytes big-endian: byte count of JSON metadata)\n    + metadata(JSON: {\"filename\": \"...\"})\n    + file_content\n\n  The download page must parse and discard the header before creating the Blob.\n\nFix needed in: send-download.js or the download page's decrypt callback.\n  After decryption, parse the SGMETA header and use only the content slice.\n\nThis test PASSES while the bug exists (download starts with SGMETA magic).\nWhen fixed, the download will NOT start with SGMETA \u2192 this test FAILS \u2192\ndelete this file and add a proper positive assertion to the download test suite.\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_p0_bug_original_content_buried_after_sgmeta",
+      "doc": "BUG: The actual file content is present but buried after the SGMETA header.\n\n        The content is not lost \u2014 it's just wrapped. Confirms the bug is purely\n        a failure to strip the envelope, not a decryption error.\n\n        PASSES while the bug exists.\n        FAILS when fixed \u2192 delete this file.\n        ",
+      "screenshots": []
+    },
+    {
+      "method": "test_p0_bug_download_starts_with_sgmeta",
+      "doc": "BUG: Downloaded zip starts with SGMETA magic bytes (envelope not stripped).\n\n        PASSES while the bug exists (content starts with SGMETA, not PK).\n        FAILS when fixed (content starts with PK \u2014 valid zip) \u2192 delete this file.\n\n        Note: as of 31 March 2026, local test server has this fixed. This test\n        reproduces the bug observed on dev.send.sgraph.ai.\n        ",
+      "screenshots": [
+        "dl_bug_01_page_state",
+        "dl_bug_02_downloaded"
+      ]
+    },
+    {
+      "method": "test_p0_bug_download_is_not_valid_zip",
+      "doc": "BUG: Downloaded zip is not a valid zip (first bytes are SGMETA, not PK).\n\n        A valid zip starts with PK (0x50 0x4B). When the SGMETA envelope is NOT\n        stripped, the file starts with SGMETA instead \u2014 making it an invalid zip.\n\n        PASSES while bug exists (not a valid zip).\n        FAILS when fixed (valid zip starts with PK) \u2192 delete this file.\n        ",
+      "screenshots": []
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "dl_bug_01_page",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__download_sgmeta_not_stripped/screenshots/dl_bug_01_page.png",
+      "description": "Download page after decrypt",
+      "has_masks": true
+    },
+    {
+      "name": "dl_bug_01_page_state",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__download_sgmeta_not_stripped/screenshots/dl_bug_01_page_state.png",
+      "description": "Download page after decrypt",
+      "has_masks": true
+    },
+    {
+      "name": "dl_bug_02_downloaded",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__download_sgmeta_not_stripped/screenshots/dl_bug_02_downloaded.png",
+      "description": "Downloaded: 'vault-snapshot.zip' \u2014 starts_with_SGMETA=False first_bytes=b'PK\\x03\\x04\\x14\\x00'",
+      "has_masks": true
+    }
+  ]
+}
