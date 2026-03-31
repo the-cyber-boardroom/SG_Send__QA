@@ -14,44 +14,32 @@
     {
       "method": "test_brw016_print_button_present_for_markdown",
       "doc": "BRW-016: Markdown files have a .sb-file__print button in the action bar.",
-      "screenshots": [
-        "brw016_01_action_bar"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw016_print_button_absent_for_csv",
       "doc": "BRW-016: Non-markdown files (CSV) do NOT have a Print button.",
-      "screenshots": [
-        "brw016_02_csv_no_print"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw017_locate_button_present_on_markdown",
       "doc": "BRW-017: Markdown files have a .sb-file__reveal (Locate) button.",
-      "screenshots": [
-        "brw017_01_locate_btn"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw017_locate_button_present_on_csv",
       "doc": "BRW-017: CSV files also have a Locate button (all file types).",
-      "screenshots": [
-        "brw017_02_csv_locate"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw017_locate_highlights_file_in_tree",
       "doc": "BRW-017: Clicking Locate adds .sb-tree__file--active to the correct tree item.",
-      "screenshots": [
-        "brw017_03_after_locate"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw018_image_pixel_width",
       "doc": "BRW-018: ![alt|400](img.png) renders with width:400px style.",
-      "screenshots": [
-        "brw018_01_images"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw018_image_percentage_width",
@@ -66,38 +54,27 @@
     {
       "method": "test_brw020_images_use_data_md_src",
       "doc": "BRW-020: <img> tags in rendered markdown have data-md-src, not raw src.",
-      "screenshots": [
-        "brw020_01_images"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw021_backtick_code_span_not_parsed_as_image",
       "doc": "BRW-021: `![alt](url)` inside backticks renders as inline code, not <img>.",
-      "screenshots": [
-        "brw021_01_backtick"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw022_present_button_opens_overlay",
       "doc": "BRW-022: .sb-file__present-md button opens fullscreen .sb-present-overlay.",
-      "screenshots": [
-        "brw022_01_before_present",
-        "brw022_02_overlay_open"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw022_present_overlay_dismissed_by_close_button",
       "doc": "BRW-022: Clicking \u2715 Exit button dismisses the Present overlay.",
-      "screenshots": [
-        "brw022_03_overlay_dismissed"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw022_present_overlay_dismissed_by_escape",
       "doc": "BRW-022: Pressing ESC dismisses the Present overlay.",
-      "screenshots": [
-        "brw022_04_overlay_esc"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_brw023_selection_colour_css_rule_present",
@@ -112,10 +89,7 @@
     {
       "method": "test_brw025_present_overlay_links_navigate",
       "doc": "BRW-025: Clicking a link inside the Present overlay opens the target file.",
-      "screenshots": [
-        "brw025_01_overlay_with_links",
-        "brw025_02_after_link_click"
-      ]
+      "screenshots": []
     }
   ],
   "screenshots": [

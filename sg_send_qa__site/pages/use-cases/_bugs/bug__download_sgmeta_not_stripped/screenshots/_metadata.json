@@ -5,16 +5,21 @@
   "test_target": "qa_server",
   "tests": [
     {
+      "method": "test_p0_bug_original_content_buried_after_sgmeta",
+      "doc": "BUG: The actual file content is present but buried after the SGMETA header.\n\n        The content is not lost \u2014 it's just wrapped. Confirms the bug is purely\n        a failure to strip the envelope, not a decryption error.\n\n        PASSES while the bug exists.\n        FAILS when fixed \u2192 delete this file.\n        ",
+      "screenshots": []
+    },
+    {
       "method": "test_p0_bug_download_starts_with_sgmeta",
-      "doc": "BUG: Downloaded file starts with SGMETA magic bytes (envelope not stripped).\n\n        PASSES while the bug exists.\n        FAILS when fixed \u2192 delete this file.\n        ",
+      "doc": "BUG: Downloaded zip starts with SGMETA magic bytes (envelope not stripped).\n\n        PASSES while the bug exists (content starts with SGMETA, not PK).\n        FAILS when fixed (content starts with PK \u2014 valid zip) \u2192 delete this file.\n\n        Note: as of 31 March 2026, local test server has this fixed. This test\n        reproduces the bug observed on dev.send.sgraph.ai.\n        ",
       "screenshots": [
-        "dl_bug_01_page",
+        "dl_bug_01_page_state",
         "dl_bug_02_downloaded"
       ]
     },
     {
-      "method": "test_p0_bug_original_content_buried_after_sgmeta",
-      "doc": "BUG: The actual file content is present but buried after the SGMETA header.\n\n        The content is not lost \u2014 it's just wrapped. Confirms the bug is purely\n        a failure to strip the envelope, not a decryption error.\n\n        PASSES while the bug exists.\n        FAILS when fixed \u2192 delete this file.\n        ",
+      "method": "test_p0_bug_download_is_not_valid_zip",
+      "doc": "BUG: Downloaded zip is not a valid zip (first bytes are SGMETA, not PK).\n\n        A valid zip starts with PK (0x50 0x4B). When the SGMETA envelope is NOT\n        stripped, the file starts with SGMETA instead \u2014 making it an invalid zip.\n\n        PASSES while bug exists (not a valid zip).\n        FAILS when fixed (valid zip starts with PK) \u2192 delete this file.\n        ",
       "screenshots": []
     }
   ],
@@ -26,9 +31,15 @@
       "has_masks": true
     },
     {
+      "name": "dl_bug_01_page_state",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__download_sgmeta_not_stripped/screenshots/dl_bug_01_page_state.png",
+      "description": "Download page after decrypt",
+      "has_masks": true
+    },
+    {
       "name": "dl_bug_02_downloaded",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__download_sgmeta_not_stripped/screenshots/dl_bug_02_downloaded.png",
-      "description": "Downloaded: 'sgmeta-bug-test.txt'",
+      "description": "Downloaded: 'vault-snapshot.zip' \u2014 starts_with_SGMETA=False first_bytes=b'PK\\x03\\x04\\x14\\x00'",
       "has_masks": true
     }
   ]

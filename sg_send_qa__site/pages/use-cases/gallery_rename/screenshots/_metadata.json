@@ -37,7 +37,7 @@
       "name": "02_gallery_loaded",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/gallery_rename/screenshots/02_gallery_loaded.png",
       "description": "Gallery view after v0.3.1 upload",
-      "has_masks": false
+      "has_masks": true
     },
     {
       "name": "03_browse_loaded",

@@ -22,23 +22,18 @@
       "method": "test_entry_form_resolves_transfer",
       "doc": "ENT-003: Entering tid/key into the entry form opens the browse view.",
       "screenshots": [
-        "ent003_01_token_entered",
-        "ent003_02_browse_loaded"
+        "ent003_01_token_entered"
       ]
     },
     {
       "method": "test_entry_form_plr_autoopen",
       "doc": "ENT-004: Entry form with a zip containing _page.json \u2192 PLR auto-opens.",
-      "screenshots": [
-        "ent004_01_plr_autoopen"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_direct_hash_skips_entry_form",
       "doc": "ENT-005: Navigating with #tid/key already in URL skips the entry form.",
-      "screenshots": [
-        "ent005_01_direct_load"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_bogus_token_shows_error",
@@ -49,24 +44,6 @@
     }
   ],
   "screenshots": [
-    {
-      "name": "ent001_01_entry_form",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent001_01_entry_form.png",
-      "description": "Entry form \u2014 no hash",
-      "has_masks": false
-    },
-    {
-      "name": "ent002_01_form_text",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent002_01_form_text.png",
-      "description": "Entry form text content",
-      "has_masks": false
-    },
-    {
-      "name": "ent003_01_token_entered",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent003_01_token_entered.png",
-      "description": "Token entered \u2014 waiting for browse",
-      "has_masks": true
-    },
     {
       "name": "ent003_02_browse_loaded",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent003_02_browse_loaded.png",
@@ -83,6 +60,24 @@
       "name": "ent005_01_direct_load",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent005_01_direct_load.png",
       "description": "Direct hash nav \u2014 entry form absent",
+      "has_masks": true
+    },
+    {
+      "name": "ent001_01_entry_form",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent001_01_entry_form.png",
+      "description": "Entry form \u2014 no hash",
+      "has_masks": false
+    },
+    {
+      "name": "ent002_01_form_text",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent002_01_form_text.png",
+      "description": "Entry form text content",
+      "has_masks": false
+    },
+    {
+      "name": "ent003_01_token_entered",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent003_01_token_entered.png",
+      "description": "Token entered \u2014 waiting for browse",
       "has_masks": true
     },
     {
