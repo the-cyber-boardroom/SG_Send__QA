@@ -32,7 +32,10 @@ from sg_send_qa.utils.QA_Screenshot import cdp_screenshot
 _REPO_ROOT      = Path(__file__).parent.parent.parent
 _DEFAULT_BASE   = str(_REPO_ROOT / "sg_send_qa__site" / "pages" / "use-cases")
 
-
+# todo: refactor to Type_Safe class (name should be Screenshot_Capture)
+#       add headless detection (which should not take screenshot)
+#       ideally this class should also be the one doing this diffs
+#       note: the class name should always match the filename , so in this case this class should had been called QA_Screenshot_Capture (which is already a better name than ScreenshotCapture)
 class ScreenshotCapture:
     """Captures screenshots for one test method and persists metadata.
 
@@ -40,7 +43,7 @@ class ScreenshotCapture:
     Multiple test methods in the same module accumulate into one
     _metadata.json (with deduplication on re-run).
     """
-
+    # todo: leverage Type_Safe so that we don't need any of this
     def __init__(self, use_case: str, module_name: str, module_doc: str,
                  method_name: str, shots_dir: Path, test_target: str = "qa_server",
                  method_doc: str = ""):
@@ -52,7 +55,7 @@ class ScreenshotCapture:
         self.shots_dir   = shots_dir
         self.test_target = test_target
         self._captured: list = []
-
+        # todo: __init__ classes should not do anything that changes state (i.e. actions like the one below)
         shots_dir.mkdir(parents=True, exist_ok=True)
 
     @classmethod
