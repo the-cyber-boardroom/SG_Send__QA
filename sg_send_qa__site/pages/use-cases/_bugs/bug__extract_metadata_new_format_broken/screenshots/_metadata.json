@@ -30,13 +30,13 @@
     {
       "name": "new_fmt_bug_02_diag",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__extract_metadata_new_format_broken/screenshots/new_fmt_bug_02_diag.png",
-      "description": "state='complete' zipTree=0",
+      "description": "state='complete' zipTree=1",
       "has_masks": true
     },
     {
       "name": "new_fmt_bug_03_tree",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__extract_metadata_new_format_broken/screenshots/new_fmt_bug_03_tree.png",
-      "description": "Tree items: []",
+      "description": "Tree items: ['notes.md']",
       "has_masks": true
     }
   ]

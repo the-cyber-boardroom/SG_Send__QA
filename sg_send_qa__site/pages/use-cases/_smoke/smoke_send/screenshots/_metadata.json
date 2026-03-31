@@ -1,0 +1,153 @@
+{
+  "use_case": "smoke_send",
+  "module": "test__smoke_send",
+  "module_doc": "Smoke tests for SG/Send live environments (dev / main / prod).\n\nRuns a core health-check against the configured target environment.\nSplit into two classes:\n\n  SmokeNoAuth   \u2014 navigation-only, no upload credentials required.\n                  Always run. Catches deploy failures, UI regressions,\n                  JS errors, and structural changes immediately.\n\n  SmokeUpload   \u2014 full round-trip: upload \u2192 browse \u2192 verify.\n                  Requires SG_SEND_ACCESS_TOKEN (or --access-token).\n                  Catches crypto/SGMETA regressions, browse rendering\n                  failures, and PLR issues against the live environment.\n\nRun against dev (default):\n    pytest tests/smoke/ -v\n\nRun against pre-prod with uploads:\n    pytest tests/smoke/ -v --target=main --access-token=<token>\n",
+  "test_target": "smoke_dev",
+  "tests": [
+    {
+      "method": "test_browse_page_loads",
+      "doc": "SM-001: /en-gb/browse/ loads without errors.",
+      "screenshots": [
+        "sm001_browse_loads"
+      ]
+    },
+    {
+      "method": "test_browse_entry_form_present",
+      "doc": "SM-002: Entry form (input + Decrypt & Download) visible at /en-gb/browse/.",
+      "screenshots": [
+        "sm002_entry_form"
+      ]
+    },
+    {
+      "method": "test_download_page_loads",
+      "doc": "SM-003: /en-gb/download/ loads and shows entry form.",
+      "screenshots": [
+        "sm003_download_page"
+      ]
+    },
+    {
+      "method": "test_ui_version_in_footer",
+      "doc": "SM-004: Footer shows UI version (confirms v0.3.1 overlay is active).",
+      "screenshots": [
+        "sm004_footer_version"
+      ]
+    },
+    {
+      "method": "test_no_js_errors_on_browse",
+      "doc": "SM-005: No uncaught JS errors when loading the browse page.",
+      "screenshots": [
+        "sm005_no_js_errors"
+      ]
+    },
+    {
+      "method": "test_sg_send_branding_present",
+      "doc": "SM-006: SG/Send branding visible \u2014 confirms correct app is served.",
+      "screenshots": [
+        "sm006_branding"
+      ]
+    },
+    {
+      "method": "test_upload_and_browse_tree_renders",
+      "doc": "SM-010: Upload zip \u2192 browse \u2192 file tree renders (catches SGMETA/zipTree regressions).",
+      "screenshots": [
+        "sm010_browse_tree"
+      ]
+    },
+    {
+      "method": "test_sgmeta_stripped_from_download",
+      "doc": "SM-011: Download page delivers clean file \u2014 SGMETA envelope is stripped.\n\n        This directly tests the regression observed on dev.send.sgraph.ai (31 March 2026)\n        where the download page served SGMETA-wrapped bytes instead of the clean file.\n        ",
+      "screenshots": [
+        "sm011_download_clean"
+      ]
+    },
+    {
+      "method": "test_plr_auto_opens_page_json",
+      "doc": "SM-012: Upload zip with _page.json \u2192 PLR auto-opens and renders layout.",
+      "screenshots": [
+        "sm012_plr_rendered"
+      ]
+    },
+    {
+      "method": "test_entry_form_resolves_transfer",
+      "doc": "SM-013: Entry form \u2014 enter tid/key \u2192 browse opens (catches entry form regressions).",
+      "screenshots": [
+        "sm013_entry_form_resolved"
+      ]
+    },
+    {
+      "method": "test_zip_download_is_valid",
+      "doc": "SM-014: Download page delivers a valid zip file (PK magic bytes, not SGMETA).",
+      "screenshots": [
+        "sm014_zip_valid"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "sm001_browse_loads",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm001_browse_loads.png",
+      "description": "Browse page loaded",
+      "has_masks": false
+    },
+    {
+      "name": "sm002_entry_form",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm002_entry_form.png",
+      "description": "Entry form visible",
+      "has_masks": false
+    },
+    {
+      "name": "sm003_download_page",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm003_download_page.png",
+      "description": "Download page loaded",
+      "has_masks": false
+    },
+    {
+      "name": "sm004_footer_version",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm004_footer_version.png",
+      "description": "Footer with UI version",
+      "has_masks": false
+    },
+    {
+      "name": "sm005_no_js_errors",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm005_no_js_errors.png",
+      "description": "JS errors: none",
+      "has_masks": false
+    },
+    {
+      "name": "sm006_branding",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm006_branding.png",
+      "description": "SG/Send branding",
+      "has_masks": false
+    },
+    {
+      "name": "sm010_browse_tree",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm010_browse_tree.png",
+      "description": "Browse tree rendered",
+      "has_masks": true
+    },
+    {
+      "name": "sm011_download_clean",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm011_download_clean.png",
+      "description": "Download \u2014 SGMETA check",
+      "has_masks": true
+    },
+    {
+      "name": "sm012_plr_rendered",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm012_plr_rendered.png",
+      "description": "PLR auto-opened",
+      "has_masks": true
+    },
+    {
+      "name": "sm013_entry_form_resolved",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm013_entry_form_resolved.png",
+      "description": "Entry form resolved to browse",
+      "has_masks": true
+    },
+    {
+      "name": "sm014_zip_valid",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm014_zip_valid.png",
+      "description": "Downloaded zip \u2014 PK check",
+      "has_masks": true
+    }
+  ]
+}
