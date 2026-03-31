@@ -6,7 +6,7 @@ auto_generated: true
 
 # File Click Opens Preview
 
-> Test source at commit [`98e60c65`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/98e60c65) · v0.2.46
+> Test source at commit [`978647d4`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/978647d4) · v0.2.47
 
 Clicking a file in the tree opens a preview in the right panel.
 
