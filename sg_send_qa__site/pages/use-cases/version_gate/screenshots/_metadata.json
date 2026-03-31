@@ -56,7 +56,7 @@
       "name": "03_network_browse_overlays",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/version_gate/screenshots/03_network_browse_overlays.png",
       "description": "Browse page overlay files",
-      "has_masks": false
+      "has_masks": true
     },
     {
       "name": "04_network_upload_overlays",

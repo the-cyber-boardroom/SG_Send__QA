@@ -28,7 +28,9 @@
     {
       "method": "test_plr002_page_title_rendered",
       "doc": "PLR-002: The 'title' field from _page.json appears in the rendered output.",
-      "screenshots": []
+      "screenshots": [
+        "plr002_02_title"
+      ]
     },
     {
       "method": "test_plr002_section_content_rendered",
@@ -38,32 +40,44 @@
     {
       "method": "test_plr004_clicking_page_json_renders_layout",
       "doc": "PLR-004: Clicking _page.json in the folder tree renders the page layout (not raw JSON).",
-      "screenshots": []
+      "screenshots": [
+        "plr004_01_layout_rendered"
+      ]
     },
     {
       "method": "test_plr005_json_colorizer_on_source_view",
       "doc": "PLR-005: JSON source view uses syntax colorizer (.plr-json-key, .plr-json-str, etc.).",
-      "screenshots": []
+      "screenshots": [
+        "plr005_01_source_view"
+      ]
     },
     {
       "method": "test_plr005_json_colorizer_on_plain_json_file",
       "doc": "PLR-005b: Plain .json files (not _page.json) also get colorized source view.",
-      "screenshots": []
+      "screenshots": [
+        "plr005_02_plain_json"
+      ]
     },
     {
       "method": "test_plr_action_bar_buttons_present",
       "doc": "PLR: _page.json tab shows action bar with Locate, Print, Present, Copy JSON, Edit, Source.",
-      "screenshots": []
+      "screenshots": [
+        "plr_action_01_bar"
+      ]
     },
     {
       "method": "test_plr_present_mode_opens_overlay",
       "doc": "PLR: Clicking Present opens .plr-present-overlay fullscreen.",
-      "screenshots": []
+      "screenshots": [
+        "plr_present_01_overlay"
+      ]
     },
     {
       "method": "test_plr_present_mode_dismissed_by_escape",
       "doc": "PLR: ESC key dismisses the PLR present overlay.",
-      "screenshots": []
+      "screenshots": [
+        "plr_present_02_esc_dismissed"
+      ]
     },
     {
       "method": "test_plr006_deeplink_hash_opens_specific_file",
@@ -95,6 +109,12 @@
     }
   ],
   "screenshots": [
+    {
+      "name": "plr002_01_auto_open",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/plr002_01_auto_open.png",
+      "description": "Browse auto-open \u2014 should show _page.json layout",
+      "has_masks": true
+    },
     {
       "name": "plr002_02_title",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/plr002_02_title.png",
@@ -138,34 +158,28 @@
       "has_masks": true
     },
     {
-      "name": "plr002_01_auto_open",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/plr002_01_auto_open.png",
-      "description": "Browse auto-open \u2014 should show _page.json layout",
-      "has_masks": false
-    },
-    {
       "name": "plr006_01_deeplink",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/plr006_01_deeplink.png",
       "description": "Deep-link URL to notes.md",
-      "has_masks": false
+      "has_masks": true
     },
     {
       "name": "plr006_02_token_parse",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/plr006_02_token_parse.png",
       "description": "Deep-link with | separator \u2014 token parsed correctly",
-      "has_masks": false
+      "has_masks": true
     },
     {
       "name": "deeplink_fix_01",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/deeplink_fix_01.png",
       "description": "Deep-link with | suffix \u2014 transfer loads",
-      "has_masks": false
+      "has_masks": true
     },
     {
       "name": "deeplink_fix_02_no_error",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/deeplink_fix_02_no_error.png",
       "description": "Deep-link to non-existent path \u2014 transfer still loads",
-      "has_masks": false
+      "has_masks": true
     }
   ]
 }

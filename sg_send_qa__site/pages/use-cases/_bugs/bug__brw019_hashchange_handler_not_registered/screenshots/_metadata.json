@@ -17,7 +17,7 @@
       "name": "brw019_bug_01_loaded",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__brw019_hashchange_handler_not_registered/screenshots/brw019_bug_01_loaded.png",
       "description": "Browse loaded \u2014 checking hashchange handler",
-      "has_masks": false
+      "has_masks": true
     }
   ]
 }
