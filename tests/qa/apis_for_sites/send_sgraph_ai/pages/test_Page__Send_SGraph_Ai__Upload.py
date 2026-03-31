@@ -30,6 +30,9 @@
 #
 #         return self.sg_send.upload__get_friendly_token()
 from unittest                                                                    import TestCase
+
+import pytest
+
 from sg_send_qa.apis_for_sites.send_sgraph_ai.pages.Page__Send_SGraph_Ai__Upload import Page__Send_SGraph_Ai__Upload
 
 
@@ -50,6 +53,29 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
         with self.upload_page as _:
             _.debug_setup_chrome()
 
+    @pytest.mark.skip("doesn't work when running with all tests") # todo: see below for the Async error
     def test_debug_inner_calls_of_setup(self):
         with self.upload_page as _:
             _.debug_inner_calls_of_setup()
+            # >               raise Error(
+            #                     """It looks like you are using Playwright Sync API inside the asyncio loop.
+            #     Please use the Async API instead."""
+            #                 )
+            # E               playwright._impl._errors.Error: It looks like you are using Playwright Sync API inside the asyncio loop.
+            # E               Please use the Async API instead.
+            #
+            # todo: we really need to figure out why this is happening, since this is the core reason we need to stop chrome between multiple class executions,
+            #       and there are tons of cases where it would be a lot of efficient to keep the browser open
+            #       for example in cases where we only want to setup once the access token
+
+    def test_debug_start_api_server(self):
+        with self.upload_page as _:
+            _.debug_start_api_server()
+
+    def test_debug_start_api_server__with_saved_state(self):
+        with self.upload_page as _:
+            _.debug_start_api_server__with_saved_state()
+
+    def test_debug_inner_methods_of__start_api_server(self):
+        with self.upload_page as _:
+            _.debug_inner_methods_of__start_api_server()
