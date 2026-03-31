@@ -5,13 +5,6 @@
   "test_target": "qa_server",
   "tests": [
     {
-      "method": "test_brw001_tree_shows_basenames",
-      "doc": "BRW-001: Files in subfolders show only the filename, not the full path.",
-      "screenshots": [
-        "brw001_01_tree"
-      ]
-    },
-    {
       "method": "test_brw002_pdf_present_button_in_browse",
       "doc": "BRW-002: PDF files in browse view show a Present button in the action bar.",
       "screenshots": []
@@ -42,8 +35,7 @@
       "method": "test_brw009_save_locally_downloads_valid_zip",
       "doc": "BRW-009: Save locally button downloads a valid zip (correct MIME type).",
       "screenshots": [
-        "brw009_01_before_save",
-        "brw009_02_download_triggered"
+        "brw009_01_before_save"
       ]
     },
     {
@@ -76,6 +68,13 @@
       "doc": "BRW-015: Tab bar is horizontally scrollable when 8+ files are open.",
       "screenshots": [
         "brw015_01_many_tabs"
+      ]
+    },
+    {
+      "method": "test_brw001_tree_shows_basenames",
+      "doc": "BRW-001: Files in subfolders show only the filename, not the full path.",
+      "screenshots": [
+        "brw001_01_tree"
       ]
     }
   ],
@@ -171,34 +170,34 @@
       "has_masks": true
     },
     {
-      "name": "brw001_01_tree",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw001_01_tree.png",
-      "description": "Folder tree loaded",
-      "has_masks": true
-    },
-    {
-      "name": "brw003_01_initial_load",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw003_01_initial_load.png",
-      "description": "Browse view on first load",
-      "has_masks": true
-    },
-    {
-      "name": "brw009_01_before_save",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw009_01_before_save.png",
-      "description": "Browse view before Save locally",
-      "has_masks": true
-    },
-    {
       "name": "brw009_02_download_triggered",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw009_02_download_triggered.png",
       "description": "Download triggered",
       "has_masks": true
     },
     {
+      "name": "brw003_01_initial_load",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw003_01_initial_load.png",
+      "description": "Browse view on first load",
+      "has_masks": false
+    },
+    {
+      "name": "brw009_01_before_save",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw009_01_before_save.png",
+      "description": "Browse view before Save locally",
+      "has_masks": false
+    },
+    {
       "name": "brw015_01_many_tabs",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw015_01_many_tabs.png",
       "description": "Browse view with 10 tabs open",
-      "has_masks": true
+      "has_masks": false
+    },
+    {
+      "name": "brw001_01_tree",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_v031/screenshots/brw001_01_tree.png",
+      "description": "Folder tree loaded",
+      "has_masks": false
     }
   ]
 }

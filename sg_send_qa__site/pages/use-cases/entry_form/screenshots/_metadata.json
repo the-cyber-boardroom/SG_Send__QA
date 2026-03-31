@@ -21,9 +21,7 @@
     {
       "method": "test_entry_form_resolves_transfer",
       "doc": "ENT-003: Entering tid/key into the entry form opens the browse view.",
-      "screenshots": [
-        "ent003_01_token_entered"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_entry_form_plr_autoopen",
@@ -38,9 +36,7 @@
     {
       "method": "test_bogus_token_shows_error",
       "doc": "ENT-006: Entering a bogus token shows an error state (does not crash).",
-      "screenshots": [
-        "ent006_01_bogus_error"
-      ]
+      "screenshots": []
     }
   ],
   "screenshots": [
@@ -63,18 +59,6 @@
       "has_masks": true
     },
     {
-      "name": "ent001_01_entry_form",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent001_01_entry_form.png",
-      "description": "Entry form \u2014 no hash",
-      "has_masks": false
-    },
-    {
-      "name": "ent002_01_form_text",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent002_01_form_text.png",
-      "description": "Entry form text content",
-      "has_masks": false
-    },
-    {
       "name": "ent003_01_token_entered",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent003_01_token_entered.png",
       "description": "Token entered \u2014 waiting for browse",
@@ -84,6 +68,18 @@
       "name": "ent006_01_bogus_error",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent006_01_bogus_error.png",
       "description": "Bogus token \u2014 error or loading state",
+      "has_masks": false
+    },
+    {
+      "name": "ent001_01_entry_form",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent001_01_entry_form.png",
+      "description": "Entry form \u2014 no hash",
+      "has_masks": false
+    },
+    {
+      "name": "ent002_01_form_text",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/entry_form/screenshots/ent002_01_form_text.png",
+      "description": "Entry form text content",
       "has_masks": false
     }
   ]

@@ -20,6 +20,7 @@
     "p1__upload__folder"         : "06-browse",
     "p1__download__viewer"       : "07-viewer",
     "p2__pdf_present"            : "08-pdf",
-    "bugs"                       : "_bugs"
+    "bugs"                       : "_bugs",
+    "smoke"                      : "_smoke"
   }
 }

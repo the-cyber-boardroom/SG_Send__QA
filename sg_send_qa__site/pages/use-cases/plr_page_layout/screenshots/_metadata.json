@@ -19,6 +19,13 @@
       ]
     },
     {
+      "method": "test_plr002_root_page_json_auto_opens",
+      "doc": "PLR-002: Browse auto-opens root _page.json as a page layout tab on first load.",
+      "screenshots": [
+        "plr002_01_auto_open"
+      ]
+    },
+    {
       "method": "test_plr002_page_title_rendered",
       "doc": "PLR-002: The 'title' field from _page.json appears in the rendered output.",
       "screenshots": []
@@ -85,13 +92,6 @@
       "screenshots": [
         "deeplink_fix_02_no_error"
       ]
-    },
-    {
-      "method": "test_plr002_root_page_json_auto_opens",
-      "doc": "PLR-002: Browse auto-opens root _page.json as a page layout tab on first load.",
-      "screenshots": [
-        "plr002_01_auto_open"
-      ]
     }
   ],
   "screenshots": [
@@ -138,34 +138,34 @@
       "has_masks": true
     },
     {
+      "name": "plr002_01_auto_open",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/plr002_01_auto_open.png",
+      "description": "Browse auto-open \u2014 should show _page.json layout",
+      "has_masks": false
+    },
+    {
       "name": "plr006_01_deeplink",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/plr006_01_deeplink.png",
       "description": "Deep-link URL to notes.md",
-      "has_masks": true
+      "has_masks": false
     },
     {
       "name": "plr006_02_token_parse",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/plr006_02_token_parse.png",
       "description": "Deep-link with | separator \u2014 token parsed correctly",
-      "has_masks": true
+      "has_masks": false
     },
     {
       "name": "deeplink_fix_01",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/deeplink_fix_01.png",
       "description": "Deep-link with | suffix \u2014 transfer loads",
-      "has_masks": true
+      "has_masks": false
     },
     {
       "name": "deeplink_fix_02_no_error",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/deeplink_fix_02_no_error.png",
       "description": "Deep-link to non-existent path \u2014 transfer still loads",
-      "has_masks": true
-    },
-    {
-      "name": "plr002_01_auto_open",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/plr_page_layout/screenshots/plr002_01_auto_open.png",
-      "description": "Browse auto-open \u2014 should show _page.json layout",
-      "has_masks": true
+      "has_masks": false
     }
   ]
 }
