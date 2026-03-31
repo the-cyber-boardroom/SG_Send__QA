@@ -45,7 +45,7 @@ URL after decrypt: http://localhost:10062/en-gb/browse/#terra-chain-5022
 
 ### 05 Token Captured
 
-Token: mirth-oak-8676
+Token: linen-twist-7114
 
 ![05 Token Captured](screenshots/05_token_captured.png)
 
@@ -58,7 +58,7 @@ Token: mirth-oak-8676
 
 ### 06 Token Resolved
 
-Token 'mirth-oak-8676' resolved
+Token 'linen-twist-7114' resolved
 
 ![06 Token Resolved](screenshots/06_token_resolved.png)
 
@@ -71,7 +71,7 @@ Token 'mirth-oak-8676' resolved
 
 ### 05 Token Resolved
 
-Token 'chess-pixel-9042'
+Token 'oak-spine-1047'
 
 ![05 Token Resolved](screenshots/05_token_resolved.png)
 
@@ -123,7 +123,7 @@ Upload complete
 
 ### 05 Hash After Decrypt
 
-URL after decrypt: http://localhost:50295//en-gb/browse/#light-oasis-3164
+URL after decrypt: http://localhost:39754//en-gb/browse/#bread-logic-9642
 
 ![05 Hash After Decrypt](screenshots/05_hash_after_decrypt.png)
 

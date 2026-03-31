@@ -28,14 +28,14 @@ Test flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `gallery_route` | GET /en-gb/gallery/#hash loads gallery view. | 1 |
-| `browse_route` | GET /en-gb/browse/#hash loads browse view. | 1 |
-| `view_route` | GET /en-gb/view/#hash loads single-file viewer. | 1 |
-| `short_v_route` | /en-gb/v/#hash is equivalent to /en-gb/view/#hash. | 1 |
-| `download_route_auto_detect` | /en-gb/download/#hash auto-detects mode and decrypts. | 1 |
-| `gallery_to_browse_hash_preserved` | Gallery 'Folder view' link navigates to /browse/ (hash preserved if supported). | 1 |
-| `browse_to_gallery_hash_preserved` | Browse 'Gallery view' link navigates to /gallery/ (hash preserved if supported). | 1 |
-| `copy_link_includes_key` | Copy Link button in gallery/browse includes the key in the URL (P1). | 1 |
+| `gallery_route` | GET /en-gb/gallery/#hash loads gallery view. | 0 |
+| `browse_route` | GET /en-gb/browse/#hash loads browse view. | 0 |
+| `view_route` | GET /en-gb/view/#hash loads single-file viewer. | 0 |
+| `short_v_route` | /en-gb/v/#hash is equivalent to /en-gb/view/#hash. | 0 |
+| `download_route_auto_detect` | /en-gb/download/#hash auto-detects mode and decrypts. | 0 |
+| `gallery_to_browse_hash_preserved` | Gallery 'Folder view' link navigates to /browse/ (hash preserved if supported). | 0 |
+| `browse_to_gallery_hash_preserved` | Browse 'Gallery view' link navigates to /gallery/ (hash preserved if supported). | 0 |
+| `copy_link_includes_key` | Copy Link button in gallery/browse includes the key in the URL (P1). | 0 |
 
 ## Screenshots
 

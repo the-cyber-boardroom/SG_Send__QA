@@ -27,13 +27,13 @@ Test flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `browse_page_loads` | Browse page loads without errors. | 1 |
-| `folder_tree_present` | Folder tree is rendered in the left panel. | 1 |
+| `browse_page_loads` | Browse page loads without errors. | 0 |
+| `folder_tree_present` | Folder tree is rendered in the left panel. | 0 |
 | `file_click_opens_preview` | Clicking a file in the tree opens a preview in the right panel. | 0 |
 | `share_tab_present` | Share tab shows URL, copy, and email actions. | 0 |
 | `info_tab_present` | Info tab shows file counts and encryption info. | 0 |
-| `save_locally_button_present` | Save locally button is present in browse view. | 1 |
-| `keyboard_navigation_j_k` | Keyboard j/k navigate through files in browse view (P2). | 2 |
+| `save_locally_button_present` | Save locally button is present in browse view. | 0 |
+| `keyboard_navigation_j_k` | Keyboard j/k navigate through files in browse view (P2). | 0 |
 
 ## Screenshots
 

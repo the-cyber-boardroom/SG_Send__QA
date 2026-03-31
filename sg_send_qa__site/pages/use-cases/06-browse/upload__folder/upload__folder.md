@@ -28,30 +28,12 @@ Test flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `upload_zip_and_gallery_view` | Upload a zip with 3+ images; verify gallery mode is shown. | 5 |
-| `gallery_thumbnail_grid` | Create a zip upload via API, open gallery, verify thumbnail grid. | 1 |
-| `browse_view_folder_tree` | Open browse view for the zip; verify folder tree is present. | 1 |
-| `mode_switch_preserves_hash` | Gallery ↔ browse mode switching preserves the hash fragment. | 1 |
+| `upload_zip_and_gallery_view` | Upload a zip with 3+ images; verify gallery mode is shown. | 3 |
+| `gallery_thumbnail_grid` | Create a zip upload via API, open gallery, verify thumbnail grid. | 0 |
+| `browse_view_folder_tree` | Open browse view for the zip; verify folder tree is present. | 0 |
+| `mode_switch_preserves_hash` | Gallery ↔ browse mode switching preserves the hash fragment. | 0 |
 
 ## Screenshots
-
-### 01 Upload Page
-
-Upload page loaded
-
-![01 Upload Page](screenshots/01_upload_page.png)
-
-### 02 File Selected
-
-Zip file selected — delivery step
-
-![02 File Selected](screenshots/02_file_selected.png)
-
-### 03 Share Step
-
-Share mode step
-
-![03 Share Step](screenshots/03_share_step.png)
 
 ### 04 Upload Done
 
@@ -82,6 +64,45 @@ Browse view with folder tree
 Switched to browse view
 
 ![08 Switched To Browse](screenshots/08_switched_to_browse.png)
+
+### 01 Upload Page
+
+Upload page loaded
+
+![01 Upload Page](screenshots/01_upload_page.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![01 Upload Page — masked](screenshots/01_upload_page__deterministic.png)
+
+</details>
+
+### 02 File Selected
+
+Zip file selected — delivery step
+
+![02 File Selected](screenshots/02_file_selected.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![02 File Selected — masked](screenshots/02_file_selected__deterministic.png)
+
+</details>
+
+### 03 Share Step
+
+Share mode step
+
+![03 Share Step](screenshots/03_share_step.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![03 Share Step — masked](screenshots/03_share_step__deterministic.png)
+
+</details>
 
 ---
 

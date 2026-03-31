@@ -26,11 +26,11 @@ Test flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `gallery_page_loads` | Gallery page loads without errors for an image-heavy zip. | 1 |
-| `view_mode_buttons_present` | View mode buttons (compact/grid/large) are present in gallery. | 1 |
-| `action_buttons_present` | Copy Link, Email, Save locally, Print buttons are present. | 1 |
-| `info_panel_toggle` | Info button toggles the info panel showing transfer metadata. | 1 |
-| `lightbox_opens_on_thumbnail` | Clicking a thumbnail opens the lightbox. | 1 |
+| `gallery_page_loads` | Gallery page loads without errors for an image-heavy zip. | 0 |
+| `view_mode_buttons_present` | View mode buttons (compact/grid/large) are present in gallery. | 0 |
+| `action_buttons_present` | Copy Link, Email, Save locally, Print buttons are present. | 0 |
+| `info_panel_toggle` | Info button toggles the info panel showing transfer metadata. | 0 |
+| `lightbox_opens_on_thumbnail` | Clicking a thumbnail opens the lightbox. | 0 |
 | `lightbox_arrow_navigation` | Arrow buttons navigate between images in the lightbox. | 0 |
 
 ## Screenshots

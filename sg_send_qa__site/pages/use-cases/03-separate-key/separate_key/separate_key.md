@@ -26,9 +26,9 @@ Flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `separate_key_decrypt_via_api` | Create a transfer via API, open link without key, enter key manually. | 4 |
-| `wrong_key_shows_error` | Enter an incorrect key and verify an error message appears. | 1 |
-| `separate_key_ui_flow` | Full UI flow: upload with Separate Key mode, extract link + key, verify. | 2 |
+| `separate_key_decrypt_via_api` | Create a transfer via API, open link without key, enter key manually. | 0 |
+| `wrong_key_shows_error` | Enter an incorrect key and verify an error message appears. | 0 |
+| `separate_key_ui_flow` | Full UI flow: upload with Separate Key mode, extract link + key, verify. | 0 |
 
 ## Screenshots
 

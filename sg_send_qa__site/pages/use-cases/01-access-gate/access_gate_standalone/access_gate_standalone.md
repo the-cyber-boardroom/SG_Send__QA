@@ -36,11 +36,25 @@ Landing page (may show gate or upload zone)
 
 ![01 Landing](screenshots/01_landing.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![01 Landing — masked](screenshots/01_landing__deterministic.png)
+
+</details>
+
 ### 04 No Gate
 
 Upload zone without gate
 
 ![04 No Gate](screenshots/04_no_gate.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![04 No Gate — masked](screenshots/04_no_gate__deterministic.png)
+
+</details>
 
 ---
 

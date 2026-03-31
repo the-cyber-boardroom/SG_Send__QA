@@ -26,12 +26,12 @@ Test flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `viewer_page_loads` | Single-file viewer loads without errors. | 1 |
-| `markdown_content_displayed` | Markdown file content is decrypted and displayed. | 1 |
-| `share_button_present` | Share button is present and toggles the share panel. | 2 |
-| `copy_url_contains_key` | The share URL shown in the panel contains the key (hash fragment). | 1 |
-| `save_locally_button_present` | Save locally button is present in the viewer. | 1 |
-| `short_url_v_route` | Short URL /en-gb/v/ works the same as /en-gb/view/. | 1 |
+| `viewer_page_loads` | Single-file viewer loads without errors. | 0 |
+| `markdown_content_displayed` | Markdown file content is decrypted and displayed. | 0 |
+| `share_button_present` | Share button is present and toggles the share panel. | 0 |
+| `copy_url_contains_key` | The share URL shown in the panel contains the key (hash fragment). | 0 |
+| `save_locally_button_present` | Save locally button is present in the viewer. | 0 |
+| `short_url_v_route` | Short URL /en-gb/v/ works the same as /en-gb/view/. | 0 |
 
 ## Screenshots
 

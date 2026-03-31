@@ -30,11 +30,11 @@ block deployment if failing.
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `pdf_lightbox_opens` | Clicking the PDF thumbnail opens the lightbox without error. | 1 |
-| `present_button_visible_for_pdf` | A 'Present' button appears in the lightbox when viewing a PDF. | 1 |
+| `pdf_lightbox_opens` | Clicking the PDF thumbnail opens the lightbox without error. | 0 |
+| `present_button_visible_for_pdf` | A 'Present' button appears in the lightbox when viewing a PDF. | 0 |
 | `present_button_click_enters_fullscreen` | Clicking the Present button enters full-screen / presentation mode. | 0 |
-| `f_shortcut_triggers_present` | The 'f' keyboard shortcut triggers present / fullscreen mode. | 2 |
-| `s_key_triggers_save` | Pressing 's' when a file is selected triggers save/download. | 2 |
+| `f_shortcut_triggers_present` | The 'f' keyboard shortcut triggers present / fullscreen mode. | 0 |
+| `s_key_triggers_save` | Pressing 's' when a file is selected triggers save/download. | 0 |
 | `j_key_moves_selection_down` | 'j' key moves file selection down in browse view. | 0 |
 | `k_key_moves_selection_up` | 'k' key moves file selection up in browse view. | 0 |
 
