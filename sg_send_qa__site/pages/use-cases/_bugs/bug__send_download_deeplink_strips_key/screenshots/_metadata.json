@@ -30,7 +30,7 @@
     {
       "name": "p0_bug_deeplink_02_state",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__send_download_deeplink_strips_key/screenshots/p0_bug_deeplink_02_state.png",
-      "description": "State: {'hashKey': None, 'zipTree': 0, 'state': 'ready'}",
+      "description": "State: {'hashKey': 'a6kBHIrLb4-EkhoMbg5yxQs-Rv2QXtdqqA7XI1w7CLs', 'zipTree': 0, 'state': 'complete'}",
       "has_masks": true
     },
     {

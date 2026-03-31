@@ -265,36 +265,32 @@ class TestPLR:
     # ── PLR-006: Deep-link URL ────────────────────────────────────────────────
 
     def test_plr006_deeplink_hash_opens_specific_file(self, page, ui_url, screenshots):
-        """PLR-006: Navigating to #token/path/to/file auto-opens the linked file."""
-        deep_url = f"{ui_url}/en-gb/browse/#{self._tid}/{self._key}/notes.md"
+        """PLR-006: Navigating to #token|path/to/file auto-opens the linked file."""
+        deep_url = f"{ui_url}/en-gb/browse/#{self._tid}/{self._key}|notes.md"
         page.goto(deep_url)
         page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(2_000)
-        screenshots.capture(page, "plr006_01_deeplink", f"Deep-link URL to notes.md")
+        screenshots.capture(page, "plr006_01_deeplink", "Deep-link URL to notes.md")
 
-        # notes.md should be open
         page_text = page.text_content("body") or ""
         assert "Some markdown notes" in page_text or "notes.md" in page_text, (
             "PLR-006: Deep-link to notes.md did not auto-open the file. "
-            "Hash format #token/key/path should open 'path' in the browse view."
+            "Hash format #token|path (pipe separator) should open 'path' in the browse view."
         )
 
     def test_plr006_deeplink_does_not_break_token_parse(self, page, ui_url, screenshots):
-        """PLR-006 / send-download.js fix: #token/key/path correctly extracts transferId."""
-        # A deep-link URL with a file path suffix — the token parse must not include the path
-        deep_url = f"{ui_url}/en-gb/browse/#{self._tid}/{self._key}/_page.json"
+        """PLR-006 / send-download.js fix: #tid/key|path correctly extracts transferId and key."""
+        deep_url = f"{ui_url}/en-gb/browse/#{self._tid}/{self._key}|_page.json"
         page.goto(deep_url)
         page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(2_000)
-        screenshots.capture(page, "plr006_02_token_parse", "Deep-link — token parsed correctly")
+        screenshots.capture(page, "plr006_02_token_parse", "Deep-link with | separator — token parsed correctly")
 
-        # Transfer should load (not show "Transfer not found" error)
         page_text = page.text_content("body") or ""
         assert "Transfer not found" not in page_text and "not found" not in page_text.lower()[:200], (
             "PLR-006 / send-download.js fix: Deep-link URL caused 'Transfer not found'. "
-            "send-download.js must strip the path suffix before parsing the transfer token."
+            "send-download.js must strip the '|path' suffix while preserving the tid/key."
         )
-        # The page layout should render
         self._wait_plr(page)
         assert page.locator(".plr-page").first.is_visible(), \
             "PLR-006: Transfer loaded but _page.json layout not rendered on deep-link"
@@ -320,38 +316,32 @@ class TestPLRDeepLinkFix:
         self._key = key
         self._ui_url = ui_url
 
-    def test_deeplink_path_suffix_does_not_break_token(self, page, screenshots):
-        """send-download.js: #tid/key/extra/path correctly loads the transfer."""
-        deep_url = f"{self._ui_url}/en-gb/browse/#{self._tid}/{self._key}/doc.md"
+    def test_deeplink_pipe_suffix_does_not_break_token(self, page, screenshots):
+        """send-download.js: #tid/key|path correctly loads the transfer (pipe separator)."""
+        deep_url = f"{self._ui_url}/en-gb/browse/#{self._tid}/{self._key}|doc.md"
         page.goto(deep_url)
         page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(2_000)
-        screenshots.capture(page, "deeplink_fix_01", "Deep-link with path suffix — transfer loads")
+        screenshots.capture(page, "deeplink_fix_01", "Deep-link with | suffix — transfer loads")
 
-        # Should load the transfer (tree appears)
         tree_files = page.locator(".sb-tree__file-name").all_text_contents()
         assert tree_files, (
             "send-download.js deep-link fix: No tree files found — transfer failed to load. "
-            "Hash '#tid/key/path' should load the transfer by stripping '/path' before token parse."
+            "Hash '#tid/key|path' should load the transfer by stripping '|path' before token parse."
         )
 
-    def test_deeplink_simple_token_with_path_loads(self, page, transfer_helper, screenshots):
-        """send-download.js: friendly token + path suffix #word-word-NNNN/doc.md resolves."""
-        # This tests that FriendlyCrypto.isFriendlyToken is called on the token-only part
-        # (not the full hash including the path). We test with a regular hash since
-        # friendly token generation requires specific conditions.
-        # Instead: verify the base case (non-PLR deep-link) doesn't show an error.
-        deep_url = f"{self._ui_url}/en-gb/browse/#{self._tid}/{self._key}/nonexistent/path.md"
+    def test_deeplink_pipe_nonexistent_path_loads_transfer(self, page, screenshots):
+        """send-download.js: #tid/key|nonexistent/path still loads the transfer."""
+        deep_url = f"{self._ui_url}/en-gb/browse/#{self._tid}/{self._key}|nonexistent/path.md"
         page.goto(deep_url)
         page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(2_000)
-        screenshots.capture(page, "deeplink_fix_02_no_error", "Deep-link to non-existent path — no 'not found' error")
+        screenshots.capture(page, "deeplink_fix_02_no_error", "Deep-link to non-existent path — transfer still loads")
 
-        # Transfer should still load even if the linked path doesn't exist
         page_text = page.text_content("body") or ""
         assert "Transfer not found" not in page_text, (
-            "send-download.js deep-link fix: '#tid/key/nonexistent/path' triggered "
-            "'Transfer not found'. The path suffix must be stripped before token parse."
+            "send-download.js deep-link fix: '#tid/key|nonexistent/path' triggered "
+            "'Transfer not found'. The '|path' suffix must be stripped before token parse."
         )
         tree_files = page.locator(".sb-tree__file-name").all_text_contents()
         assert tree_files, "Transfer should load even when the deep-linked file path doesn't exist"
