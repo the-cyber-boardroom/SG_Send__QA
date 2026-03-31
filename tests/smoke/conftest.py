@@ -152,7 +152,7 @@ def browser(playwright_instance):
 
 @pytest.fixture(scope="session")
 def browser_context(browser):
-    ctx = browser.new_context(viewport={"width": 1280, "height": 800})
+    ctx = browser.new_context(viewport={"width": 1280, "height": 800}, ignore_https_errors=True)
     ctx.set_default_timeout(15_000)
     # Navigation against live servers with CDN deps uses domcontentloaded
     # (not "load") to avoid waiting for third-party scripts that may be slow.
