@@ -1,7 +1,7 @@
 from osbot_utils.type_safe.Type_Safe import Type_Safe
 
 
-# todo: refactor all types below to be Type_Safe primitives
+# [LIB-2026-04-01-013] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 class Schema__Harness_State(Type_Safe):                                         # what gets persisted to disk
     api_port        : int = 0                                                   # FastAPI server port
     ui_port         : int = 0                                                   # static file server port

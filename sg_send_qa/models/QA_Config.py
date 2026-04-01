@@ -14,7 +14,7 @@ import json
 from pathlib import Path
 from osbot_utils.base_classes.Kwargs_To_Self import Kwargs_To_Self as Type_Safe
 
-# todo: separaete to individual classes
+# [LIB-2026-04-01-020] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 class QA_Config__Target(Type_Safe):
     """One test target (local or production)."""
     user_url  : str = ""
@@ -41,7 +41,7 @@ class QA_Config__Docs(Type_Safe):
     template         : str = "default"
 
 
-# todo: refactor logic to leverage Type_Safe and make this code simpler
+# [LIB-2026-04-01-021] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 class QA_Config(Type_Safe):
     """Loaded test configuration.
 

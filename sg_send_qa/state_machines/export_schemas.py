@@ -20,8 +20,7 @@ from sg_send_qa.state_machines.State_Machine__Upload   import upload_state_machi
 from sg_send_qa.state_machines.State_Machine__Download import download_state_machine
 from sg_send_qa.state_machines.State_Machine__Utils    import State_Machine__Utils
 
-# todo: refactor these into instance methods
-#       replace path and data with Type_Safe primitives
+# [LIB-2026-04-01-016] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 
 def _write_if_changed(path: Path, data: dict) -> bool:
     content = json.dumps(data, indent=2, ensure_ascii=False)
@@ -32,7 +31,7 @@ def _write_if_changed(path: Path, data: dict) -> bool:
     print(f"  Written:    {path}")
     return True
 
-# todo: refactor mermaid code to use MGraph_DB
+# [LIB-2026-04-01-017] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 def _machine_payload(machine) -> dict:
     """Return the full JSON payload for a state machine, including mermaid text."""
     utils = State_Machine__Utils()

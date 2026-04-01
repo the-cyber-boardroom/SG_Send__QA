@@ -26,7 +26,7 @@ DEFAULT__I18N__LANGUAGE_LOCATION = 'en-gb'
 # this class needs to be split into smaller classes (specially the code specific to a particular page or flow)
 class SG_Send__Browser__Pages(Type_Safe):
     headless      : bool                     = True
-    target_port   : Safe_UInt__Port          = 0        # todo: see why we are getting an  "ValueError: Safe_UInt__Port does not allow None values" (even when this value is set on the ctor call)
+    target_port   : Safe_UInt__Port          = 0        # [LIB-2026-04-01-010] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
     target_server : Safe_Str__Url__Server    = DEFAULT__TARGET_SERVER__LOCALHOST
 
     # ═══════════════════════════════════════════════════════════════════════════
@@ -407,7 +407,7 @@ class SG_Send__Browser__Pages(Type_Safe):
             is_gate_visible = self.is_access_gate_visible()                               ,
         )
 
-    # todo: this logic should not be here (i.e. inside this generic SG_Send__Browser__Pages class)
+    # [LIB-2026-04-01-011] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
     def extract__download_page(self) -> Schema__Download_Page:                      # snapshot download/decrypt state
         return Schema__Download_Page(
             state                = self.download_state()                          or '',

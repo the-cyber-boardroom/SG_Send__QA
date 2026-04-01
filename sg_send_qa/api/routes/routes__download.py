@@ -5,8 +5,7 @@ from osbot_fast_api.api.routes.Fast_API__Routes import Fast_API__Routes
 from sg_send_qa.api.QA_API__Runner              import QA_API__Runner
 from sg_send_qa.api.Schema__QA_Request          import Schema__QA_Request
 
-# todo: these routes need direct tests also these routes should have no logic
-#       since all the logic should be inside classes for each of these workflows
+# [LIB-2026-04-01-006] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 class Routes__Download(Fast_API__Routes):
     tag       : str            = 'download'
     qa_runner : QA_API__Runner

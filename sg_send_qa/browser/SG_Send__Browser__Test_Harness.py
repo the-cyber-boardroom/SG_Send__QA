@@ -29,8 +29,7 @@ from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server impo
 
 UI_BUILD_FOLDER_FORMAT = 'sg_send_qa_ui_build_{version}'
 
-# todo: split this class into smaller parts/concernts since it is already doing too much
-#       rename sg_send to something that is related to what it is actualy doing
+# [LIB-2026-04-01-012] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 class SG_Send__Browser__Test_Harness(Type_Safe):                                # manages API server + UI server + browser lifecycle
     config          : Schema__Browser_Test_Config                               # session configuration
     persistence     : Harness_State__Persistence                                # load/save state across runs
