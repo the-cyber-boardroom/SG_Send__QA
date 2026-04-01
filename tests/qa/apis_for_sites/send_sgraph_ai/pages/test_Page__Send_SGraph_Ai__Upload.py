@@ -32,6 +32,7 @@
 from unittest                                                                    import TestCase
 
 import pytest
+from osbot_utils.utils.Dev import pprint
 
 from sg_send_qa.apis_for_sites.send_sgraph_ai.pages.Page__Send_SGraph_Ai__Upload import Page__Send_SGraph_Ai__Upload
 
@@ -79,3 +80,8 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
     def test_debug_inner_methods_of__start_api_server(self):
         with self.upload_page as _:
             _.debug_inner_methods_of__start_api_server()
+
+    def test_debug__start_and_stop_server_using_port(self):
+        with self.upload_page as _:
+            result = _.debug__start_and_stop_server_using_port()
+            pprint(result)

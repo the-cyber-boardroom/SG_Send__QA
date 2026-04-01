@@ -1,9 +1,16 @@
+import subprocess
+
+import psutil
 from osbot_fast_api.utils.Fast_API_Server                                   import Fast_API_Server
 from osbot_utils.helpers.duration.decorators.print_duration                 import print_duration
 from osbot_utils.testing.Stderr                                             import Stderr
 from osbot_utils.type_safe.Type_Safe                                        import Type_Safe
+from osbot_utils.utils.Misc import random_port, wait_for
+from osbot_utils.utils.Process import start_process
+
 from sg_send_qa.browser.SG_Send__Browser__Test_Harness                      import SG_Send__Browser__Test_Harness
 from sg_send_qa.browser.Schema__Browser_Test_Config                         import Schema__Browser_Test_Config
+from sgraph_ai_app_send.lambda__user.lambda_function.lambda_handler__user import run
 from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import setup__send_user_lambda__test_client
 
 
@@ -215,3 +222,67 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
 #           - test files (of all types and size)
 #           - vaults
 #           - access and (eventually) PKI keys
+
+
+    def debug__start_and_stop_server_using_port(self):
+        import os
+        import requests
+        from subprocess import check_output
+        def get_process_details(pid):
+            try:
+                proc = psutil.Process(pid)
+                mem_info, cpu_info, io_info, status = proc.memory_info(), proc.cpu_times(), proc.io_counters(), proc.status()
+                return {
+                    "pid": pid,
+                    "name": proc.name(),
+                    "mem_info": mem_info,
+                    "cpu_info": cpu_info,
+                    "io_info": io_info,
+                    "status": status,
+                }
+            except psutil.NoSuchProcess:
+                return {"error": "Process not found"}
+        port              = random_port()
+        fast_api_handler  = run.__module__
+        handler_app       = f"{fast_api_handler}:app"
+        process__name = ["poetry"]
+        process__args = ["run",
+                         "uvicorn",
+                         handler_app      ,
+                         "--port", str(port),
+                         '--log-level', 'info',
+                         '--timeout-graceful-shutdown', '0']
+
+        popen_args         = process__name + process__args
+        fast_api_process   = subprocess.Popen(popen_args)
+
+        port_open = False
+        for i in range(10):
+            try:
+                url = f"http://localhost:{port}/info/status"
+                print(url)
+                response = requests.get(url, timeout=100)
+                if response.status_code == 200:
+                    port_open = True
+                    break
+            except Exception as e:
+                print(f"Error checking port status at attempt {i+1}: {e}")
+            wait_for(0.1)
+
+        if port_open:
+            pid = check_output(["pgrep", "-f", "uvicorn"]).decode("utf-8").strip()
+            details = get_process_details(int(pid))
+            if "error" not in details:
+                print("\nFastAPI process details:")
+                for key, value in details.items():
+                    if isinstance(value, dict):
+                        sub_keys = [k for k in value]
+                        sub_values = [str(v) for v in value[sub_keys]]
+                        print(f"{key}: {', '.join(sub_values)}")
+                    else:
+                        print(f"{key}: {value}")
+                os.system(f"kill {pid}")
+            else:
+                print(details["error"])
+        else:
+            print("FastAPI process not found on the specified port.")
