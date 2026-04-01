@@ -1,0 +1,43 @@
+{
+  "use_case": "bug__extract_metadata_new_format_broken",
+  "module": "test__bug__extract_metadata_new_format_broken",
+  "module_doc": "BUG (P0): _extractMetadata broken for new-format SGMETA payloads \u2014 v0.20.29\n\nIntroduced by: commit a28e8206 (\"fix: handle old SGMETA wire format\")\nObserved: 31 March 2026 \u2014 all browse tests fail (zipTree=0) after installing v0.20.29\n\nRoot cause:\n  The SGMETA fix uses bytes[6] !== 0x00 to detect new vs old format:\n\n      if (bytes[magic.length] !== 0x00) { /* new format */ }\n      // else: old format (bytes[magic.length] === 0x00)\n\n  BUT \u2014 in the NEW format, the first byte of the 4-byte length field is at\n  position 6 (immediately after the 6-byte magic). For any metadata JSON\n  smaller than 16 MB (which is every real payload), the big-endian 4-byte\n  length starts with 0x00. So:\n\n      New format: SGMETA[6] + 0x00{len_byte1} + 0x00{len_byte2} + ... + JSON + content\n      Old format: SGMETA[6] + 0x00{separator} + {JSON}...\n\n  bytes[6] === 0x00 for BOTH formats \u2192 new format always falls into the old\n  format path.\n\n  In the old format path, bytes[7] is expected to be '{' (0x7B). For new format,\n  bytes[7] is the second byte of the 4-byte length (0x00 for JSON < 65 KB).\n  Since 0x00 !== '{', the function returns { metadata: null, content: buf },\n  i.e. the full SGMETA-wrapped buffer as \"content\".\n\nConsequences:\n  1. this.fileName is not set from SGMETA metadata (filename unknown)\n  2. this.decryptedBytes = full SGMETA-wrapped buffer (not clean file content)\n  3. For zip transfers: JSZip.loadAsync(SGMETA_wrapped_bytes) fails\n     \u2192 this._zipTree = []  \u2192 browse tree never renders \u2192 state='complete', zipTree=0\n\nCorrect fix:\n  Discriminate by checking bytes[7] (the byte after the potential null):\n  - Old format: bytes[6]=0x00 AND bytes[7]=0x7B ('{')  \u2192 SGMETA\u0000{json}\n  - New format: bytes[6]=0x00 AND bytes[7]!=0x7B       \u2192 SGMETA + length[4] + json\n\n  New discriminator: if (bytes[magic.length] !== 0x00 || bytes[magic.length+1] !== 0x7B)\n  \u2192 new format (either bytes[6]!=0 OR bytes[6]=0 but bytes[7]!='{')\n\nBug test pattern:\n  PASSES while bug exists (browse tree is empty / zipTree=0 for new-format transfer).\n  FAILS when fixed (browse tree renders correctly) \u2192 delete this file.\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_p0_bug_new_format_zip_tree_empty",
+      "doc": "BUG: New-format zip transfer has empty browse tree (zipTree=0) after decrypt.\n\n        The _extractMetadata fix treats new-format payloads as old-format because\n        both have bytes[6]=0x00. The parsing fails \u2192 content = full SGMETA buffer\n        \u2192 JSZip parse fails \u2192 zipTree=0.\n\n        PASSES while bug exists (zipTree=0).\n        FAILS when fixed (zipTree>0, browse tree renders) \u2192 delete this file.\n        ",
+      "screenshots": [
+        "new_fmt_bug_01_state",
+        "new_fmt_bug_02_diag"
+      ]
+    },
+    {
+      "method": "test_p0_bug_new_format_browse_tree_not_visible",
+      "doc": "BUG: Browse file tree is empty after new-format decrypt.\n\n        PASSES while bug exists (no .sb-tree__file-name elements).\n        FAILS when fixed (file names visible in tree) \u2192 delete this file.\n        ",
+      "screenshots": [
+        "new_fmt_bug_03_tree"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "new_fmt_bug_01_state",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__extract_metadata_new_format_broken/screenshots/new_fmt_bug_01_state.png",
+      "description": "Browse state after decrypt",
+      "has_masks": true
+    },
+    {
+      "name": "new_fmt_bug_02_diag",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__extract_metadata_new_format_broken/screenshots/new_fmt_bug_02_diag.png",
+      "description": "state='complete' zipTree=0",
+      "has_masks": true
+    },
+    {
+      "name": "new_fmt_bug_03_tree",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__extract_metadata_new_format_broken/screenshots/new_fmt_bug_03_tree.png",
+      "description": "Tree items: []",
+      "has_masks": true
+    }
+  ]
+}

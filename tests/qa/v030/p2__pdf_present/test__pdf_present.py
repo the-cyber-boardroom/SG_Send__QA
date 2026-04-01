@@ -11,6 +11,12 @@ Test flow:
 
 These tests are P2 — they verify progressive-enhancement behaviour and do not
 block deployment if failing.
+
+v0.3.1 notes:
+  - Gallery view is NOT patched in v0.3.1 — these tests run against the
+    unchanged v0.3.0 gallery view and should continue to pass unmodified.
+  - BRW-002 adds a Present button to the BROWSE view (not gallery).
+    That is tested separately in tests/qa/v031/p2__browse/test__browse_v031.py.
 """
 
 import pytest

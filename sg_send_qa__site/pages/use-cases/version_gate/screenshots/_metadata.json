@@ -1,0 +1,68 @@
+{
+  "use_case": "version_gate",
+  "module": "test__version_gate",
+  "module_doc": "P0: v0.3.1 version gate.\n\nThese tests run first. They assert that the locally-served UI is actually\nv0.3.1 and that all overlay files are present. If any gate test fails, all\nBRW-* tests in this suite are meaningless \u2014 a CI failure here means the\noverlay was not deployed or the wrong UI version is installed.\n\nChecks:\n  - window.SGRAPH_BUILD.uiVersion === 'v0.3.1' on upload page\n  - window.SGRAPH_BUILD.uiVersion === 'v0.3.1' on browse page\n  - All 5 overlay files are served (no 404 fallback to v0.3.0 behaviour)\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_upload_page_reports_v031",
+      "doc": "Upload page (en-gb/) sets window.SGRAPH_BUILD.uiVersion = 'v0.3.1'.",
+      "screenshots": [
+        "01_upload_version"
+      ]
+    },
+    {
+      "method": "test_browse_page_reports_v031",
+      "doc": "Browse page (en-gb/browse/) sets window.SGRAPH_BUILD.uiVersion = 'v0.3.1'.",
+      "screenshots": [
+        "02_browse_version"
+      ]
+    },
+    {
+      "method": "test_browse_overlay_files_loaded",
+      "doc": "4 browse overlay files are fetched with HTTP 200 on the browse page.",
+      "screenshots": [
+        "03_network_browse_overlays"
+      ]
+    },
+    {
+      "method": "test_upload_overlay_files_loaded",
+      "doc": "upload-folder-v031.js is fetched with HTTP 200 on the upload page.",
+      "screenshots": [
+        "04_network_upload_overlays"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "03_network_overlays",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/version_gate/screenshots/03_network_overlays.png",
+      "description": "Browse page with overlay files",
+      "has_masks": false
+    },
+    {
+      "name": "01_upload_version",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/version_gate/screenshots/01_upload_version.png",
+      "description": "Upload page version: v0.3.1",
+      "has_masks": false
+    },
+    {
+      "name": "02_browse_version",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/version_gate/screenshots/02_browse_version.png",
+      "description": "Browse page version: v0.3.1",
+      "has_masks": false
+    },
+    {
+      "name": "03_network_browse_overlays",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/version_gate/screenshots/03_network_browse_overlays.png",
+      "description": "Browse page overlay files",
+      "has_masks": true
+    },
+    {
+      "name": "04_network_upload_overlays",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/version_gate/screenshots/04_network_upload_overlays.png",
+      "description": "Upload page overlay files",
+      "has_masks": false
+    }
+  ]
+}

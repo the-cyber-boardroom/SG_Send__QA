@@ -40,7 +40,7 @@ class TestBug__GenericButtonOpensLanguageDropdown:
     def test_first_button_is_not_go_button(self, page, ui_url, send_server):
         """The first <button> on the page is the language selector, not Go."""
         page.goto(f"{ui_url}/en-gb/")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(1000)
 
         gate_input = page.locator("#access-token-input")

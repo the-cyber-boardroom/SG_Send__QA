@@ -1,0 +1,23 @@
+{
+  "use_case": "bug__brw019_hashchange_handler_not_registered",
+  "module": "test__bug__brw019_hashchange_handler_not_registered",
+  "module_doc": "BUG: BRW-019 hashchange handler is never registered.\n\nRoot cause:\n  send-browse-v031.js patches SendDownload.prototype.connectedCallback to\n  register a hashchange listener. But the <send-download> element (browse/index.html\n  line 36) is parsed and upgraded BEFORE the script tags (lines 49+) run.\n\n  Execution order on the browse page:\n    1. HTML parsed up to line 36 \u2192 <send-download> element in DOM (unupgraded)\n    2. send-download.js runs \u2192 customElements.define() called \u2192 element upgraded\n       \u2192 connectedCallback fires (UNPATCHED version)\n    3. send-browse-v031.js runs \u2192 patches SendDownload.prototype.connectedCallback\n       (too late \u2014 connectedCallback already fired for the live element)\n\n  Result: sd._v031HashHandler is never set; window.addEventListener('hashchange',\n  ...) is never called. Changing the hash (e.g. via the friendly-token entry form)\n  has no effect.\n\nFix needed in send-browse-v031.js (BRW-019 IIFE):\n  After patching the prototype, also apply to any already-connected instances:\n\n    document.querySelectorAll('send-download').forEach(function(el) {\n        if (!el._v031HashHandler) {\n            el._v031HashHandler = function() { ... };\n            window.addEventListener('hashchange', el._v031HashHandler);\n        }\n    });\n\nThis test PASSES while the bug exists (handler absent).\nWhen the fix ships, _v031HashHandler IS set \u2192 this test FAILS \u2192\ndelete this file and promote test_brw019_hashchange_loads_new_transfer from p4.\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_brw019_bug_handler_not_registered",
+      "doc": "BRW-019 BUG: _v031HashHandler is absent because connectedCallback\n        fires before send-browse-v031.js patches the prototype.\n\n        PASSES while the bug exists.\n        FAILS when fixed \u2192 delete this file, promote the BRW-019 test in p4/.\n        ",
+      "screenshots": [
+        "brw019_bug_01_loaded"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "brw019_bug_01_loaded",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__brw019_hashchange_handler_not_registered/screenshots/brw019_bug_01_loaded.png",
+      "description": "Browse loaded \u2014 checking hashchange handler",
+      "has_masks": true
+    }
+  ]
+}

@@ -18,7 +18,7 @@ class TestAccessGate:
     def test_upload_accessible_with_token(self, page, ui_url, send_server, screenshots):
         """Providing the correct access token grants access to the upload zone."""
         page.goto(f"{ui_url}/en-gb/")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(1000)
         screenshots.capture(page, "01_landing", "Landing page (may show gate or upload zone)")
 
@@ -27,7 +27,7 @@ class TestAccessGate:
         if gate_input.is_visible(timeout=3000):
             gate_input.fill(send_server.access_token)
             page.locator("#access-token-submit").click()
-            page.wait_for_load_state("networkidle")
+            page.wait_for_selector("body[data-ready]", timeout=10_000)
             page.wait_for_timeout(1000)
             screenshots.capture(page, "02_after_token", "After entering access token")
 
@@ -43,7 +43,7 @@ class TestAccessGate:
     def test_wrong_token_shows_error(self, page, ui_url, send_server, screenshots):
         """Providing a wrong access token shows an error."""
         page.goto(f"{ui_url}/en-gb/")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(1000)
 
         gate_input = page.locator("#access-token-input")
@@ -62,7 +62,7 @@ class TestAccessGate:
     def test_upload_zone_visible_without_gate(self, page, ui_url, send_server, screenshots):
         """If no gate is configured, upload zone is immediately visible."""
         page.goto(f"{ui_url}/en-gb/")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(1000)
 
         gate_input = page.locator("#access-token-input")

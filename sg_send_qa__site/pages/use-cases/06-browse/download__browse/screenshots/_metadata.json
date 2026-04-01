@@ -7,16 +7,12 @@
     {
       "method": "test_browse_page_loads",
       "doc": "Browse page loads without errors.",
-      "screenshots": [
-        "01_browse_loaded"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_folder_tree_present",
-      "doc": "Folder tree is rendered in the left panel.",
-      "screenshots": [
-        "02_folder_tree"
-      ]
+      "doc": "Folder tree is rendered in the left panel.\n\n        v0.3.1 / BRW-001: files in subfolders show basename only, not the full\n        zip path. The zip has docs/sub/extra.md \u2014 the tree should show \"extra.md\",\n        not \"docs/sub/extra.md\".\n        ",
+      "screenshots": []
     },
     {
       "method": "test_file_click_opens_preview",
@@ -36,44 +32,44 @@
     {
       "method": "test_save_locally_button_present",
       "doc": "Save locally button is present in browse view.",
-      "screenshots": [
-        "06_save_button"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_keyboard_navigation_j_k",
       "doc": "Keyboard j/k navigate through files in browse view (P2).",
-      "screenshots": [
-        "07_keyboard_j",
-        "08_keyboard_k"
-      ]
+      "screenshots": []
     }
   ],
   "screenshots": [
     {
       "name": "01_browse_loaded",
-      "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/01_browse_loaded.png",
-      "description": "Browse view loaded"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/01_browse_loaded.png",
+      "description": "Browse view loaded",
+      "has_masks": false
     },
     {
       "name": "02_folder_tree",
-      "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/02_folder_tree.png",
-      "description": "Folder tree in browse view"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/02_folder_tree.png",
+      "description": "Folder tree in browse view",
+      "has_masks": false
     },
     {
       "name": "06_save_button",
-      "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/06_save_button.png",
-      "description": "Save locally button"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/06_save_button.png",
+      "description": "Save locally button",
+      "has_masks": false
     },
     {
       "name": "07_keyboard_j",
-      "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/07_keyboard_j.png",
-      "description": "After pressing j"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/07_keyboard_j.png",
+      "description": "After pressing j",
+      "has_masks": false
     },
     {
       "name": "08_keyboard_k",
-      "path": "sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/08_keyboard_k.png",
-      "description": "After pressing k"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/download__browse/screenshots/08_keyboard_k.png",
+      "description": "After pressing k",
+      "has_masks": false
     }
   ]
 }

@@ -7,45 +7,32 @@
     {
       "method": "test_viewer_page_loads",
       "doc": "Single-file viewer loads without errors.",
-      "screenshots": [
-        "01_viewer_loaded"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_markdown_content_displayed",
       "doc": "Markdown file content is decrypted and displayed.",
-      "screenshots": [
-        "02_content"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_share_button_present",
       "doc": "Share button is present and toggles the share panel.",
-      "screenshots": [
-        "03_before_share",
-        "04_share_panel"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_copy_url_contains_key",
       "doc": "The share URL shown in the panel contains the key (hash fragment).",
-      "screenshots": [
-        "05_url_with_key"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_save_locally_button_present",
       "doc": "Save locally button is present in the viewer.",
-      "screenshots": [
-        "06_save_button"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_short_url_v_route",
       "doc": "Short URL /en-gb/v/ works the same as /en-gb/view/.",
-      "screenshots": [
-        "07_short_url_v"
-      ]
+      "screenshots": []
     }
   ],
   "screenshots": [

@@ -6,7 +6,7 @@ auto_generated: true
 
 # Manual Entry
 
-> Test source at commit [`17d0c5af`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/17d0c5af) · v0.2.40
+> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
 
 UC-09: Manual token/ID entry form (P1).
 
@@ -28,28 +28,10 @@ Test flow:
 | `entry_form_shown_without_hash` | Navigating to /en-gb/download/ with no hash shows the entry form. | 1 |
 | `entry_form_has_decrypt_button` | Entry form has a Decrypt & Download (or similar) button. | 1 |
 | `bogus_token_shows_error` | Entering a bogus token shows an error (not a crash). | 1 |
-| `valid_transfer_id_resolves` | Entering a valid transfer ID resolves and shows the file. | 1 |
-| `hash_navigation_to_download` | Navigating directly to /en-gb/download/#id/key auto-decrypts (P1). | 1 |
+| `valid_transfer_id_resolves` | Entering a valid transfer ID resolves and shows the file. | 0 |
+| `hash_navigation_to_download` | Navigating directly to /en-gb/download/#id/key auto-decrypts (P1). | 0 |
 
 ## Screenshots
-
-### 01 Entry Form
-
-Manual entry form without hash
-
-![01 Entry Form](screenshots/01_entry_form.png)
-
-### 02 Decrypt Button
-
-Entry form with decrypt button
-
-![02 Decrypt Button](screenshots/02_decrypt_button.png)
-
-### 03 Bogus Token Error
-
-Error after bogus token
-
-![03 Bogus Token Error](screenshots/03_bogus_token_error.png)
 
 ### 04 Valid Id Resolved
 
@@ -62,6 +44,45 @@ Valid transfer ID resolved
 Direct hash navigation to download
 
 ![05 Direct Hash Nav](screenshots/05_direct_hash_nav.png)
+
+### 01 Entry Form
+
+Manual entry form without hash
+
+![01 Entry Form](screenshots/01_entry_form.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![01 Entry Form — masked](screenshots/01_entry_form__deterministic.png)
+
+</details>
+
+### 02 Decrypt Button
+
+Entry form with decrypt button
+
+![02 Decrypt Button](screenshots/02_decrypt_button.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![02 Decrypt Button — masked](screenshots/02_decrypt_button__deterministic.png)
+
+</details>
+
+### 03 Bogus Token Error
+
+Error after bogus token
+
+![03 Bogus Token Error](screenshots/03_bogus_token_error.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![03 Bogus Token Error — masked](screenshots/03_bogus_token_error__deterministic.png)
+
+</details>
 
 ---
 
@@ -171,7 +192,7 @@ class TestManualEntryForm:
         tid, key_b64 = transfer_helper.upload_encrypted(SAMPLE_CONTENT, "uc09-direct.txt")
 
         page.goto(f"{ui_url}/en-gb/download/#{tid}/{key_b64}")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(2000)
         screenshots.capture(page, "05_direct_hash_nav", "Direct hash navigation to download")
 

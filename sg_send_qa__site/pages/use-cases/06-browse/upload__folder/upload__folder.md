@@ -6,7 +6,7 @@ auto_generated: true
 
 # Upload  Folder
 
-> Test source at commit [`807336ab`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/807336ab) · v0.2.40
+> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
 
 UC-02: Folder upload → gallery + browse view (P1).
 
@@ -28,30 +28,12 @@ Test flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `upload_zip_and_gallery_view` | Upload a zip with 3+ images; verify gallery mode is shown. | 5 |
-| `gallery_thumbnail_grid` | Create a zip upload via API, open gallery, verify thumbnail grid. | 1 |
-| `browse_view_folder_tree` | Open browse view for the zip; verify folder tree is present. | 1 |
-| `mode_switch_preserves_hash` | Gallery ↔ browse mode switching preserves the hash fragment. | 1 |
+| `upload_zip_and_gallery_view` | Upload a zip with 3+ images; verify gallery mode is shown. | 3 |
+| `gallery_thumbnail_grid` | Create a zip upload via API, open gallery, verify thumbnail grid. | 0 |
+| `browse_view_folder_tree` | Open browse view for the zip; verify folder tree is present. | 0 |
+| `mode_switch_preserves_hash` | Gallery ↔ browse mode switching preserves the hash fragment. | 0 |
 
 ## Screenshots
-
-### 01 Upload Page
-
-Upload page loaded
-
-![01 Upload Page](screenshots/01_upload_page.png)
-
-### 02 File Selected
-
-Zip file selected — delivery step
-
-![02 File Selected](screenshots/02_file_selected.png)
-
-### 03 Share Step
-
-Share mode step
-
-![03 Share Step](screenshots/03_share_step.png)
 
 ### 04 Upload Done
 
@@ -83,6 +65,45 @@ Switched to browse view
 
 ![08 Switched To Browse](screenshots/08_switched_to_browse.png)
 
+### 01 Upload Page
+
+Upload page loaded
+
+![01 Upload Page](screenshots/01_upload_page.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![01 Upload Page — masked](screenshots/01_upload_page__deterministic.png)
+
+</details>
+
+### 02 File Selected
+
+Zip file selected — delivery step
+
+![02 File Selected](screenshots/02_file_selected.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![02 File Selected — masked](screenshots/02_file_selected__deterministic.png)
+
+</details>
+
+### 03 Share Step
+
+Share mode step
+
+![03 Share Step](screenshots/03_share_step.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![03 Share Step — masked](screenshots/03_share_step__deterministic.png)
+
+</details>
+
 ---
 
 <details>
@@ -100,6 +121,14 @@ Test flow:
   6. Verify browse view loads with folder tree
   7. Click a file in the tree → verify it opens in preview
   8. Click "Gallery view" → verify it switches back
+
+v0.3.1 notes:
+  - Gallery folder naming changed: v0.3.1 uses __gallery__{8-char-hash}
+    instead of v0.3.0's _gallery.{16-char-hash}. These tests do not inspect
+    the internal zip structure, so they pass for both naming conventions.
+  - Gallery view is NOT patched by v0.3.1 (browse-only overlay), so gallery
+    behaviour is identical to v0.3.0.
+  - Gallery rename backward-compatibility is tested in tests/qa/v031/p3__gallery_rename/.
 """
 
 import pytest

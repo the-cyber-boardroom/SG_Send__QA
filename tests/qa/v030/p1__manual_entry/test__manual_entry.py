@@ -100,7 +100,7 @@ class TestManualEntryForm:
         tid, key_b64 = transfer_helper.upload_encrypted(SAMPLE_CONTENT, "uc09-direct.txt")
 
         page.goto(f"{ui_url}/en-gb/download/#{tid}/{key_b64}")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(2000)
         screenshots.capture(page, "05_direct_hash_nav", "Direct hash navigation to download")
 

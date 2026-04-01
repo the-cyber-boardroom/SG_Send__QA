@@ -7,100 +7,92 @@
     {
       "method": "test_gallery_route",
       "doc": "GET /en-gb/gallery/#hash loads gallery view.",
-      "screenshots": [
-        "01_gallery_route"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_browse_route",
       "doc": "GET /en-gb/browse/#hash loads browse view.",
-      "screenshots": [
-        "02_browse_route"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_view_route",
       "doc": "GET /en-gb/view/#hash loads single-file viewer.",
-      "screenshots": [
-        "03_view_route"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_short_v_route",
       "doc": "/en-gb/v/#hash is equivalent to /en-gb/view/#hash.",
-      "screenshots": [
-        "04_short_v_route"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_download_route_auto_detect",
       "doc": "/en-gb/download/#hash auto-detects mode and decrypts.",
-      "screenshots": [
-        "05_download_auto"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_gallery_to_browse_hash_preserved",
       "doc": "Gallery 'Folder view' link navigates to /browse/ (hash preserved if supported).",
-      "screenshots": [
-        "06_gallery_to_browse"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_browse_to_gallery_hash_preserved",
       "doc": "Browse 'Gallery view' link navigates to /gallery/ (hash preserved if supported).",
-      "screenshots": [
-        "07_browse_to_gallery"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_copy_link_includes_key",
       "doc": "Copy Link button in gallery/browse includes the key in the URL (P1).",
-      "screenshots": [
-        "08_copy_link"
-      ]
+      "screenshots": []
     }
   ],
   "screenshots": [
     {
       "name": "01_gallery_route",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/01_gallery_route.png",
-      "description": "Gallery route loaded"
+      "description": "Gallery route loaded",
+      "has_masks": false
     },
     {
       "name": "02_browse_route",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/02_browse_route.png",
-      "description": "Browse route loaded"
+      "description": "Browse route loaded",
+      "has_masks": false
     },
     {
       "name": "03_view_route",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/03_view_route.png",
-      "description": "View route loaded"
+      "description": "View route loaded",
+      "has_masks": true
     },
     {
       "name": "04_short_v_route",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/04_short_v_route.png",
-      "description": "Short /v/ route loaded"
+      "description": "Short /v/ route loaded",
+      "has_masks": true
     },
     {
       "name": "05_download_auto",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/05_download_auto.png",
-      "description": "Download route auto-detect"
+      "description": "Download route auto-detect",
+      "has_masks": true
     },
     {
       "name": "06_gallery_to_browse",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/06_gallery_to_browse.png",
-      "description": "Gallery \u2192 browse"
+      "description": "Gallery \u2192 browse",
+      "has_masks": false
     },
     {
       "name": "07_browse_to_gallery",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/07_browse_to_gallery.png",
-      "description": "Browse \u2192 gallery"
+      "description": "Browse \u2192 gallery",
+      "has_masks": false
     },
     {
       "name": "08_copy_link",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/04-navigation/navigation/screenshots/08_copy_link.png",
-      "description": "Copy Link button clicked"
+      "description": "Copy Link button clicked",
+      "has_masks": false
     }
   ]
 }

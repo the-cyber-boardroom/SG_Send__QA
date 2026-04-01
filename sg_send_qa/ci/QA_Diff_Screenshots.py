@@ -60,19 +60,35 @@ class QA_Diff_Screenshots(Type_Safe):
 
     # --------------------------------------------------------------- diffing
 
+    channel_tolerance : int   = 5    # per-channel max difference to ignore (0-255)
+                                     # rendering noise (anti-aliasing, sub-pixel shifts)
+                                     # typically differs by 1-3 per channel across many
+                                     # pixels — a tolerance of 5 absorbs this without
+                                     # hiding real visual changes.
+
     def pixel_diff_ratio(self, img_a: Image.Image, img_b: Image.Image) -> float:
-        """Return fraction of pixels that differ between two same-size images."""
+        """Return fraction of pixels that differ significantly between two images.
+
+        A pixel is counted as different only if at least one channel differs by
+        more than channel_tolerance (default 5 out of 255).  This absorbs
+        rendering noise (anti-aliasing, sub-pixel font shifts) without hiding
+        genuine visual changes.
+        """
         if img_a.size != img_b.size:
             return 1.0  # different dimensions = fully changed
 
-        pixels_a = list(img_a.get_flattened_data())
-        pixels_b = list(img_b.get_flattened_data())
+        pixels_a = list(img_a.convert("RGB").get_flattened_data())
+        pixels_b = list(img_b.convert("RGB").get_flattened_data())
         total    = len(pixels_a)
 
         if total == 0:
             return 0.0
 
-        diff_count = sum(1 for a, b in zip(pixels_a, pixels_b) if a != b)
+        tol = self.channel_tolerance
+        diff_count = sum(
+            1 for a, b in zip(pixels_a, pixels_b)
+            if max(abs(x - y) for x, y in zip(a, b)) > tol
+        )
         return diff_count / total
 
     # --------------------------------------------------------------- main run

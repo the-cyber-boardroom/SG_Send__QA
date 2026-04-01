@@ -1,0 +1,43 @@
+{
+  "use_case": "bug__send_download_deeplink_strips_key",
+  "module": "test__bug__send_download_deeplink_strips_key",
+  "module_doc": "BUG P0: send-download.js deep-link fix strips the encryption key.\n\nIntroduced by commit: \"fix send-download.js (v0.3.0): strip deep-link path\nfrom hash before token parse\"\n\nRoot cause:\n  The PLR-006 \"fix\" strips everything after the FIRST '/' from the hash.\n  But the normal browse URL format is #transferId/encryptionKey \u2014 the FIRST\n  '/' separates the transferId from the key. Stripping at the first '/'\n  discards the encryption key entirely.\n\n  Broken code in send-download.js _parseUrl():\n    const hash = _fullHash.includes('/')\n                   ? _fullHash.slice(0, _fullHash.indexOf('/'))  // strips key!\n                   : _fullHash;\n    // ...\n    const i = hash.indexOf('/');   // -1, because key was stripped\n    if (i > 0) { ... }             // never reached\n    else { this.transferId = hash; // hashKey never set \u2192 decryption fails }\n\n  Result: sd.hashKey = undefined \u2192 decryption fails \u2192 state='ready', zipTree=[]\n  \u2192 browse tree never renders. ALL non-friendly-token browse transfers are broken.\n\nImpact:\n  - P0: every browse/download page load with a #tid/key URL silently fails\n  - The zip is downloaded but cannot be decrypted (no key)\n  - Users see a perpetual loading/ready state with no content\n  - Only friendly-token URLs (word-word-NNNN) are unaffected (no '/' in token)\n\nCorrect fix in send-download.js _parseUrl():\n  For regular tokens: strip path suffix after the SECOND slash (keeping key).\n  For friendly tokens: strip path suffix after the FIRST slash (token has no key).\n\n    const firstSlash = _fullHash.indexOf('/');\n    const firstPart  = firstSlash > 0 ? _fullHash.slice(0, firstSlash) : _fullHash;\n    let hash;\n    if (firstSlash < 0) {\n        hash = _fullHash;  // no slash \u2014 no path suffix\n    } else if (typeof FriendlyCrypto !== 'undefined' && FriendlyCrypto.isFriendlyToken(firstPart)) {\n        hash = firstPart;  // friendly token: strip path after first slash\n    } else {\n        const secondSlash = _fullHash.indexOf('/', firstSlash + 1);\n        hash = secondSlash > 0 ? _fullHash.slice(0, secondSlash) : _fullHash;\n    }\n\nThis test PASSES while the bug exists (hashKey absent / zipTree empty).\nWhen fixed (hashKey present, browse tree renders), this test FAILS \u2014 delete it.\n\nRELEASE BLOCKER: Do NOT deploy v0.3.1 until this is fixed.\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_p0_bug_encryption_key_stripped_from_hash",
+      "doc": "P0 BUG: sd.hashKey is absent because the deep-link fix strips the key.\n\n        PASSES while the bug exists (hashKey absent, zipTree empty).\n        FAILS when fixed (hashKey set, browse tree renders) \u2192 delete this file.\n        ",
+      "screenshots": [
+        "p0_bug_deeplink_01_blank",
+        "p0_bug_deeplink_02_state"
+      ]
+    },
+    {
+      "method": "test_p0_bug_browse_tree_never_renders",
+      "doc": "P0 BUG: Browse tree is empty because decryption fails without the key.\n\n        PASSES while the bug exists (empty tree).\n        FAILS when fixed (tree has files) \u2192 delete this file.\n        ",
+      "screenshots": [
+        "p0_bug_deeplink_03_tree"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "p0_bug_deeplink_01_blank",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__send_download_deeplink_strips_key/screenshots/p0_bug_deeplink_01_blank.png",
+      "description": "Browse loaded \u2014 should be blank (bug)",
+      "has_masks": true
+    },
+    {
+      "name": "p0_bug_deeplink_02_state",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__send_download_deeplink_strips_key/screenshots/p0_bug_deeplink_02_state.png",
+      "description": "State: {'hashKey': 'a6kBHIrLb4-EkhoMbg5yxQs-Rv2QXtdqqA7XI1w7CLs', 'zipTree': 0, 'state': 'complete'}",
+      "has_masks": true
+    },
+    {
+      "name": "p0_bug_deeplink_03_tree",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_bugs/bug__send_download_deeplink_strips_key/screenshots/p0_bug_deeplink_03_tree.png",
+      "description": "Browse tree \u2014 should be empty (bug)",
+      "has_masks": true
+    }
+  ]
+}

@@ -7,27 +7,17 @@
     {
       "method": "test_separate_key_decrypt_via_api",
       "doc": "Create a transfer via API, open link without key, enter key manually.",
-      "screenshots": [
-        "01_ready_state",
-        "02_transfer_info",
-        "03_key_entered",
-        "04_decrypted"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_wrong_key_shows_error",
       "doc": "Enter an incorrect key and verify an error message appears.",
-      "screenshots": [
-        "05_wrong_key_error"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_separate_key_ui_flow",
       "doc": "Full UI flow: upload with Separate Key mode, extract link + key, verify.",
-      "screenshots": [
-        "06_separate_key_selected",
-        "07_separate_key_done"
-      ]
+      "screenshots": []
     }
   ],
   "screenshots": [

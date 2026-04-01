@@ -1,0 +1,193 @@
+{
+  "use_case": "browse_brw016_025",
+  "module": "test__browse_brw016_025",
+  "module_doc": "P4: v0.3.1 Browse \u2014 BRW-016 through BRW-025.\n\nNew fixes shipped after the initial v0.3.1 BRW-001..015 batch:\n\n  BRW-016  Per-file Print button in markdown action bar (sb-file__print)\n  BRW-017  Locate button on every file type \u2014 expands tree, highlights, scrolls\n  BRW-018  Discourse-style image dimensions: ![alt|400](img.png) \u2192 width:400px\n  BRW-019  hashchange listener on SendDownload \u2014 new token navigates without reload\n  BRW-020  Images output data-md-src (not src) \u2014 zero HTTP 404s while resolving\n  BRW-021  Backtick code spans: `![alt](url)` renders as code, not broken image\n  BRW-022  Markdown Present mode \u2014 sb-present-overlay, ESC to dismiss\n  BRW-023  Selection colour: .sb-file__markdown ::selection \u2192 soft teal\n  BRW-024  Ctrl+P while Present overlay open prints only the overlay\n  BRW-025  Links inside Present overlay navigate (cloneNode fix)\n",
+  "test_target": "qa_server",
+  "tests": [
+    {
+      "method": "test_brw019_hashchange_loads_new_transfer",
+      "doc": "BRW-019: Changing window.location.hash triggers full reload of new transfer.",
+      "screenshots": [
+        "brw019_01_first_transfer"
+      ]
+    },
+    {
+      "method": "test_brw016_print_button_present_for_markdown",
+      "doc": "BRW-016: Markdown files have a .sb-file__print button in the action bar.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw016_print_button_absent_for_csv",
+      "doc": "BRW-016: Non-markdown files (CSV) do NOT have a Print button.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw017_locate_button_present_on_markdown",
+      "doc": "BRW-017: Markdown files have a .sb-file__reveal (Locate) button.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw017_locate_button_present_on_csv",
+      "doc": "BRW-017: CSV files also have a Locate button (all file types).",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw017_locate_highlights_file_in_tree",
+      "doc": "BRW-017: Clicking Locate adds .sb-tree__file--active to the correct tree item.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw018_image_pixel_width",
+      "doc": "BRW-018: ![alt|400](img.png) renders with width:400px style.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw018_image_percentage_width",
+      "doc": "BRW-018: ![alt|50%](img.png) renders with width:50% style.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw018_image_pixel_width_and_height",
+      "doc": "BRW-018: ![alt|200x100](img.png) renders with both width and height.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw020_images_use_data_md_src",
+      "doc": "BRW-020: <img> tags in rendered markdown have data-md-src, not raw src.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw021_backtick_code_span_not_parsed_as_image",
+      "doc": "BRW-021: `![alt](url)` inside backticks renders as inline code, not <img>.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw022_present_button_opens_overlay",
+      "doc": "BRW-022: .sb-file__present-md button opens fullscreen .sb-present-overlay.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw022_present_overlay_dismissed_by_close_button",
+      "doc": "BRW-022: Clicking \u2715 Exit button dismisses the Present overlay.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw022_present_overlay_dismissed_by_escape",
+      "doc": "BRW-022: Pressing ESC dismisses the Present overlay.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw023_selection_colour_css_rule_present",
+      "doc": "BRW-023: ::selection CSS for .sb-file__markdown uses teal (rgba 78,205,196,0.25).",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw024_print_media_css_rule_present",
+      "doc": "BRW-024: @media print CSS hides non-overlay elements when overlay is open.",
+      "screenshots": []
+    },
+    {
+      "method": "test_brw025_present_overlay_links_navigate",
+      "doc": "BRW-025: Clicking a link inside the Present overlay opens the target file.",
+      "screenshots": []
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "brw019_02_second_transfer",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw019_02_second_transfer.png",
+      "description": "After hashchange \u2014 second transfer",
+      "has_masks": true
+    },
+    {
+      "name": "brw019_01_first_transfer",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw019_01_first_transfer.png",
+      "description": "First transfer loaded",
+      "has_masks": true
+    },
+    {
+      "name": "brw016_01_action_bar",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw016_01_action_bar.png",
+      "description": "Markdown action bar",
+      "has_masks": true
+    },
+    {
+      "name": "brw016_02_csv_no_print",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw016_02_csv_no_print.png",
+      "description": "CSV action bar \u2014 no Print button",
+      "has_masks": true
+    },
+    {
+      "name": "brw017_01_locate_btn",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw017_01_locate_btn.png",
+      "description": "Markdown action bar \u2014 Locate button",
+      "has_masks": true
+    },
+    {
+      "name": "brw017_02_csv_locate",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw017_02_csv_locate.png",
+      "description": "CSV action bar \u2014 Locate button",
+      "has_masks": true
+    },
+    {
+      "name": "brw017_03_after_locate",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw017_03_after_locate.png",
+      "description": "After Locate \u2014 file highlighted in tree",
+      "has_masks": true
+    },
+    {
+      "name": "brw018_01_images",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw018_01_images.png",
+      "description": "rich.md \u2014 image dimensions",
+      "has_masks": true
+    },
+    {
+      "name": "brw020_01_images",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw020_01_images.png",
+      "description": "rich.md \u2014 image src check",
+      "has_masks": true
+    },
+    {
+      "name": "brw021_01_backtick",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw021_01_backtick.png",
+      "description": "rich.md \u2014 backtick image span",
+      "has_masks": true
+    },
+    {
+      "name": "brw022_01_before_present",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw022_01_before_present.png",
+      "description": "Before Present mode",
+      "has_masks": true
+    },
+    {
+      "name": "brw022_02_overlay_open",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw022_02_overlay_open.png",
+      "description": "Present overlay open",
+      "has_masks": true
+    },
+    {
+      "name": "brw022_03_overlay_dismissed",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw022_03_overlay_dismissed.png",
+      "description": "Overlay dismissed via \u2715 Exit",
+      "has_masks": true
+    },
+    {
+      "name": "brw022_04_overlay_esc",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw022_04_overlay_esc.png",
+      "description": "Overlay dismissed via ESC",
+      "has_masks": true
+    },
+    {
+      "name": "brw025_01_overlay_with_links",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw025_01_overlay_with_links.png",
+      "description": "Present overlay \u2014 contains links",
+      "has_masks": true
+    },
+    {
+      "name": "brw025_02_after_link_click",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/browse_brw016_025/screenshots/brw025_02_after_link_click.png",
+      "description": "After clicking link in overlay",
+      "has_masks": true
+    }
+  ]
+}

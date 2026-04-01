@@ -6,7 +6,7 @@ auto_generated: true
 
 # Separate Key
 
-> Test source at commit [`a713eea0`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/a713eea0) · v0.2.40
+> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
 
 UC-05: Separate Key share mode (P0).
 
@@ -26,9 +26,9 @@ Flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `separate_key_decrypt_via_api` | Create a transfer via API, open link without key, enter key manually. | 4 |
-| `wrong_key_shows_error` | Enter an incorrect key and verify an error message appears. | 1 |
-| `separate_key_ui_flow` | Full UI flow: upload with Separate Key mode, extract link + key, verify. | 2 |
+| `separate_key_decrypt_via_api` | Create a transfer via API, open link without key, enter key manually. | 0 |
+| `wrong_key_shows_error` | Enter an incorrect key and verify an error message appears. | 0 |
+| `separate_key_ui_flow` | Full UI flow: upload with Separate Key mode, extract link + key, verify. | 0 |
 
 ## Screenshots
 
@@ -121,7 +121,7 @@ class TestSeparateKey:
 
         # --- Open the download link WITHOUT the key in the hash ---
         page.goto(f"{ui_url}/en-gb/download/#{tid}")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(3000)
         screenshots.capture(page, "01_ready_state", "Download page — ready state, key input visible")
 
@@ -168,7 +168,7 @@ class TestSeparateKey:
         wrong_key = base64.urlsafe_b64encode(os.urandom(32)).rstrip(b"=").decode()
 
         page.goto(f"{ui_url}/en-gb/download/#{tid}")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
         page.wait_for_timeout(3000)
 
         # Enter wrong key
@@ -200,14 +200,14 @@ class TestSeparateKey:
     def test_separate_key_ui_flow(self, page, ui_url, send_server, screenshots):
         """Full UI flow: upload with Separate Key mode, extract link + key, verify."""
         page.goto(f"{ui_url}/en-gb/")
-        page.wait_for_load_state("networkidle")
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
 
         # Handle access gate
         access_input = page.locator("input[type='text'], input[type='password']").first
         if access_input.is_visible(timeout=2000):
             access_input.fill(send_server.access_token)
             page.locator("button").first.click()
-            page.wait_for_load_state("networkidle")
+            page.wait_for_selector("body[data-ready]", timeout=10_000)
 
         # Upload file
         file_input = page.locator("#file-input")

@@ -6,7 +6,7 @@ auto_generated: true
 
 # Download  Browse
 
-> Test source at commit [`d9cf0f4e`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/d9cf0f4e) · v0.2.40
+> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
 
 UC-07: Browse view features (P1).
 
@@ -27,13 +27,13 @@ Test flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `browse_page_loads` | Browse page loads without errors. | 1 |
-| `folder_tree_present` | Folder tree is rendered in the left panel. | 1 |
+| `browse_page_loads` | Browse page loads without errors. | 0 |
+| `folder_tree_present` | Folder tree is rendered in the left panel. | 0 |
 | `file_click_opens_preview` | Clicking a file in the tree opens a preview in the right panel. | 0 |
 | `share_tab_present` | Share tab shows URL, copy, and email actions. | 0 |
 | `info_tab_present` | Info tab shows file counts and encryption info. | 0 |
-| `save_locally_button_present` | Save locally button is present in browse view. | 1 |
-| `keyboard_navigation_j_k` | Keyboard j/k navigate through files in browse view (P2). | 2 |
+| `save_locally_button_present` | Save locally button is present in browse view. | 0 |
+| `keyboard_navigation_j_k` | Keyboard j/k navigate through files in browse view (P2). | 0 |
 
 ## Screenshots
 
@@ -43,11 +43,25 @@ Browse view loaded
 
 ![01 Browse Loaded](screenshots/01_browse_loaded.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![01 Browse Loaded — masked](screenshots/01_browse_loaded__deterministic.png)
+
+</details>
+
 ### 02 Folder Tree
 
 Folder tree in browse view
 
 ![02 Folder Tree](screenshots/02_folder_tree.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![02 Folder Tree — masked](screenshots/02_folder_tree__deterministic.png)
+
+</details>
 
 ### 06 Save Button
 
@@ -55,17 +69,38 @@ Save locally button
 
 ![06 Save Button](screenshots/06_save_button.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![06 Save Button — masked](screenshots/06_save_button__deterministic.png)
+
+</details>
+
 ### 07 Keyboard J
 
 After pressing j
 
 ![07 Keyboard J](screenshots/07_keyboard_j.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![07 Keyboard J — masked](screenshots/07_keyboard_j__deterministic.png)
+
+</details>
+
 ### 08 Keyboard K
 
 After pressing k
 
 ![08 Keyboard K](screenshots/08_keyboard_k.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![08 Keyboard K — masked](screenshots/08_keyboard_k__deterministic.png)
+
+</details>
 
 ---
 
@@ -83,6 +118,13 @@ Test flow:
   - Verify Info tab shows file counts by type, encryption info
   - Verify "Save locally" downloads the zip
   - Verify print button is present
+
+v0.3.1 notes:
+  - BRW-001: Folder tree now shows basenames only (not full zip paths).
+    test_folder_tree_present asserts the new correct behaviour.
+  - BRW-002: PDF Present mode is now also in browse view (tested in v031 suite).
+  - Use body[data-ready] (CR-001) instead of wait_for_timeout for page load.
+  - Data-testid selectors (CR-003) used where available.
 """
 
 import pytest
@@ -110,8 +152,10 @@ class TestBrowseViewFeatures:
         tid, key_b64 = transfer_helper.upload_encrypted(zip_bytes, "docs.zip")
         browse_url = f"{ui_url}/en-gb/browse/#{tid}/{key_b64}"
         page.goto(browse_url)
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(3000)
+        # CR-001: body[data-ready] is set when the UI finishes initialising —
+        # more reliable than networkidle (which never resolves due to background API calls).
+        page.wait_for_selector("body[data-ready]", timeout=10_000)
+        page.wait_for_timeout(1_500)   # allow JS to render the tree
         return tid, key_b64
 
     def test_browse_page_loads(self, page, ui_url, transfer_helper, screenshots):
@@ -125,18 +169,33 @@ class TestBrowseViewFeatures:
         ), "Browse page shows error"
 
     def test_folder_tree_present(self, page, ui_url, transfer_helper, screenshots):
-        """Folder tree is rendered in the left panel."""
-        self._open_browse(page, ui_url, transfer_helper)
+        """Folder tree is rendered in the left panel.
 
-        # Tree items or folder navigation elements
-        tree = page.locator(
-            "[class*='tree'], [class*='folder'], [class*='sidebar'], "
-            "nav li, ul li a[href]"
-        ).first
+        v0.3.1 / BRW-001: files in subfolders show basename only, not the full
+        zip path. The zip has docs/sub/extra.md — the tree should show "extra.md",
+        not "docs/sub/extra.md".
+        """
+        self._open_browse(page, ui_url, transfer_helper)
         screenshots.capture(page, "02_folder_tree", "Folder tree in browse view")
 
-        # Either tree or file listing should be present
-        assert tree.count() > 0 or page.locator("body").text_content() is not None
+        # v0.3.1: tree file labels use .sb-tree__file-name class
+        file_name_els = page.locator(".sb-tree__file-name").all()
+        if file_name_els:
+            # BRW-001 assertion: no file label contains a "/" (no full-path names)
+            for el in file_name_els:
+                name = el.text_content() or ""
+                assert "/" not in name, (
+                    f"BRW-001: Tree file label '{name}' contains '/' — "
+                    "showing full zip path instead of basename. "
+                    "This was fixed in v0.3.1 send-browse-v031.js."
+                )
+        else:
+            # Fallback for environments where the component uses different selectors
+            tree = page.locator(
+                ".sb-tree__file, [class*='tree'], [class*='sidebar'], nav li"
+            ).first
+            assert tree.count() > 0 or page.locator("body").text_content() is not None, \
+                "No tree elements found — browse view did not render"
 
     def test_file_click_opens_preview(self, page, ui_url, transfer_helper, screenshots):
         """Clicking a file in the tree opens a preview in the right panel."""

@@ -6,7 +6,7 @@ auto_generated: true
 
 # Pdf Present
 
-> Test source at commit [`807336ab`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/807336ab) · v0.2.40
+> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
 
 UC-06 (P2): PDF lightbox — Present mode and 'f' fullscreen shortcut.
 
@@ -30,11 +30,11 @@ block deployment if failing.
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `pdf_lightbox_opens` | Clicking the PDF thumbnail opens the lightbox without error. | 1 |
-| `present_button_visible_for_pdf` | A 'Present' button appears in the lightbox when viewing a PDF. | 1 |
+| `pdf_lightbox_opens` | Clicking the PDF thumbnail opens the lightbox without error. | 0 |
+| `present_button_visible_for_pdf` | A 'Present' button appears in the lightbox when viewing a PDF. | 0 |
 | `present_button_click_enters_fullscreen` | Clicking the Present button enters full-screen / presentation mode. | 0 |
-| `f_shortcut_triggers_present` | The 'f' keyboard shortcut triggers present / fullscreen mode. | 2 |
-| `s_key_triggers_save` | Pressing 's' when a file is selected triggers save/download. | 2 |
+| `f_shortcut_triggers_present` | The 'f' keyboard shortcut triggers present / fullscreen mode. | 0 |
+| `s_key_triggers_save` | Pressing 's' when a file is selected triggers save/download. | 0 |
 | `j_key_moves_selection_down` | 'j' key moves file selection down in browse view. | 0 |
 | `k_key_moves_selection_up` | 'k' key moves file selection up in browse view. | 0 |
 
@@ -95,6 +95,12 @@ Test flow:
 
 These tests are P2 — they verify progressive-enhancement behaviour and do not
 block deployment if failing.
+
+v0.3.1 notes:
+  - Gallery view is NOT patched in v0.3.1 — these tests run against the
+    unchanged v0.3.0 gallery view and should continue to pass unmodified.
+  - BRW-002 adds a Present button to the BROWSE view (not gallery).
+    That is tested separately in tests/qa/v031/p2__browse/test__browse_v031.py.
 """
 
 import pytest
