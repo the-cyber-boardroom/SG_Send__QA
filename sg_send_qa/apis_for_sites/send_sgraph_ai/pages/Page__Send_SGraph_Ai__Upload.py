@@ -1,16 +1,16 @@
 import subprocess
-
 import psutil
 from osbot_fast_api.utils.Fast_API_Server                                   import Fast_API_Server
 from osbot_utils.helpers.duration.decorators.print_duration                 import print_duration
 from osbot_utils.testing.Stderr                                             import Stderr
+from osbot_utils.testing.__helpers                                          import obj
 from osbot_utils.type_safe.Type_Safe                                        import Type_Safe
-from osbot_utils.utils.Misc import random_port, wait_for
-from osbot_utils.utils.Process import start_process
-
+from osbot_utils.utils.Http                                                 import wait_for_http, wait_for_port, url_join_safe
+from osbot_utils.utils.Misc                                                 import random_port, wait_for
+from osbot_utils.utils.Objects                                              import obj_dict
 from sg_send_qa.browser.SG_Send__Browser__Test_Harness                      import SG_Send__Browser__Test_Harness
 from sg_send_qa.browser.Schema__Browser_Test_Config                         import Schema__Browser_Test_Config
-from sgraph_ai_app_send.lambda__user.lambda_function.lambda_handler__user import run
+from sgraph_ai_app_send.lambda__user.lambda_function.lambda_handler__user   import run
 from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import setup__send_user_lambda__test_client
 
 
@@ -242,6 +242,7 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
                 }
             except psutil.NoSuchProcess:
                 return {"error": "Process not found"}
+
         port              = random_port()
         fast_api_handler  = run.__module__
         handler_app       = f"{fast_api_handler}:app"
@@ -254,35 +255,48 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
                          '--timeout-graceful-shutdown', '0']
 
         popen_args         = process__name + process__args
-        fast_api_process   = subprocess.Popen(popen_args)
+        # stderr             = Stderr()                           # create object to capture stderr
+        # stderr.start()                                          # start monitoring # @ dev: capture this as a bug in OSBot_Utils since Stderr().start() should return the Stderr() object
+        stderr             = subprocess.PIPE
+        stdout             = subprocess.PIPE
+        fast_api_process   = subprocess.Popen(popen_args,
+                                              stderr = stderr ,
+                                              stdout = stdout)       # @dev : capture this missing method in OSBot-Utils (at the moment the processes helper class only has a method that hands the execution until the process is completed
 
-        port_open = False
-        for i in range(10):
-            try:
-                url = f"http://localhost:{port}/info/status"
-                print(url)
-                response = requests.get(url, timeout=100)
-                if response.status_code == 200:
-                    port_open = True
-                    break
-            except Exception as e:
-                print(f"Error checking port status at attempt {i+1}: {e}")
-            wait_for(0.1)
+        url__server = f"http://localhost:{port}"
+        url__server__info = url_join_safe(url__server, "/info/status")
 
-        if port_open:
-            pid = check_output(["pgrep", "-f", "uvicorn"]).decode("utf-8").strip()
-            details = get_process_details(int(pid))
-            if "error" not in details:
-                print("\nFastAPI process details:")
-                for key, value in details.items():
-                    if isinstance(value, dict):
-                        sub_keys = [k for k in value]
-                        sub_values = [str(v) for v in value[sub_keys]]
-                        print(f"{key}: {', '.join(sub_values)}")
-                    else:
-                        print(f"{key}: {value}")
-                os.system(f"kill {pid}")
-            else:
-                print(details["error"])
+        with print_duration(): # this is about ~ 1.35 seconds
+            if not wait_for_port('localhost', port):
+                raise Exception(f"was not able to get port {port} in localhost")
+
+        with print_duration():      # this is about ~ 0.017 seconds
+            if not wait_for_http(url__server__info):
+                raise Exception(f"was not able to open url: {url__server__info}")
+
+
+        pid = fast_api_process.pid
+
+        result = dict(fast_api_process  = obj_dict(fast_api_process) ,
+                      stderr            = stderr                     ,
+                      stdout            = stdout                     ,
+                      pid               = pid                        ,
+                      port              = port                       ,
+                      url__server       = url__server                ,
+                      url__server__info = url__server__info          )
+
+        return obj(result)
+
+        details = get_process_details(int(pid))
+        if "error" not in details:
+            print("\nFastAPI process details:")
+            for key, value in details.items():
+                if isinstance(value, dict):
+                    sub_keys = [k for k in value]
+                    sub_values = [str(v) for v in value[sub_keys]]
+                    print(f"{key}: {', '.join(sub_values)}")
+                else:
+                    print(f"{key}: {value}")
+            os.system(f"kill {pid}")
         else:
-            print("FastAPI process not found on the specified port.")
+            print(details["error"])
