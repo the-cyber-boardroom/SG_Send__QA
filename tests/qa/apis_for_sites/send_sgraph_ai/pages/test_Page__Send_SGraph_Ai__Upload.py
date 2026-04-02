@@ -3,10 +3,70 @@ import pytest
 import requests
 from unittest                                                                    import TestCase
 from osbot_utils.testing.__                                                      import __, __SKIP__
+from osbot_utils.type_safe.Type_Safe                                             import Type_Safe
 from osbot_utils.utils.Http                                                      import is_port_open, wait_for_port_closed
 from osbot_utils.utils.Process                                                   import kill_process
 from sg_send_qa.apis_for_sites.send_sgraph_ai.pages.Page__Send_SGraph_Ai__Upload import Page__Send_SGraph_Ai__Upload
+from sg_send_qa.browser.Schema__Browser_Test_Config                              import Schema__Browser_Test_Config
 
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Non-browser unit tests — run in CI without Chromium
+# ═══════════════════════════════════════════════════════════════════════════════
+
+class test_Page__Send_SGraph_Ai__Upload__Unit(TestCase):
+    """Unit tests for Page__Send_SGraph_Ai__Upload — no browser required."""
+
+    def test_instantiation(self):                                             # class can be constructed with no arguments
+        page = Page__Send_SGraph_Ai__Upload()
+        assert page is not None
+
+    def test_is_type_safe_subclass(self):                                     # must be a Type_Safe subclass (project convention)
+        page = Page__Send_SGraph_Ai__Upload()
+        assert isinstance(page, Type_Safe)
+
+    def test_config_defaults_to_headless_true(self):                         # CI safety: headless must default to True
+        page = Page__Send_SGraph_Ai__Upload()
+        assert isinstance(page.config, Schema__Browser_Test_Config)
+        assert page.config.headless is True
+
+    def test_config_can_be_overridden_to_headless_false(self):               # debug path: caller can force visible browser
+        config = Schema__Browser_Test_Config(headless=False)
+        page   = Page__Send_SGraph_Ai__Upload(config=config)
+        assert page.config.headless is False
+
+    def test_harness_is_none_before_setup(self):                             # harness must not be started until setup() is called
+        page = Page__Send_SGraph_Ai__Upload()
+        assert page.harness is None
+
+    def test_sg_send_is_none_before_setup(self):                             # sg_send (browser pages) must not exist until setup()
+        page = Page__Send_SGraph_Ai__Upload()
+        assert page.sg_send is None
+
+    def test_has_setup_method(self):                                         # setup() must be present and callable
+        page = Page__Send_SGraph_Ai__Upload()
+        assert callable(getattr(page, 'setup', None))
+
+    def test_has_upload_file_method(self):                                   # upload_file() must be present and callable
+        page = Page__Send_SGraph_Ai__Upload()
+        assert callable(getattr(page, 'upload_file', None))
+
+    def test_has_get_friendly_token_method(self):                            # get_friendly_token() must be present and callable
+        page = Page__Send_SGraph_Ai__Upload()
+        assert callable(getattr(page, 'get_friendly_token', None))
+
+    def test_has_teardown_method(self):                                      # teardown() must be present and callable
+        page = Page__Send_SGraph_Ai__Upload()
+        assert callable(getattr(page, 'teardown', None))
+
+    def test_teardown_is_safe_when_harness_is_none(self):                    # teardown() must not raise if setup() was never called
+        page = Page__Send_SGraph_Ai__Upload()
+        page.teardown()                                                       # should complete without error
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Browser tests — require Chromium; skip in headless CI
+# ═══════════════════════════════════════════════════════════════════════════════
 
 class test_Page__Send_SGraph_Ai__Upload(TestCase):
     @classmethod
@@ -17,10 +77,39 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
     # def tearDownClass(cls):
     #     cls.upload_page.harness.teardown()
 
+    @pytest.mark.skip("requires browser — run manually")
+    def test_setup_and_teardown_headless(self):                              # verify headless setup/teardown lifecycle
+        page = Page__Send_SGraph_Ai__Upload()
+        page.setup()
+        assert page.harness   is not None
+        assert page.sg_send   is not None
+        assert page.config.headless is True
+        page.teardown()
+
+    @pytest.mark.skip("requires browser — run manually")
+    def test_upload_file_returns_friendly_token(self, tmp_path):             # upload a temp file and get back a word-word-NNNN token
+        import re
+        import tempfile, os
+        with tempfile.NamedTemporaryFile(suffix=".txt", delete=False, mode="w") as f:
+            f.write("headless upload test content")
+            tmp_file = f.name
+        try:
+            page = Page__Send_SGraph_Ai__Upload()
+            page.setup()
+            token = page.upload_file(tmp_file)
+            page.teardown()
+            assert token, "upload_file() returned empty token"
+            assert re.match(r"\b[a-z]+-[a-z]+-\d{4}\b", token), \
+                f"Token does not match word-word-NNNN: {token!r}"
+        finally:
+            os.unlink(tmp_file)
+
+    @pytest.mark.skip("requires browser — run manually")
     def test_current_logic(self):
         with self.upload_page as _:
             _.current_logic()
 
+    @pytest.mark.skip("requires browser — run manually")
     def test_debug_setup_chrome(self):
         with self.upload_page as _:
             _.debug_setup_chrome()
@@ -38,18 +127,22 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
             #
             # [LIB-2026-04-01-043] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 
+    @pytest.mark.skip("requires browser — run manually")
     def test_debug_start_api_server(self):
         with self.upload_page as _:
             _.debug_start_api_server()
 
+    @pytest.mark.skip("requires browser — run manually")
     def test_debug_start_api_server__with_saved_state(self):
         with self.upload_page as _:
             _.debug_start_api_server__with_saved_state()
 
+    @pytest.mark.skip("requires browser — run manually")
     def test_debug_inner_methods_of__start_api_server(self):
         with self.upload_page as _:
             _.debug_inner_methods_of__start_api_server()
 
+    @pytest.mark.skip("requires browser — run manually")
     def test_debug__start_and_stop_server_using_port(self):
         with self.upload_page as _:
             result = _.debug__start_and_stop_server_using_port()

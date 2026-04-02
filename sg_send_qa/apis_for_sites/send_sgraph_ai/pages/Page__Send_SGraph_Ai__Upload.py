@@ -15,13 +15,48 @@ from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server impo
 
 
 class Page__Send_SGraph_Ai__Upload(Type_Safe):
-    #harness : SG_Send__Browser__Test_Harness
+    config  : Schema__Browser_Test_Config                                     # headless=True (CI default), headless=False for debug
+    harness : SG_Send__Browser__Test_Harness = None                           # lifecycle owner — None until setup() is called
+    sg_send = None                                                            # SG_Send__Browser__Pages — None until setup() is called
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # Production path — headless=True by default, safe for CI
+    # ═══════════════════════════════════════════════════════════════════════
+
+    def setup(self):                                                          # start harness, set token, open upload page
+        self.harness = SG_Send__Browser__Test_Harness(config=self.config)
+        self.harness.setup()
+        self.sg_send = self.harness.sg_send
+        self.harness.set_access_token()
+        self.sg_send.page__root()
+        return self
+
+    def upload_file(self, file_path: str) -> str:                            # upload a file and return the friendly token
+        filename      = file_path.split("/")[-1]
+        content_bytes = open(file_path, "rb").read()
+        return self.sg_send.workflow__upload_friendly_token(
+            token         = self.harness.access_token(),
+            filename      = filename,
+            content_bytes = content_bytes,
+        )
+
+    def get_friendly_token(self) -> str:                                     # read the current friendly token from the page
+        return self.sg_send.upload__get_friendly_token()
+
+    def teardown(self):                                                      # stop harness cleanly
+        if self.harness:
+            self.harness.teardown()
+        return self
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # Debug / performance investigation — kept for reference
+    # ═══════════════════════════════════════════════════════════════════════
 
     def current_logic(self):
         with print_duration(action_name="setup harness"):
             self.harness = SG_Send__Browser__Test_Harness()
         with print_duration(action_name="setup chrome"):
-            self.harness.headless(False).setup()
+            self.harness.setup()                                             # headless default from config (True in CI)
             self.sg_send = self.harness.sg_send
         with print_duration(action_name="set_access_token"):
             self.harness.set_access_token()
@@ -38,7 +73,7 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
     def debug_setup_chrome(self):
         self.harness = SG_Send__Browser__Test_Harness()
         with print_duration(action_name="setup chrome"):
-            self.harness.headless(False).setup()
+            self.harness.headless(False).setup()              # headless=False intentional — debug probe only
 
         with print_duration(action_name="close servers (but not chrome)"):
             self.harness.teardown()
