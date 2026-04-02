@@ -29,7 +29,7 @@ class test_Friendly_Token(TestCase):        # Validate the Simple Token (friendl
 
     @classmethod
     def setUpClass(cls):
-        cls.harness = SG_Send__Browser__Test_Harness().headless(False).setup()
+        cls.harness = SG_Send__Browser__Test_Harness().headless(True).setup()
         cls.sg_send = cls.harness.sg_send
         cls.harness.set_access_token()              # [LIB-2026-04-01-049] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 
