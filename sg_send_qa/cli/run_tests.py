@@ -12,11 +12,7 @@ import sys
 
 from sg_send_qa.cli.QA_Run_Tests import QA_Run_Tests
 
-# todo: refactor to a) have a lot more granularity
-#                   b) support individual test execution
-#                   c) provide http and browser based execution
-#       this should be a lot more than just execution a test
-#       create a plan for how this CLI should work
+# [LIB-2026-04-01-022] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 def main():
     parser = argparse.ArgumentParser(description="SG/Send QA Test Runner")
     parser.add_argument("--target", default="https://send.sgraph.ai",
