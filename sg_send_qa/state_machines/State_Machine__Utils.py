@@ -23,7 +23,7 @@ class State_Machine__Utils(Type_Safe):
             if str(t.from_state) == from_state
         ]
 
-    # todo: refactor mermaid code to use MGraph_DB
+    # [LIB-2026-04-01-018] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
     def to_mermaid(self, machine) -> str:
         """Render the state machine as a Mermaid stateDiagram-v2 block."""
         lines = ['stateDiagram-v2']

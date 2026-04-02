@@ -31,8 +31,7 @@ class QA_Diff_Screenshots(Type_Safe):
         return 0.01
 
     # -------------------------------------------------------------------- git
-    # todo: we need a better Type_Safe way to capture and map these changes (which is something we need in a lot of places)
-    #       basically we should have an object model (Digital Twin) of the commit and diff
+    # [LIB-2026-04-01-014] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
     def get_changed_screenshots(self) -> list:
         """Return list of screenshot PNGs that git considers modified."""
         result = subprocess.run(

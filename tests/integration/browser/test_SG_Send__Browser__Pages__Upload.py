@@ -76,13 +76,13 @@ class test_SG_Send__Browser__Pages__Upload(TestCase):                           
         assert self.sg_send.upload_state() == 'complete'
 
     def test__05__upload__get_simple_token(self):                                   # extract combined link from done step
-        simple_token = self.sg_send.upload__get_friendly_token()                    # todo: these upload__get_friendly_token methods need to be moved to a class with logic specific to this upload page
+        simple_token = self.sg_send.upload__get_friendly_token()                    # [LIB-2026-04-01-041] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
         assert len(simple_token.split("-")) == 3
-        # todo  add way to percist this token
+        # [LIB-2026-04-01-063] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 
     # def test__05__upload__get_combined_link(self):                                   # extract combined link from done step
     #     #link = self.sg_send.upload__get_combined_link()
-    #     simple_token = self.sg_send.upload__get_friendly_token()                    # todo: these upload__get_friendly_token methods need to be moved to a class with logic specific to this upload page
+    #     simple_token = self.sg_send.upload__get_friendly_token()
     #     assert len(simple_token.split("-")) == 3
 
     # the test bellow need either open in a new window, or we need a way to keep the state of this page

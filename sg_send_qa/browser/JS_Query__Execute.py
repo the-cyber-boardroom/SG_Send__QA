@@ -65,7 +65,7 @@ class JS_Query__Execute(Type_Safe):                                             
     # ═══════════════════════════════════════════════════════════════════════════
     # localStorage
     # ═══════════════════════════════════════════════════════════════════════════
-    # todo: refactor this into a separate class (focused only on LocalStorage
+    # [LIB-2026-04-01-007] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
     def storage_get(self, key):                                                 # read from localStorage
         return self.evaluate(f"localStorage.getItem(atob('{b64(key)}'))")
 
@@ -87,7 +87,7 @@ class JS_Query__Execute(Type_Safe):                                             
     # ═══════════════════════════════════════════════════════════════════════════
     # Light DOM reads — no shadow traversal
     # ═══════════════════════════════════════════════════════════════════════════
-    # todo: refactor this into a separate class
+    # [LIB-2026-04-01-008] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
     def light_text(self, selector):                                             # innerText of a light DOM element
         sel_b64 = b64(selector)
         return self.evaluate_iife(
@@ -137,7 +137,7 @@ class JS_Query__Execute(Type_Safe):                                             
     # ═══════════════════════════════════════════════════════════════════════════
     # Light DOM predicates — JS function strings for wait_for_function
     # ═══════════════════════════════════════════════════════════════════════════
-    # todo: refactor this into a separate class
+    # [LIB-2026-04-01-009] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
     def predicate__light_exists(self, selector):                                # true when element is present in DOM
         sel_b64 = b64(selector)
         return f'() => document.querySelector(atob("{sel_b64}")) !== null'

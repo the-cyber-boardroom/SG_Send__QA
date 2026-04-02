@@ -26,9 +26,7 @@ from sg_send_qa.api.routes.routes__download                         import Route
 from sg_send_qa.api.routes.routes__workflow                         import Routes__Workflow
 from sg_send_qa.utils.Version                                       import version__sg_send__qa
 
-# todo: add tests that target this class
-#       also there doesn't seem to be any way to start this API locally
-#       note this is the APIs that the CLI should be using
+# [LIB-2026-04-01-003] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 class Fast_API__QA__Server(Serverless__Fast_API):
 
     qa_runner : QA_API__Runner = None                           # injected or auto-created in setup()
@@ -63,7 +61,7 @@ class Fast_API__QA__Server(Serverless__Fast_API):
 # ──────────────────────────────────────────────────────────────────────────────
 _fast_api = Fast_API__QA__Server().setup()
 
-# todo:
+# [LIB-2026-04-01-004] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 handler   = _fast_api.handler()         # Mangum-wrapped ASGI — for Lambda direct invoke
 app       = _fast_api.app()             # raw ASGI app — for uvicorn / Lambda Web Adapter
 

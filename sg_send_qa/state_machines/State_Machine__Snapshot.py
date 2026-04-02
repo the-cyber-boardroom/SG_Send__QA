@@ -15,11 +15,7 @@ from osbot_utils.type_safe.primitives.domains.identifiers.safe_int.Timestamp_Now
 from sg_send_qa.state_machines.primitives    import Safe_Str__Machine_Name, Safe_Str__State_Name
 from sg_send_qa.state_machines.State_Transition import State_Transition
 
-# todo: refactor to Schema__ class
-#       capture how how the comments on this class have been done, (this is how it should  be)
-#       map out how this state-machine logic is done, since the whole idea of this is to provide an
-#           abstraction layer for some tests, but for that to work this needs to be connected to the actual code
-#           which doesn't seem that this how this state_machines is working
+# [LIB-2026-04-01-015] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 class State_Machine__Snapshot(Type_Safe):                   # Observed transitions for one state machine during one test run  .
 
     version              : Safe_Str__Version                # QA suite version that produced this snapshot (e.g. 'v0.3.0')
