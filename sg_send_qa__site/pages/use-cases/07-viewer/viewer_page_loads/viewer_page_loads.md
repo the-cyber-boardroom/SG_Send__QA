@@ -6,7 +6,7 @@ auto_generated: true
 
 # Viewer Page Loads
 
-> Test source at commit [`98e60c65`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/98e60c65) · v0.2.46
+> Test source at commit [`978647d4`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/978647d4) · v0.2.47
 
 Single-file viewer loads without errors.
 

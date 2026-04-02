@@ -85,7 +85,7 @@ Upload complete
 
 ### 06 Link Captured
 
-Combined link: http://localhost:38534/en-gb/browse/#e2e9460333c5/whgprsGqGeYQR-GPbT1uuSPh7KAWS-
+Combined link: http://localhost:48153/en-gb/browse/#880c0346fea7/dS_Rabvi6WPFdMFylnXpe_sxiKyUvk
 
 ![06 Link Captured](screenshots/06_link_captured.png)
 

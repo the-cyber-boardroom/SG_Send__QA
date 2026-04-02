@@ -6,7 +6,7 @@ auto_generated: true
 
 # Gallery To Browse Hash Preserved
 
-> Test source at commit [`98e60c65`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/98e60c65) · v0.2.46
+> Test source at commit [`978647d4`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/978647d4) · v0.2.47
 
 Gallery 'Folder view' link navigates to /browse/ preserving the hash.
 
