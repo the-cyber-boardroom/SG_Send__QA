@@ -13,6 +13,39 @@ from sg_send_qa.browser.SG_Send__Browser__Pages                                 
 # Unit tests — no servers, no browser
 # ═══════════════════════════════════════════════════════════════════════════════
 
+class test_SG_Send__Browser__Test_Harness__port_reuse(TestCase):              # port-reuse logic (no browser)
+
+    def test__load_saved_state__returns_none_in_headless_mode(self):           # CI isolation — headless=True always returns None
+        harness = SG_Send__Browser__Test_Harness()
+        assert harness.config.headless is True                                 # default is CI mode
+        result = harness._load_saved_state()
+        assert result is None                                                  # no disk read in CI mode
+
+    def test__api_server_port_open__closed_port_returns_false(self):          # port not in use → False
+        harness = SG_Send__Browser__Test_Harness()
+        assert harness.api_server_port_open(0)     is False                   # port 0 is never open
+        assert harness.api_server_port_open(19999) is False                   # unpopulated port
+
+    def test__start_api_server__twice__no_port_conflict(self):                # two sequential start/stop cycles — no leftover port
+        harness = SG_Send__Browser__Test_Harness()
+        harness.headless(True)
+
+        harness._start_api_server()                                           # first start
+        assert harness.api_server is not None
+        assert harness.api_server.is_port_open()                              # port is open after start
+        port_first = harness.api_server.port
+        harness.api_server.stop()                                             # clean up first
+
+        harness._start_api_server()                                           # second start — fresh (headless=True, no saved port)
+        assert harness.api_server is not None
+        assert harness.api_server.is_port_open()                              # port is open after second start
+        port_second = harness.api_server.port
+        harness.api_server.stop()                                             # clean up second
+
+        assert port_first  != 0                                               # both ports were real
+        assert port_second != 0
+
+
 class test_SG_Send__Browser__Test_Harness(TestCase):
 
     def test__init__(self):                                                     # verify defaults before setup

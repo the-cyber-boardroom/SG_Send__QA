@@ -130,9 +130,19 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     def _start_api_server(self, saved_state=None):
         self.test_objs  = setup__send_user_lambda__test_client()
         api_port        = saved_state.api_port if saved_state else 0            # 0 = let Fast_API_Server pick random
+
+        if api_port and self.api_server_port_open(api_port):                    # port alive from previous run — reuse
+            self.api_server = Fast_API_Server(app  = self.test_objs.fast_api__app ,
+                                              port = api_port                      )
+            return                                                              # skip start() — server already running
+
         self.api_server = Fast_API_Server(app  = self.test_objs.fast_api__app ,
                                           port = api_port                      )
         self.api_server.start()
+
+    def api_server_port_open(self, port):                                      # check if a port is already open
+        from osbot_utils.utils.Http import port_is_open
+        return port_is_open('localhost', port)
 
 
 
