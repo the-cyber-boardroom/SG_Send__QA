@@ -198,3 +198,64 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
                 assert str(error.args[0].reason) == (f"HTTPConnection(host='localhost', port={port}): "
                                                      f"Failed to establish a new connection: [Errno 61] Connection refused")
         # [LIB-2026-04-01-046] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
+
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# Integration tests — require Chromium and a running SG/Send instance; skip in CI
+# ═══════════════════════════════════════════════════════════════════════════════
+
+@pytest.mark.skip("requires browser — run manually")
+class test_Page__Send_SGraph_Ai__Upload__Integration(TestCase):
+    """Integration tests for Page__Send_SGraph_Ai__Upload — browser required.
+
+    These tests exercise the full upload flow through a real headless Chromium
+    browser against a running SG/Send instance.  They are skipped in CI because
+    Chromium is not available in the sandbox; run them locally with:
+
+        pytest tests/qa/apis_for_sites/send_sgraph_ai/pages/ -k Integration -s
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import os, re, tempfile
+        cls._os             = os
+        cls._re             = re
+        cls._token_pattern  = re.compile(r"\b[a-z]+-[a-z]+-\d{4}\b")
+        cls.page            = Page__Send_SGraph_Ai__Upload()
+        cls.page.setup()
+
+        # Create a small temp file once — reused across tests in this class
+        with tempfile.NamedTemporaryFile(suffix=".txt", delete=False, mode="w") as f:
+            f.write("SG/Send QA integration test — upload via Page__Send_SGraph_Ai__Upload.")
+            cls._tmp_file = f.name
+
+        # Perform the upload once; store the token for all assertions
+        cls._token = cls.page.upload_file(cls._tmp_file)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.page.teardown()
+        if hasattr(cls, '_tmp_file') and cls._os.path.exists(cls._tmp_file):
+            cls._os.unlink(cls._tmp_file)
+
+    def test_upload_file__returns_friendly_token(self):                          # upload_file() must return a non-empty friendly token
+        assert self._token, "upload_file() returned an empty string — expected a friendly token"
+        assert isinstance(self._token, str), f"upload_file() must return str, got {type(self._token)}"
+        assert self._token_pattern.search(self._token), (
+            f"Token does not match word-word-NNNN pattern: {self._token!r}"
+        )
+
+    def test_get_friendly_token__after_upload(self):                             # get_friendly_token() must return the same token as upload_file()
+        page_token = self.page.get_friendly_token()
+        assert page_token, "get_friendly_token() returned an empty string after upload"
+        assert self._token_pattern.search(page_token), (
+            f"get_friendly_token() result does not match word-word-NNNN pattern: {page_token!r}"
+        )
+        assert page_token == self._token, (
+            f"get_friendly_token() returned {page_token!r} but upload_file() returned {self._token!r} — they must match"
+        )
+
+    def test_upload_page__is_accessible(self):                                   # root page loaded successfully — basic smoke check
+        assert self.page.harness         is not None, "harness must be set after setup()"
+        assert self.page.sg_send         is not None, "sg_send must be set after setup()"
+        assert self.page.config.headless is True,     "headless must default to True (CI safety)"
