@@ -19,8 +19,9 @@ from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server impo
 class Page__Send_SGraph_Ai__Upload(Type_Safe):
     config  : Schema__Browser_Test_Config                                     # headless=True (CI default), headless=False for debug
     harness : SG_Send__Browser__Test_Harness = None                           # lifecycle owner — None until setup() is called
+    # qa we should never have a variable in a Type_Safe class that doesn't have a type
     sg_send = None                                                            # SG_Send__Browser__Pages — None until setup() is called
-
+    #sg_send : SG_Send__Browser__Pages = None                                 # qa the reason this doesn't work is due to the circular dependency, which is the problem that needs to be solved (so in a way not being able to use a type here is a good way to detect a problem)
     # ═══════════════════════════════════════════════════════════════════════
     # Production path — headless=True by default, safe for CI
     # ═══════════════════════════════════════════════════════════════════════

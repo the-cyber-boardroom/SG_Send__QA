@@ -17,7 +17,7 @@ from sg_send_qa.browser.QA_Browser                                              
 from sg_send_qa.browser.Schema__Browse_Page                                      import Schema__Browse_Page
 from sg_send_qa.browser.Schema__Download_Page                                    import Schema__Download_Page
 from sg_send_qa.browser.Schema__Gallery_Page                                     import Schema__Gallery_Page
-from sg_send_qa.browser.Schema__Upload_Page                                      import Schema__Upload_Page
+from sg_send_qa.browser.Schema__Upload_Page                                      import Schema__Upload_Page     # @qa: refactor out this dependency from this class (see note on Schema__Upload_Page page)
 from sg_send_qa.browser.Schema__Viewer_Page                                      import Schema__Viewer_Page
 
 DEFAULT__TARGET_SERVER__LOCALHOST = Safe_Str__Url__Server('http://localhost')
