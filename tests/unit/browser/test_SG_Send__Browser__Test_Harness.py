@@ -46,6 +46,27 @@ class test_SG_Send__Browser__Test_Harness__port_reuse(TestCase):              # 
         assert port_second != 0
 
 
+class test_SG_Send__Browser__Test_Harness__hash_cache(TestCase):           # content-hash UI build cache (no browser)
+
+    def test__ui_content_hash__returns_string(self):                        # _ui_content_hash() returns a non-empty string
+        harness = SG_Send__Browser__Test_Harness()
+        result  = harness._ui_content_hash()
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+    def test__stable_build_folder__returns_local_server(self):              # _stable_build_folder() ends in .local-server
+        harness = SG_Send__Browser__Test_Harness()
+        folder  = harness._stable_build_folder()
+        assert isinstance(folder, str)
+        assert folder.endswith('.local-server')
+
+    def test__ui_content_hash__is_stable(self):                             # calling twice returns same value
+        harness = SG_Send__Browser__Test_Harness()
+        first   = harness._ui_content_hash()
+        second  = harness._ui_content_hash()
+        assert first == second
+
+
 class test_SG_Send__Browser__Test_Harness(TestCase):
 
     def test__init__(self):                                                     # verify defaults before setup
