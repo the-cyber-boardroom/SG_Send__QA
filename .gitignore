@@ -209,3 +209,4 @@ __marimo__/
 # Project-specific
 config/.env
 node_modules/
+.local-server/

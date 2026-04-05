@@ -45,6 +45,7 @@ class Harness_State__Persistence(Type_Safe):                                    
                     ui_port         = state.ui_port         ,
                     ui_build_folder = state.ui_build_folder ,
                     ui_version      = state.ui_version      ,
+                    ui_content_hash = state.ui_content_hash ,
                     access_token    = state.access_token    ,
                     chrome_port     = state.chrome_port     )
         json_save_file(data, self.state_file())

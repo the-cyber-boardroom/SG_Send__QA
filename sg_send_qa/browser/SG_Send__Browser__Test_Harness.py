@@ -13,6 +13,7 @@
 #   - No persistence → clean state guaranteed
 # ═══════════════════════════════════════════════════════════════════════════════
 
+import hashlib
 from pathlib                                                                import Path
 from osbot_fast_api.utils.Fast_API_Server                                   import Fast_API_Server
 from osbot_utils.type_safe.Type_Safe                                        import Type_Safe
@@ -23,7 +24,7 @@ from osbot_utils.utils.Files                                                impo
 from sg_send_qa.browser.SG_Send__Browser__Pages                             import SG_Send__Browser__Pages
 from sg_send_qa.browser.Schema__Browser_Test_Config                         import Schema__Browser_Test_Config
 from sg_send_qa.browser.Harness_State__Persistence                          import Harness_State__Persistence, Schema__Harness_State
-from sg_send_qa.utils.QA_UI_Server                                          import build_ui_serve_dir
+from sg_send_qa.utils.QA_UI_Server                                          import build_ui_serve_dir, UI_VERSION, UI_VERSION_BASE
 from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import setup__send_user_lambda__test_client, Send__User_Lambda__Test_Objs
 
 
@@ -147,23 +148,20 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
 
 
     def _build_ui(self, saved_state=None):
-        ui_version = self._current_ui_version()
-
-        if not self.config.headless and saved_state:
-            cached_folder = saved_state.ui_build_folder
-            if (saved_state.ui_version == ui_version
-                    and cached_folder
-                    and folder_exists(cached_folder)
-                    and saved_state.api_port == self.api_server.port):
-                self.ui_serve_dir = cached_folder               # reuse cached — skip rebuild
-                return
-
-        if self.config.headless:
+        if self.config.headless:                                                # CI mode — always fresh, use Temp_Folder
             self.ui_folder = Temp_Folder()
             self.ui_folder.__enter__()
-            self.ui_serve_dir = self.ui_folder.path()           # Temp_Folder manages lifecycle
-        else:
-            self.ui_serve_dir = self._stable_build_folder(ui_version)
+            self.ui_serve_dir = self.ui_folder.path()
+        else:                                                                   # debug mode — use stable .local-server folder
+            ui_content_hash   = self._ui_content_hash()
+            stable_folder     = self._stable_build_folder()
+            if (saved_state
+                    and saved_state.ui_content_hash == ui_content_hash
+                    and saved_state.api_port        == self.api_server.port
+                    and folder_exists(stable_folder)):
+                self.ui_serve_dir = stable_folder                               # reuse cached — skip rebuild
+                return
+            self.ui_serve_dir = stable_folder
             folder_create(self.ui_serve_dir)
 
         build_ui_serve_dir(api_url   = self.api_url()              ,
@@ -194,8 +192,9 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         state = Schema__Harness_State(
             api_port        = self.api_server.port                             ,
             ui_port         = self.ui_server.port                              ,
-            ui_build_folder = self.ui_serve_dir                                ,   # ← was self.ui_folder.folder_name
+            ui_build_folder = self.ui_serve_dir                                ,
             ui_version      = self._current_ui_version()                       ,
+            ui_content_hash = self._ui_content_hash()                          ,
             access_token    = self.access_token()                              ,
             chrome_port     = 10070                                            )
         self.persistence.save(state)
@@ -212,6 +211,28 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         return QA_Transfer_Helper(api_url      = self.api_url().rstrip("/"),  # strip trailing slash — helper adds its own
                                   access_token = self.access_token()      )
 
-    def _stable_build_folder(self, version):                                    # debug mode: stable path in temp
-        folder_name = UI_BUILD_FOLDER_FORMAT.format(version=version)
-        return path_combine(temp_folder_current(), folder_name)
+    def _stable_build_folder(self, version=None) -> str:                        # debug mode: stable .local-server under project root
+        project_root = Path(__file__).parent.parent.parent                     # SG_Send__QA/
+        return str(project_root / '.local-server')
+
+    def _ui_content_hash(self) -> str:                                         # md5 over UI source file paths + mtimes (first 8 chars)
+        try:
+            import sgraph_ai_app_send__ui__user as _ui_pkg
+            pkg_root = Path(_ui_pkg.__file__).parent
+            md5      = hashlib.md5()
+            # collect all source files under the UI version directories used by build_ui_serve_dir
+            versions_to_hash = [UI_VERSION_BASE]
+            if UI_VERSION != UI_VERSION_BASE:
+                versions_to_hash.append(UI_VERSION)
+            entries = []
+            for ui_version in versions_to_hash:
+                ui_dir = pkg_root / "v0" / "v0.3" / ui_version
+                if ui_dir.exists():
+                    for p in sorted(ui_dir.rglob("*")):
+                        if p.is_file():
+                            entries.append(f"{p}:{p.stat().st_mtime}")
+            for entry in sorted(entries):
+                md5.update(entry.encode())
+            return md5.hexdigest()[:8]
+        except Exception:
+            return 'unknown'

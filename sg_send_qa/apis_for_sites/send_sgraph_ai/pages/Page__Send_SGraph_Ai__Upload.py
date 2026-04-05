@@ -10,6 +10,8 @@ from osbot_utils.utils.Misc                                                 impo
 from osbot_utils.utils.Objects                                              import obj_dict
 from sg_send_qa.browser.SG_Send__Browser__Test_Harness                      import SG_Send__Browser__Test_Harness
 from sg_send_qa.browser.Schema__Browser_Test_Config                         import Schema__Browser_Test_Config
+from sg_send_qa.browser.Schema__Browse_Page                                 import Schema__Browse_Page
+from sg_send_qa.browser.Schema__Download_Page                               import Schema__Download_Page
 from sgraph_ai_app_send.lambda__user.lambda_function.lambda_handler__user   import run
 from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import setup__send_user_lambda__test_client
 
@@ -47,6 +49,44 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
         if self.harness:
             self.harness.teardown()
         return self
+
+    # ═══════════════════════════════════════════════════════════════════════
+    # Workflows — upload then navigate to another page
+    # ═══════════════════════════════════════════════════════════════════════
+
+    def workflow__upload_and_browse(self, file_path: str) -> Schema__Browse_Page:   # upload file → navigate to browse page → return state
+        filename      = file_path.split("/")[-1]
+        content_bytes = open(file_path, "rb").read()
+        combined_link = self.sg_send.workflow__upload_combined(
+            token         = self.harness.access_token(),
+            filename      = filename,
+            content_bytes = content_bytes,
+        )
+        # combined_link is e.g. http://host:port/en-gb/browse/#transfer_id/key_b64
+        fragment = combined_link.split('#')[-1] if '#' in combined_link else ''
+        parts    = fragment.split('/')
+        transfer_id = parts[0] if len(parts) > 0 else ''
+        key_b64     = parts[1] if len(parts) > 1 else ''
+        self.sg_send.page__browse_with_hash(transfer_id=transfer_id, key_b64=key_b64)
+        return self.sg_send.extract__browse_page()
+
+    def workflow__upload_and_download(self, file_path: str) -> Schema__Download_Page:  # upload file → navigate to download page → decrypt → return state
+        filename      = file_path.split("/")[-1]
+        content_bytes = open(file_path, "rb").read()
+        combined_link = self.sg_send.workflow__upload_combined(
+            token         = self.harness.access_token(),
+            filename      = filename,
+            content_bytes = content_bytes,
+        )
+        # combined_link is e.g. http://host:port/en-gb/download/#transfer_id/key_b64
+        # The combined link from upload uses the browse route; rewrite to download route
+        fragment = combined_link.split('#')[-1] if '#' in combined_link else ''
+        parts    = fragment.split('/')
+        transfer_id = parts[0] if len(parts) > 0 else ''
+        key_b64     = parts[1] if len(parts) > 1 else ''
+        self.sg_send.page__download_with_hash(transfer_id=transfer_id, key_b64=key_b64)
+        self.sg_send.wait_for_download_states(['complete', 'error'])
+        return self.sg_send.extract__download_page()
 
     # ═══════════════════════════════════════════════════════════════════════
     # Debug / performance investigation — kept for reference

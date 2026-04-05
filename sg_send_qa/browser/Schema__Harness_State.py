@@ -7,5 +7,6 @@ class Schema__Harness_State(Type_Safe):                                         
     ui_port         : int = 0                                                   # static file server port
     ui_build_folder : str = ''                                                  # path to cached built UI files
     ui_version      : str = ''                                                  # UI version used for build
+    ui_content_hash : str = ''                                                  # md5 hash of UI source files (first 8 chars)
     access_token    : str = ''                                                  # access token from test server
     chrome_port     : int = 0                                                   # CDP debug port (mirrors QA_Browser)
