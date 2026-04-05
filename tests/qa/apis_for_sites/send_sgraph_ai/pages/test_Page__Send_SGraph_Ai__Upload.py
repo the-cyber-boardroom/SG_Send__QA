@@ -3,13 +3,16 @@ import pytest
 import requests
 from unittest                                                                    import TestCase
 
+from osbot_fast_api.utils.Fast_API_Server import Fast_API_Server
 from osbot_utils.helpers.duration.decorators.capture_duration import capture_duration
-from osbot_utils.testing.__                                                      import __, __SKIP__
+from osbot_utils.testing.__ import __, __SKIP__, __BETWEEN__
 from osbot_utils.type_safe.Type_Safe                                             import Type_Safe
 from osbot_utils.utils.Http                                                      import is_port_open, wait_for_port_closed
 from osbot_utils.utils.Objects import base_types
 from osbot_utils.utils.Process                                                   import kill_process
 from sg_send_qa.apis_for_sites.send_sgraph_ai.pages.Page__Send_SGraph_Ai__Upload import Page__Send_SGraph_Ai__Upload
+from sg_send_qa.browser.SG_Send__Browser__Pages import SG_Send__Browser__Pages
+from sg_send_qa.browser.SG_Send__Browser__Test_Harness import SG_Send__Browser__Test_Harness
 from sg_send_qa.browser.Schema__Browser_Test_Config                              import Schema__Browser_Test_Config
 
 # @qa we don't need this class (see comment on next class
@@ -144,16 +147,223 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
 
         with Page__Send_SGraph_Ai__Upload() as _:
             with capture_duration() as duration__setup:
-                assert _.setup()   is _                                                 # @qa, never lose an opportunity to assert a particular behaviour
-                assert _.harness   is not None
-                assert _.sg_send   is not None
+                assert type(_.setup())   is Page__Send_SGraph_Ai__Upload         # @qa this is a much better way to test, since we confirm the exact types
+                assert type(_.harness)   is SG_Send__Browser__Test_Harness
+                assert type(_.sg_send)   is SG_Send__Browser__Pages              # @qa note how the sg_send is not a good one to use here
                 assert _.config.headless is True
+                # @qa the problem with the test above is that we are not really testing what is the state of Page__Send_SGraph_Ai__Upload object
+                #assert _.obj() == __()                                          # @qa ideally this is how we would do it
+                #                                                                #     but we are getting a recursion error:
+                                                                                 #          E   RecursionError: maximum recursion depth exceeded
+                                                                                 #          !!! Recursion detected (same locals & position)
+                                                                                 #     .... so let's see where
+                assert _.config.obj() == __(headless       = True       ,        # @qa this is ok, and also a much better way to confirm the value of config.headless
+                                            capture_stderr = True       ,
+                                            host           = 'localhost')
+
+                #assert _.harness.obj() == __()                                 # @qa ok here is where we have the recursive loop
+                                                                                #     note that I use the trick "{Type_Safe()}.obj() == __()" since the assert error provides the values that should be here (i.e. a nice way to get the correct values)
+                assert _.sg_send.obj() == __(headless      = True                   ,   # @qa works ok, and we confirm the values assigned
+                                             target_port   = __BETWEEN__(1000,65000),   #     __BETWEEN__ is one of the techniques used with the class __() to (in this case) confirm that the port is an int between these two values
+                                             target_server ='http://localhost'      )
+                # @qa next lets see what is happening with _.harness.obj()
+                assert _.harness.config       .obj()      == __(headless=True, capture_stderr=True, host='localhost')
+                assert _.harness.persistence  .obj() == __()
+                #assert _.harness.api_server  .obj() == __()      # recursion error
+                #assert _.harness.ui_folder   .obj() == __()     # not a Type_Safe class        # @dev fix in OSBot_Utils
+                #assert _.harness.ui_server   .obj() == __()     # not a Type_Safe class        # @dev fix in OSBot_Utils
+                #assert _.harness.stderr      .obj() == __()     # not a Type_Safe class
+                assert _.harness.sg_send      .obj() == __(headless=True, target_port=__SKIP__, target_server='http://localhost')
+                # @qa the assert below is a great example of the power of .obj() since it really provices a nice way to see what is going on
+                #       note that I added some __SKIP__ to make the test less verbose in a couple cases
+                #       also we need to have this in our test suite, but on this test the non Fast_API variables are more interesting and useful
+                assert _.harness.test_objs    .obj() == __(fast_api=__(send_config=__(storage_mode='memory', s3_bucket=None),
+                                                                       transfer_service=__(storage_fs=__(content_data=__()),
+                                                                                           TRANSFER_ID_PATTERN=None),
+                                                                       presigned_service=__(transfer_service=__(storage_fs=__(content_data=__()),
+                                                                                                                TRANSFER_ID_PATTERN=None),
+                                                                                            s3=None,
+                                                                                            s3_bucket='',
+                                                                                            s3_prefix='',
+                                                                                            storage_mode='memory'),
+                                                                       admin_service_client=None,
+                                                                       early_access_service=__(n8n_webhook_url='',
+                                                                                               n8n_webhook_secret=''),
+                                                                       vault_service=__(storage_fs=__(content_data=__()),
+                                                                                        _manifest_cache=__()),
+                                                                       vault_zip_service=__(vault_service=__(storage_fs=__(content_data=__()),
+                                                                                                             _manifest_cache=__()),
+                                                                                            storage_fs=__(content_data=__())),
+                                                                       vault_presigned_service=__(vault_service=__(storage_fs=__(content_data=__()),
+                                                                                                                   _manifest_cache=__()),
+                                                                                                  s3=None,
+                                                                                                  s3_bucket='',
+                                                                                                  s3_prefix='',
+                                                                                                  storage_mode='memory'),
+                                                                       config=__(enable_cors=True,
+                                                                                 enable_api_key=False,
+                                                                                 default_routes=False,
+                                                                                 base_path='/',
+                                                                                 add_admin_ui=False,
+                                                                                 docs_offline=True,
+                                                                                 name='SGraph Send',
+                                                                                 version=__SKIP__,
+                                                                                 description='SGraph Send _ Zero-Knowledge Encrypted '
+                                                                                             'File Sharing'),
+                                                                       server_id=__SKIP__,
+                                                                       mcp= __SKIP__),
+                                                                       fast_api__app='FastAPI',
+                                                       fast_api__client=__(async_backend=__(backend='asyncio',
+                                                                                            backend_options=__()),
+                                                                           app='FastAPI',
+                                                                           app_state=__(),
+                                                                           _base_url=__(_uri_reference=['http',
+                                                                                                        '',
+                                                                                                        'testserver',
+                                                                                                        None,
+                                                                                                        '',
+                                                                                                        None,
+                                                                                                        None]),
+                                                                           _auth=None,
+                                                                           _params=__(_dict=__()),
+                                                                           _headers=__(_list=__SKIP__,
+                                                                                       _encoding='ascii'),
+                                                                           _cookies=__(jar=__(_policy=__SKIP__,
+                                                                                              _cookies_lock=None,
+                                                                                              _cookies=__())),
+                                                                           _timeout=__(connect=5.0, read=5.0, write=5.0, pool=5.0),
+                                                                           follow_redirects=True,
+                                                                           max_redirects=20,
+                                                                           _event_hooks=__(request=[], response=[]),
+                                                                           _trust_env=True,
+                                                                           _default_encoding='utf-8',
+                                                                           _state=1,
+                                                                           _transport=__(app='FastAPI',
+                                                                                         raise_server_exceptions=True,
+                                                                                         root_path='',
+                                                                                         portal_factory='_portal_factory',
+                                                                                         app_state=__(),
+                                                                                         client=['testclient', 50000]),
+                                                                           _mounts=__()),
+                                                       fast_api_server=None,
+                                                       server_url='',
+                                                       access_token=__SKIP__,
+                                                       write_key=__SKIP__)
+                # @qa note that the code above will be MUCH more readable once it is correctly formatted and aligned
+                # @qa now let take a look at where is the problem with "_.harness.api_server  .obj()" which is causing the recursive loop
+
+                assert type(_.harness.api_server) is Fast_API_Server        # let's start by confirming the class we are working with
+                # with _.harness.api_server as fast_api_server:                # let's move to a more relevant context
+                #     assert fast_api_server.obj() == __(app       = __SKIP__,
+                #                                        port      = __SKIP__,
+                #                                        log_level = __SKIP__,
+                #                                        config    = __SKIP__,
+                #                                        server    = __SKIP__,
+                #                                        thread    = __SKIP__,
+                #                                        running   = __SKIP__,
+                #                                        stdout    = __SKIP__,
+                #                                        stderr    = __SKIP__)
+
+                # @qa ok, I was not able to figure what is causing the recursive error, but I think it is due to some circular dependencies that exist in the code
+                #         which we need to figure out where (this is where it is worth writing a set of tests just to focus on this
+                #         note that Fast_API_Server.obj() works ok (as seen below)
+                assert Fast_API_Server().obj() == __(log_level='error',
+                                                       config=__(app='FastAPI',
+                                                                 host='127.0.0.1',
+                                                                 port=__SKIP__,
+                                                                 uds=None,
+                                                                 fd=None,
+                                                                 loop='auto',
+                                                                 http='auto',
+                                                                 ws='auto',
+                                                                 ws_max_size=16777216,
+                                                                 ws_max_queue=32,
+                                                                 ws_ping_interval=20.0,
+                                                                 ws_ping_timeout=20.0,
+                                                                 ws_per_message_deflate=True,
+                                                                 lifespan='auto',
+                                                                 log_config=__(version=1,
+                                                                               disable_existing_loggers=False,
+                                                                               formatters=__(default=__(__='uvicorn.logging.DefaultFormatter',
+                                                                                                        fmt='%(levelprefix)s '
+                                                                                                            '%(message)s',
+                                                                                                        use_colors=None),
+                                                                                             access=__(__='uvicorn.logging.AccessFormatter',
+                                                                                                       fmt='%(levelprefix)s '
+                                                                                                           '%(client_addr)s - '
+                                                                                                           '"%(request_line)s" '
+                                                                                                           '%(status_code)s')),
+                                                                               handlers=__(default=__(formatter='default',
+                                                                                                      _class='logging.StreamHandler',
+                                                                                                      stream='ext://sys.stderr'),
+                                                                                           access=__(formatter='access',
+                                                                                                     _class='logging.StreamHandler',
+                                                                                                     stream='ext://sys.stdout')),
+                                                                               loggers=__(uvicorn=__(handlers=['default'],
+                                                                                                     level='INFO',
+                                                                                                     propagate=False),
+                                                                                          uvicorn_error=__(level='INFO'),
+                                                                                          uvicorn_access=__(handlers=['access'],
+                                                                                                            level='INFO',
+                                                                                                            propagate=False))),
+                                                                 log_level='error',
+                                                                 access_log=True,
+                                                                 use_colors=None,
+                                                                 interface='auto',
+                                                                 reload=False,
+                                                                 reload_delay=0.25,
+                                                                 workers=1,
+                                                                 proxy_headers=True,
+                                                                 server_header=True,
+                                                                 date_header=True,
+                                                                 root_path='',
+                                                                 limit_concurrency=None,
+                                                                 limit_max_requests=None,
+                                                                 limit_max_requests_jitter=0,
+                                                                 backlog=2048,
+                                                                 timeout_keep_alive=5,
+                                                                 timeout_notify=30,
+                                                                 timeout_graceful_shutdown=None,
+                                                                 timeout_worker_healthcheck=5,
+                                                                 callback_notify=None,
+                                                                 ssl_keyfile=None,
+                                                                 ssl_certfile=None,
+                                                                 ssl_keyfile_password=None,
+                                                                 ssl_version=17,
+                                                                 ssl_cert_reqs=0,
+                                                                 ssl_ca_certs=None,
+                                                                 ssl_ciphers='TLSv1',
+                                                                 headers=[],
+                                                                 encoded_headers=[],
+                                                                 factory=False,
+                                                                 h11_max_incomplete_event_size=None,
+                                                                 loaded=False,
+                                                                 reload_dirs=[],
+                                                                 reload_dirs_excludes=[],
+                                                                 reload_includes=[],
+                                                                 reload_excludes=[],
+                                                                 forwarded_allow_ips='127.0.0.1'),
+                                                       server=None,
+                                                       thread=None,
+                                                       running=False,
+                                                       app='FastAPI',
+                                                       port=__SKIP__,
+                                                       stdout=__(output=__(),
+                                                                 redirect_stdout=__(_new_target=__(), _old_targets=[])),
+                                                       stderr=__(output=__(), redirect_stderr=__(_new_target=__(), _old_targets=[])))
+
+            # 'Fast_API__SGraph__App__Send__User'
             with capture_duration() as duration__teardown:
                 _.teardown()
 
             assert duration__setup.seconds      < 2                                     # note: on my osx laptop , on battery
             assert duration__teardown.seconds   < 0.5
+
+
             # assert duration__teardown           < 0.5                                 # @dev add support for this pattern to OSBot_Utils
+
+            # @qa at the moment when we execute this test we get the console message (which should had been captured)
+            #     DevTools listening on ws://127.0.0.1:26945/devtools/browser/8cdf1bb7-6fe3-4ed3-aedc-d98a88de8134
 
     @pytest.mark.skip("requires browser — run manually")
     def test_upload_file_returns_friendly_token(self, tmp_path):             # upload a temp file and get back a word-word-NNNN token
