@@ -26,14 +26,21 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
     # Production path — headless=True by default, safe for CI
     # ═══════════════════════════════════════════════════════════════════════
 
+    # helper classes
+    # @dev theis setup feels quite generic and should be moved to a base class that Page__Send_SGraph_Ai__Upload then uses
     def setup(self):                                                          # start harness, set token, open upload page
         self.harness = SG_Send__Browser__Test_Harness(config=self.config)
         self.harness.setup()
         self.sg_send = self.harness.sg_send
-        self.harness.set_access_token()
-        self.sg_send.page__root()
+        #self.harness.set_access_token()
+        #self.sg_send.page__root()
         return self
 
+    def headless(self, value:bool):
+        self.config.headless = value
+        return self
+    #
+    # action methods (page specific)
     def upload_file(self, file_path: str) -> str:                            # upload a file and return the friendly token
         filename      = file_path.split("/")[-1]
         content_bytes = open(file_path, "rb").read()

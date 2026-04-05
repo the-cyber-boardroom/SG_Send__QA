@@ -5,6 +5,7 @@ from unittest                                                                   
 
 from osbot_fast_api.utils.Fast_API_Server import Fast_API_Server
 from osbot_utils.helpers.duration.decorators.capture_duration import capture_duration
+from osbot_utils.helpers.duration.decorators.print_duration import print_duration
 from osbot_utils.testing.__ import __, __SKIP__, __BETWEEN__
 from osbot_utils.type_safe.Type_Safe                                             import Type_Safe
 from osbot_utils.utils.Http                                                      import is_port_open, wait_for_port_closed
@@ -99,9 +100,34 @@ from sg_send_qa.browser.Schema__Browser_Test_Config                             
 
 # @qa we should never have more than one class per file  and the name of the class marches the file name
 #     so I'm going to comment out all code above, and move that assert here
+class test_abc(TestCase):
+
+    def test_123(self):
+        port_open = is_port_open('localhost', 50109)
+        print(f'port_open: {port_open}')
+
+    def test_setup_and_teardown_headless__false(self):
+        port_open = is_port_open('localhost', 50109)
+        print(f'port_open: {port_open}')
+
+        with print_duration():
+            with Page__Send_SGraph_Ai__Upload() as _:
+                assert _.headless(False)  is _
+                assert _.setup   ()       is _
+
 class test_Page__Send_SGraph_Ai__Upload(TestCase):
     @classmethod
     def setUpClass(cls):
+        # @qa and @dev see if you have any idea why this is happening (which happened to me as I was working on test_setup_and_teardown_headless__false)
+        #       for example weird reason when I start the process inside method called test_Page__Send_SGraph_Ai__Upload_2
+        #       the python process stays alive on exit, and is still there when I execute test_abc
+        #       BUT as soon as run a method from test_Page__Send_SGraph_Ai__Upload (and I put a breakpoint on the line below)
+        #       that process is terminated!!
+        #       is this something in PyCharm? or in our code?  (this happens on both normal execution and debug
+        #
+        #    just to double check, I renamed the test_abc class to test_Page__Send_SGraph_Ai__Upload
+        #       and it started to have the same behavior (i.e. the process was stopped on the next execution
+        #       I'm going to try to write some tests to replicate this weird behaviour that I have not seen before
         cls.upload_page = Page__Send_SGraph_Ai__Upload()
 
     # @classmethod
@@ -364,6 +390,27 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
 
             # @qa at the moment when we execute this test we get the console message (which should had been captured)
             #     DevTools listening on ws://127.0.0.1:26945/devtools/browser/8cdf1bb7-6fe3-4ed3-aedc-d98a88de8134
+
+    def test_setup_and_teardown_headless__false(self):
+
+        port_open = is_port_open('localhost', 50109)
+        print(f'port_open: {port_open}')
+        with print_duration():
+            with Page__Send_SGraph_Ai__Upload() as _:
+                assert _.headless(False)  is _
+                assert _.setup   ()       is _
+
+                #assert _.teardown() is True
+                # qa: ok as it stands the code above takes ~ 0.905 seconds
+                #     without the .harness.set_access_token() and sg_send.page__root() it is still taking about 200ms
+                #     running with code coverage I can see that inside harness.setup()
+                #        in _start_api_server, we are still trying to start api server
+                #        even though it exists
+                #        so the prob is that self.api_server_port_open(api_port) returns False
+                #        found one bug, the signature of port_is_open is : def port_is_open(port : int , host='0.0.0.0', timeout=1.0):
+                #          #  return port_is_open('localhost', port) # bug
+                #           return port_is_open(host='localhost', port=port)
+
 
     @pytest.mark.skip("requires browser — run manually")
     def test_upload_file_returns_friendly_token(self, tmp_path):             # upload a temp file and get back a word-word-NNNN token

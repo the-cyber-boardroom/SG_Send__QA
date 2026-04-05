@@ -20,7 +20,8 @@ from osbot_utils.type_safe.Type_Safe                                        impo
 from osbot_utils.testing.Stderr                                             import Stderr
 from osbot_utils.testing.Temp_Folder                                        import Temp_Folder
 from osbot_utils.testing.Temp_Web_Server                                    import Temp_Web_Server
-from osbot_utils.utils.Files                                                import path_combine, temp_folder_current, folder_create, folder_exists
+from osbot_utils.utils.Files                                                import folder_create, folder_exists
+from osbot_utils.utils.Http                                                 import port_is_open
 from sg_send_qa.browser.SG_Send__Browser__Pages                             import SG_Send__Browser__Pages
 from sg_send_qa.browser.Schema__Browser_Test_Config                         import Schema__Browser_Test_Config
 from sg_send_qa.browser.Harness_State__Persistence                          import Harness_State__Persistence, Schema__Harness_State
@@ -142,8 +143,8 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         self.api_server.start()
 
     def api_server_port_open(self, port):                                      # check if a port is already open
-        from osbot_utils.utils.Http import port_is_open
-        return port_is_open('localhost', port)
+        #return port_is_open('localhost', port)
+        return port_is_open(host='localhost', port=port)
 
 
 
