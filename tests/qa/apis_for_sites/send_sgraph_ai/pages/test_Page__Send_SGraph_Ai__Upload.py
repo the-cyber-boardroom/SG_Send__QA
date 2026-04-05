@@ -2,6 +2,8 @@
 import pytest
 import requests
 from unittest                                                                    import TestCase
+
+from osbot_utils.helpers.duration.decorators.capture_duration import capture_duration
 from osbot_utils.testing.__                                                      import __, __SKIP__
 from osbot_utils.type_safe.Type_Safe                                             import Type_Safe
 from osbot_utils.utils.Http                                                      import is_port_open, wait_for_port_closed
@@ -10,86 +12,90 @@ from osbot_utils.utils.Process                                                  
 from sg_send_qa.apis_for_sites.send_sgraph_ai.pages.Page__Send_SGraph_Ai__Upload import Page__Send_SGraph_Ai__Upload
 from sg_send_qa.browser.Schema__Browser_Test_Config                              import Schema__Browser_Test_Config
 
+# @qa we don't need this class (see comment on next class
+# # ═══════════════════════════════════════════════════════════════════════════════
+# # Non-browser unit tests — run in CI without Chromium
+# # ═══════════════════════════════════════════════════════════════════════════════
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# Non-browser unit tests — run in CI without Chromium
-# ═══════════════════════════════════════════════════════════════════════════════
+# # @qa we should not be using docstrings for class comments, they should go at the end of the function line, aligned with the other comments
+# #      just like below
+# class test_Page__Send_SGraph_Ai__Upload__Unit(TestCase):                        # Unit tests for Page__Send_SGraph_Ai__Upload — no browser required.
+#
+#     # @qa I think test__init__ is a better name for what this test is doing
+#     #def test_instantiation(self):                                               # class can be constructed with no arguments
+#     def test__init__(self):                                                     # check class default values
+#         # @qa for classes that implement type safe, instead of doing this which doesn't gives us a lot
+#         #   page = Page__Send_SGraph_Ai__Upload()
+#         #   assert page is not None
+#         # using this technique we confirm a lot of more things while also providing a visual view of the objects we are working with
+#         with Page__Send_SGraph_Ai__Upload() as _:                                       # @qa create the object and assign to _ (which makes the code easier to read)
+#             assert type(_)          is Page__Send_SGraph_Ai__Upload                     #     simple way to confirm that all worked well
+#             assert base_types(_)    == [Type_Safe, object]                              #     good way to confirm that this is a Type_Safe class
+#             assert _.obj()          == __(harness = None,                               #     .obj() is a sophisticated way to check the default values
+#                                           sg_send = None,                               #          due to special attributes like __SKIP__ which handle ok non-deterministic values
+#                                           config  = __(headless       = True       ,
+#                                                        capture_stderr = True       ,
+#                                                        host           ='localhost'))    # @qa note the formating and alignment of this method
+#             assert _.teardown() is False                                                # @qa this is also a nice place to put this simple confirmation
+#
+#         # @qa the other problem I can see here is why are we creating a new instance of Page__Send_SGraph_Ai__Upload for every test method in this class
+#
+#     # @qa we don't need to test this here
+#     # def test_is_type_safe_subclass(self):                                     # must be a Type_Safe subclass (project convention)
+#     #     page = Page__Send_SGraph_Ai__Upload()
+#     #     assert isinstance(page, Type_Safe)
+#
+#     # @qa this is also already tests
+#     # def test_config_defaults_to_headless_true(self):                         # CI safety: headless must default to True
+#     #     page = Page__Send_SGraph_Ai__Upload()
+#     #     assert isinstance(page.config, Schema__Browser_Test_Config)
+#     #     assert page.config.headless is True
+#
+#     def test_config_can_be_overridden_to_headless_false(self):                  # debug path: caller can force visible browser
+#         config = Schema__Browser_Test_Config(headless=False)
+#         with Page__Send_SGraph_Ai__Upload(config=config) as _:                  # @qa this pattern makes it easier to read
+#             assert _.config.headless is False
+#
+#     # @qa these two are also tested by __init__
+#     # def test_harness_is_none_before_setup(self):                             # harness must not be started until setup() is called
+#     #     page = Page__Send_SGraph_Ai__Upload()
+#     #     assert page.harness is None
+#     #
+#     # def test_sg_send_is_none_before_setup(self):                             # sg_send (browser pages) must not exist until setup()
+#     #     page = Page__Send_SGraph_Ai__Upload()
+#     #     assert page.sg_send is None
+#
+#     # @qa these methods are redundant since we will be testing this by the tests below that use these methods: setup, upload_file, get_friendly_token, teardown
+#     # def test_has_setup_method(self):                                         # setup() must be present and callable
+#     #     page = Page__Send_SGraph_Ai__Upload()
+#     #     assert callable(getattr(page, 'setup', None))
+#     #
+#     # def test_has_upload_file_method(self):                                   # upload_file() must be present and callable
+#     #     page = Page__Send_SGraph_Ai__Upload()
+#     #     assert callable(getattr(page, 'upload_file', None))
+#     #
+#     # def test_has_get_friendly_token_method(self):                            # get_friendly_token() must be present and callable
+#     #     page = Page__Send_SGraph_Ai__Upload()
+#     #     assert callable(getattr(page, 'get_friendly_token', None))
+#     #
+#     # def test_has_teardown_method(self):                                      # teardown() must be present and callable
+#     #     page = Page__Send_SGraph_Ai__Upload()
+#     #     assert callable(getattr(page, 'teardown', None))
+#
+#     # @qa this is a good example of a test that we need to make more deterministic
+#     #     the problem here is that we don't get any clues from .teardown() about what happened (since teardown at the moment returns false
+#     #     to improve this I will change next return logic of .teardown()
+#     # def test_teardown_is_safe_when_harness_is_none(self):                    # teardown() must not raise if setup() was never called
+#     #     page = Page__Send_SGraph_Ai__Upload()
+#     #     page.teardown()                                                       # should complete without error
+#     # @qa (note after refactoring), since there wasn't really much happening here,
+#     #                               after adding the return {bool} to the .teardown() method
+#     #                               I added the assert to test__init__
 
-# @qa we should not be using docstrings for class comments, they should go at the end of the function line, aligned with the other comments
-#      just like below
-class test_Page__Send_SGraph_Ai__Upload__Unit(TestCase):                        # Unit tests for Page__Send_SGraph_Ai__Upload — no browser required.
-
-    # @qa I think test__init__ is a better name for what this test is doing
-    #def test_instantiation(self):                                               # class can be constructed with no arguments
-    def test__init__(self):                                                     # check class default values
-        # @qa for classes that implement type safe, instead of doing this which doesn't gives us a lot
-        #   page = Page__Send_SGraph_Ai__Upload()
-        #   assert page is not None
-        # using this technique we confirm a lot of more things while also providing a visual view of the objects we are working with
-        with Page__Send_SGraph_Ai__Upload() as _:                                       # @qa create the object and assign to _ (which makes the code easier to read)
-            assert type(_)          is Page__Send_SGraph_Ai__Upload                     #     simple way to confirm that all worked well
-            assert base_types(_)    == [Type_Safe, object]                              #     good way to confirm that this is a Type_Safe class
-            assert _.obj()          == __(harness = None,                               #     .obj() is a sophisticated way to check the default values
-                                          sg_send = None,                               #          due to special attributes like __SKIP__ which handle ok non-deterministic values
-                                          config  = __(headless       = True       ,
-                                                       capture_stderr = True       ,
-                                                       host           ='localhost'))    # @qa note the formating and alignment of this method
-        # @qa the other problem I can see here is why are we creating a new instance of Page__Send_SGraph_Ai__Upload for every test method in this class
-
-    # @qa we don't need to test this here
-    # def test_is_type_safe_subclass(self):                                     # must be a Type_Safe subclass (project convention)
-    #     page = Page__Send_SGraph_Ai__Upload()
-    #     assert isinstance(page, Type_Safe)
-
-    # @qa this is also already tests
-    # def test_config_defaults_to_headless_true(self):                         # CI safety: headless must default to True
-    #     page = Page__Send_SGraph_Ai__Upload()
-    #     assert isinstance(page.config, Schema__Browser_Test_Config)
-    #     assert page.config.headless is True
-
-    def test_config_can_be_overridden_to_headless_false(self):                  # debug path: caller can force visible browser
-        config = Schema__Browser_Test_Config(headless=False)
-        with Page__Send_SGraph_Ai__Upload(config=config) as _:                  # @qa this pattern makes it easier to read
-            assert _.config.headless is False
-
-    # @qa these two are also tested by __init__
-    # def test_harness_is_none_before_setup(self):                             # harness must not be started until setup() is called
-    #     page = Page__Send_SGraph_Ai__Upload()
-    #     assert page.harness is None
-    #
-    # def test_sg_send_is_none_before_setup(self):                             # sg_send (browser pages) must not exist until setup()
-    #     page = Page__Send_SGraph_Ai__Upload()
-    #     assert page.sg_send is None
-
-    # @qa these methods are redundant since we will be testing this by the tests below that use these methods: setup, upload_file, get_friendly_token, teardown
-    # def test_has_setup_method(self):                                         # setup() must be present and callable
-    #     page = Page__Send_SGraph_Ai__Upload()
-    #     assert callable(getattr(page, 'setup', None))
-    #
-    # def test_has_upload_file_method(self):                                   # upload_file() must be present and callable
-    #     page = Page__Send_SGraph_Ai__Upload()
-    #     assert callable(getattr(page, 'upload_file', None))
-    #
-    # def test_has_get_friendly_token_method(self):                            # get_friendly_token() must be present and callable
-    #     page = Page__Send_SGraph_Ai__Upload()
-    #     assert callable(getattr(page, 'get_friendly_token', None))
-    #
-    # def test_has_teardown_method(self):                                      # teardown() must be present and callable
-    #     page = Page__Send_SGraph_Ai__Upload()
-    #     assert callable(getattr(page, 'teardown', None))
-
-    # @qa this is a good example of a test that we need to make more deterministic
-    #     the problem here is that we don't get any clues from .teardown() about what happened (since teardown at the moment returns false
-    #     to improve this I will change next return logic of .teardown()
-    def test_teardown_is_safe_when_harness_is_none(self):                    # teardown() must not raise if setup() was never called
-        page = Page__Send_SGraph_Ai__Upload()
-        page.teardown()                                                       # should complete without error
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# Browser tests — require Chromium; skip in headless CI
-# ═══════════════════════════════════════════════════════════════════════════════
-
+# @qa we should never have more than one class per file  and the name of the class marches the file name
+#     so I'm going to comment out all code above, and move that assert here
 class test_Page__Send_SGraph_Ai__Upload(TestCase):
     @classmethod
     def setUpClass(cls):
@@ -99,14 +105,55 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
     # def tearDownClass(cls):
     #     cls.upload_page.harness.teardown()
 
-    @pytest.mark.skip("requires browser — run manually")
-    def test_setup_and_teardown_headless(self):                              # verify headless setup/teardown lifecycle
-        page = Page__Send_SGraph_Ai__Upload()
-        page.setup()
-        assert page.harness   is not None
-        assert page.sg_send   is not None
-        assert page.config.headless is True
-        page.teardown()
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # Non-browser unit tests — run in CI without Chromium
+    # ═══════════════════════════════════════════════════════════════════════════════
+
+    # @qa these two are refactored from test_Page__Send_SGraph_Ai__Upload__Unit (above)
+    def test__init__(self):                                                             # check class default values
+        with Page__Send_SGraph_Ai__Upload() as _:
+            assert type(_)          is Page__Send_SGraph_Ai__Upload                     # @qa, can you add some comments to these lines?
+            assert base_types(_)    == [Type_Safe, object]
+            assert _.obj()          == __(harness = None,
+                                          sg_send = None,
+                                          config  = __(headless       = True       ,
+                                                       capture_stderr = True       ,
+                                                       host           ='localhost'))
+            assert _.teardown() is False
+
+    def test_config_can_be_overridden_to_headless_false(self):                  # debug path: caller can force visible browser
+        config = Schema__Browser_Test_Config(headless=False)
+        with Page__Send_SGraph_Ai__Upload(config=config) as _:
+            assert _.config.headless is False
+
+
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # Browser tests — require Chromium
+    # ═══════════════════════════════════════════════════════════════════════════════
+    # @qa all these tests should always run with a live browser (since that is the point of them), what we want to do is to make the process of starting and reusing the browser as effective as possible
+    #@pytest.mark.skip("requires browser — run manually")
+    # def test_setup_and_teardown_headless(self):                                 # verify headless setup/teardown lifecycle
+    #     with Page__Send_SGraph_Ai__Upload() as _:                               # @qa as this stands this is a test that doesn't really check for much
+    #         _.setup()                                                           #       since this is perfect place to really make sure that all our assumption are correct
+    #         assert _.harness   is not None                                      #       and as long as there aren't performance implications, or we are adding a lot of complexity
+    #         assert _.sg_send   is not None                                      #       this is also a great place to provide a more visual explanation of what just happened with the setup
+    #         assert _.config.headless is True                                    #       and what are the state of the objects
+    #         _.teardown()                                                        #       next, I'm going to comment out this test and recreate it
+
+    def test_setup_and_teardown_headless(self):
+
+        with Page__Send_SGraph_Ai__Upload() as _:
+            with capture_duration() as duration__setup:
+                assert _.setup()   is _                                                 # @qa, never lose an opportunity to assert a particular behaviour
+                assert _.harness   is not None
+                assert _.sg_send   is not None
+                assert _.config.headless is True
+            with capture_duration() as duration__teardown:
+                _.teardown()
+
+            assert duration__setup.seconds      < 2                                     # note: on my osx laptop , on battery
+            assert duration__teardown.seconds   < 0.5
+            # assert duration__teardown           < 0.5                                 # @dev add support for this pattern to OSBot_Utils
 
     @pytest.mark.skip("requires browser — run manually")
     def test_upload_file_returns_friendly_token(self, tmp_path):             # upload a temp file and get back a word-word-NNNN token

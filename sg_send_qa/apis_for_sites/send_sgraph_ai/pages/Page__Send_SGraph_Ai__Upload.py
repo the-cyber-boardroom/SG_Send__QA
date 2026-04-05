@@ -46,10 +46,18 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
     def get_friendly_token(self) -> str:                                     # read the current friendly token from the page
         return self.sg_send.upload__get_friendly_token()
 
+    # def teardown(self):                                                      # stop harness cleanly
+    #     if self.harness:
+    #         self.harness.teardown()
+    #     return self
+
     def teardown(self):                                                      # stop harness cleanly
         if self.harness:
             self.harness.teardown()
-        return self
+            return True                                                         # @qa we should have a better way to confirm that all went well
+        return False
+
+
 
     # ═══════════════════════════════════════════════════════════════════════
     # Workflows — upload then navigate to another page
