@@ -20,6 +20,7 @@ from osbot_utils.type_safe.Type_Safe                                        impo
 from osbot_utils.testing.Stderr                                             import Stderr
 from osbot_utils.testing.Temp_Folder                                        import Temp_Folder
 from osbot_utils.testing.Temp_Web_Server                                    import Temp_Web_Server
+from osbot_utils.type_safe.type_safe_core.decorators.type_safe import type_safe
 from osbot_utils.utils.Files                                                import folder_create, folder_exists
 from osbot_utils.utils.Http                                                 import port_is_open
 from sg_send_qa.browser.SG_Send__Browser__Pages                             import SG_Send__Browser__Pages
@@ -121,7 +122,9 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     # Internal setup steps
     # ═══════════════════════════════════════════════════════════════════════════
 
-    def _load_saved_state(self):                                                # load previous state (debug mode only)
+    # @qa , the problem of not adding return types to methods like this, is that it not obvious what is the class
+    @type_safe                                                                  # this should be used as much as possible since it helps to catch all sorts of bugs (only be careful on methods that all called lots of times)
+    def _load_saved_state(self) -> Schema__Harness_State:                                                # load previous state (debug mode only)
         if self.config.headless:
             return None                                                         # CI mode — always fresh
         state = self.persistence.load()
@@ -129,6 +132,9 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
             print(f"[harness] WARNING: ports {state.api_port}/{state.ui_port} still in use from previous run")
         return state
 
+    # @dev as per the guidance this should be start_api_server not _start_api_server (i.e. there are very few cases where we should be prefixing methods with _ )
+    # @dev @qa I also just noticed that there is only explict test for _start_api_server .
+    #          instead of adding more complexity to this SG_Send__Browser__Test_Hardness I'm going to refactor this into a separate class which is going to be the only one responsible for the API Server
     def _start_api_server(self, saved_state=None):
         self.test_objs  = setup__send_user_lambda__test_client()
         api_port        = saved_state.api_port if saved_state else 0            # 0 = let Fast_API_Server pick random

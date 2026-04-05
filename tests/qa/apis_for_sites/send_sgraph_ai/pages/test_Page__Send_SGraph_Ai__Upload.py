@@ -15,6 +15,8 @@ from sg_send_qa.apis_for_sites.send_sgraph_ai.pages.Page__Send_SGraph_Ai__Upload
 from sg_send_qa.browser.SG_Send__Browser__Pages import SG_Send__Browser__Pages
 from sg_send_qa.browser.SG_Send__Browser__Test_Harness import SG_Send__Browser__Test_Harness
 from sg_send_qa.browser.Schema__Browser_Test_Config                              import Schema__Browser_Test_Config
+from sg_send_qa.browser.Schema__Harness_State import Schema__Harness_State
+
 
 # @qa we don't need this class (see comment on next class
 # # ═══════════════════════════════════════════════════════════════════════════════
@@ -585,3 +587,49 @@ class test_Page__Send_SGraph_Ai__Upload__Integration(TestCase):
         assert self.page.harness         is not None, "harness must be set after setup()"
         assert self.page.sg_send         is not None, "sg_send must be set after setup()"
         assert self.page.config.headless is True,     "headless must default to True (CI safety)"
+
+
+class test_Debug_weird_process_Recycle(TestCase):
+
+
+    def test_star_process(self):
+        print()
+        api_port = 54321
+        print(f"[before] is port open {is_port_open(port=api_port, host='localhost')}")
+        state = Schema__Harness_State(api_port=api_port)
+        with SG_Send__Browser__Test_Harness() as _:
+
+            _.headless(False)
+            _._start_api_server(state)
+            print('port', _.api_server.port)
+
+            print(f"[after] is port open {is_port_open(port=api_port, host='localhost')}")
+
+            # @qa ok the code above is reliably returning:
+            #   [before] is port open False
+            #   port 54321
+            #   [after] is port open True
+            #
+            # but i can see the problem
+            #
+            # _start_api_server is using Fast_API_Server,
+            #    more specifically the Fast_API_Server.start() method, which is tied to the current thread
+            #     def start(self):
+            #         self.server = Server(config=self.config)
+            #
+            #         def run():
+            #             self.server.run()
+            #
+            #         self.thread = threading.Thread(target=run)
+            #         self.thread.start()
+            #         wait_for_port(host=FAST_API__HOST, port=self.port)
+            #         self.running = True
+            #         return True
+
+            # and this is not what we want, we need to start a subprocess like in the previous example I provided
+
+            # @qa ok so the solution is to wire on the SG_Send__Browser__Test_Hardness the use of the external process (which is what I'm going to do next)
+            # @librarian @architect, for future reference, this (wiring the subprocess.Popen) was the most important task from my last offline session, and that should have been the first thing that should had been implemented by the QA team
+            #                       since that is the performance force multiplier
+            #
+

@@ -26,6 +26,7 @@ class test_SG_Send__Browser__Test_Harness__port_reuse(TestCase):              # 
         assert harness.api_server_port_open(0)     is False                   # port 0 is never open
         assert harness.api_server_port_open(19999) is False                   # unpopulated port
 
+    # @qa this looks like the only place where we are testing the _start_api_server, which needs a lot more testing (specially as we add the separate process)
     def test__start_api_server__twice__no_port_conflict(self):                # two sequential start/stop cycles — no leftover port
         harness = SG_Send__Browser__Test_Harness()
         harness.headless(True)
