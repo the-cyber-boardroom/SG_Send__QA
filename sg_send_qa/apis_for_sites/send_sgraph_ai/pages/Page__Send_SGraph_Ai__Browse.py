@@ -8,7 +8,7 @@ from sg_send_qa.browser.SG_Send__Browser__Test_Harness                     impor
 from sg_send_qa.browser.Schema__Browser_Test_Config                        import Schema__Browser_Test_Config
 from sg_send_qa.browser.Schema__Browse_Page                                import Schema__Browse_Page
 
-
+# @dev can you refactor this (and others) to Page__Send_SGraph_AI__Browse (since we should be using "AI" not "Ai")
 class Page__Send_SGraph_Ai__Browse(Type_Safe):
     config  : Schema__Browser_Test_Config                                   # headless=True by default (CI safe)
     harness : SG_Send__Browser__Test_Harness = None                         # lifecycle owner — None until setup() is called

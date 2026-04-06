@@ -1,0 +1,16 @@
+{
+  "fastapi__handler": "sgraph_ai_app_send.lambda__user.lambda_function.lambda_handler__user:app",
+  "health_check__api__path": "/info/status",
+  "health_check__api__last_status": false,
+  "health_check__api__last_timestamp": null,
+  "health_check__api__last_response": null,
+  "health_check__port__last_status": false,
+  "health_check__port__last_timestamp": null,
+  "server__host": "localhost",
+  "server__is_fast_api": true,
+  "server__online": true,
+  "server__port": 50001,
+  "server__scheme": "http",
+  "server__process_id": 54605,
+  "server__started": false
+}

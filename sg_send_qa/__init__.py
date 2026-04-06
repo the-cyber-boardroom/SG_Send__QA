@@ -1,1 +1,4 @@
 # [LIB-2026-04-01-001] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
+
+package_name = 'sg_send_qa'
+path         = __path__[0]
