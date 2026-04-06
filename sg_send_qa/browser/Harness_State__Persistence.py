@@ -28,7 +28,7 @@ HARNESS_STATE_FILE   = 'harness_state.json'
 
 
 class Harness_State__Persistence(Type_Safe):                                    # load/save harness state from disk
-
+    # todo: refactor this to use the '.local-servers' folder used by QA__Local_Servers (note that if needed we can change the base folder name, and that this '.local-servers' folder has now been added to the .gitignore file)
     def state_folder(self):                                                     # well-known temp path
         path = path_combine(temp_folder_current(), HARNESS_STATE_FOLDER)
         folder_create(path)

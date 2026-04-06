@@ -367,7 +367,7 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
             # @qa at the moment when we execute this test we get the console message (which should had been captured)
             #     DevTools listening on ws://127.0.0.1:26945/devtools/browser/8cdf1bb7-6fe3-4ed3-aedc-d98a88de8134
 
-    # @qa now I'm going to try to wire up the Server__API__Send_SGraph_AI and see if we get the performance improvements
+    # @qa ok now that Server__API__Send_SGraph_AI is working, next step is to look at the SG_Send__Browser__Test_Harness._build_ui
     def test_setup_and_teardown_headless__false(self):
         with Page__Send_SGraph_Ai__Upload() as _:
             with print_duration():
@@ -375,6 +375,23 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
                 assert _.headless(False)  is _
                 assert _.setup   ()       is _
 
+            # @qa ok so with "self.build_ui(saved_state)"  on SG_Send__Browser__Test_Harness.setup()
+            #       on first run we had ~ 0.792 seconds
+            #       on next runs we had ~: 0.09 seconds     # but looking at the code we are still calling build_ui_serve_dir
+
+            # @qa and @dev update on the above and on the comments I just added to the codebase
+            #      after using the version value for detecting changes to the UI code
+            #      build_ui() now uses the cached folder, and the .setup() method takes ~ 0.012 seconds (which is more like it)
+            #      for reference the setup code is current doing (with a couple steps missing, but getting there):
+
+            #           saved_state = self._load_saved_state()
+            #           self.start_api_server(saved_state)
+            #           self.build_ui        (saved_state)
+            #           self._save_state()
+
+
+
+            # @qa these are the checks that I added during the refactoring of the .start_api_server()
             server_port  = _.harness.server__send_graph_ai__api.config.server__port
             assert is_port_open('localhost', server_port) is True
 

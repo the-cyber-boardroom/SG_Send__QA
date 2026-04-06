@@ -31,13 +31,13 @@ class test_SG_Send__Browser__Test_Harness__port_reuse(TestCase):              # 
         harness = SG_Send__Browser__Test_Harness()
         harness.headless(True)
 
-        harness._start_api_server()                                           # first start
+        harness.start_api_server()                                           # first start
         assert harness.api_server is not None
         assert harness.api_server.is_port_open()                              # port is open after start
         port_first = harness.api_server.port
         harness.api_server.stop()                                             # clean up first
 
-        harness._start_api_server()                                           # second start — fresh (headless=True, no saved port)
+        harness.start_api_server()                                           # second start — fresh (headless=True, no saved port)
         assert harness.api_server is not None
         assert harness.api_server.is_port_open()                              # port is open after second start
         port_second = harness.api_server.port
@@ -51,7 +51,7 @@ class test_SG_Send__Browser__Test_Harness__hash_cache(TestCase):           # con
 
     def test__ui_content_hash__returns_string(self):                        # _ui_content_hash() returns a non-empty string
         harness = SG_Send__Browser__Test_Harness()
-        result  = harness._ui_content_hash()
+        result  = harness.ui_content_hash()
         assert isinstance(result, str)
         assert len(result) > 0
 
@@ -63,8 +63,8 @@ class test_SG_Send__Browser__Test_Harness__hash_cache(TestCase):           # con
 
     def test__ui_content_hash__is_stable(self):                             # calling twice returns same value
         harness = SG_Send__Browser__Test_Harness()
-        first   = harness._ui_content_hash()
-        second  = harness._ui_content_hash()
+        first   = harness.ui_content_hash()
+        second  = harness.ui_content_hash()
         assert first == second
 
 

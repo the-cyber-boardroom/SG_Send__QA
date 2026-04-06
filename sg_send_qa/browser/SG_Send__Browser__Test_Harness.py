@@ -16,6 +16,10 @@
 import hashlib
 from pathlib                                                                import Path
 from osbot_fast_api.utils.Fast_API_Server                                   import Fast_API_Server
+from osbot_utils.utils.Misc import str_md5
+
+from osbot_utils.type_safe.primitives.domains.network.safe_uint.Safe_UInt__Port import Safe_UInt__Port
+
 from osbot_utils.type_safe.Type_Safe                                        import Type_Safe
 from osbot_utils.testing.Stderr                                             import Stderr
 from osbot_utils.testing.Temp_Folder                                        import Temp_Folder
@@ -29,7 +33,7 @@ from sg_send_qa.browser.Harness_State__Persistence                          impo
 from sg_send_qa.local_servers.Server__API__Send_SGraph_AI import Server__API__Send_SGraph_AI
 from sg_send_qa.utils.QA_UI_Server                                          import build_ui_serve_dir, UI_VERSION, UI_VERSION_BASE
 from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import setup__send_user_lambda__test_client, Send__User_Lambda__Test_Objs
-
+from sgraph_ai_app_send.utils.Version import version__sgraph_ai_app_send
 
 UI_BUILD_FOLDER_FORMAT = 'sg_send_qa_ui_build_{version}'
 
@@ -38,7 +42,8 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     config          : Schema__Browser_Test_Config                               # session configuration
     persistence     : Harness_State__Persistence                                # load/save state across runs
 
-    api_server      : Fast_API_Server               = None                      # FastAPI on stable port (in-memory backend)
+    api_server      : Fast_API_Server               = None                      # @dev todo: with the new mode to start the api server, do we still need this? specially here on QA which should really be looking at he behaviour of the API (only execption I can think is if we need direct access to the SG/Send api inner objects |  FastAPI on stable port (in-memory backend)
+    api_server__port: Safe_UInt__Port               = None                      #
     ui_folder       : Temp_Folder                   = None                      # temp dir with built static files (or cached)
     ui_server       : Temp_Web_Server               = None                      # static file server on stable port
     stderr          : Stderr                        = None                      # stderr capture (Chrome + server logs)
@@ -54,11 +59,11 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
 
     def setup(self):                                                            # start everything — call from setUpClass
         saved_state = self._load_saved_state()
-        self._start_api_server(saved_state)                                     # @qa next step is to wire up Server__API__Send_SGraph_AI here
-        # self._build_ui(saved_state)
-        # self._start_ui_server(saved_state)
+        self.start_api_server(saved_state)                                     #  @dev see what we need to do with this saved_state
+        self.build_ui        (saved_state)                                     #  @qa next step is to see the impact of this _build_ui
+        #self._start_ui_server(saved_state)                                    #      and this
         # self._create_browser()
-        # self._save_state()
+        self._save_state()
         # if self.config.capture_stderr:
         #     self.stderr = Stderr()
         #     self.stderr.start()
@@ -89,7 +94,7 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         return self
 
     def api_url(self) -> str:                                                   # e.g. http://localhost:54321/
-        return f"http://{self.config.host}:{self.api_server.port}/"
+        return f"http://{self.config.host}:{self.api_server__port }/"
 
     def ui_url(self) -> str:                                                    # e.g. http://localhost:63960/
         return f"http://{self.config.host}:{self.ui_server.port}/"
@@ -135,26 +140,12 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
             print(f"[harness] WARNING: ports {state.api_port}/{state.ui_port} still in use from previous run")
         return state
 
-    # @dev as per the guidance this should be start_api_server not _start_api_server (i.e. there are very few cases where we should be prefixing methods with _ )
-    # @dev @qa I also just noticed that there is only explict test for _start_api_server .
-    #          instead of adding more complexity to this SG_Send__Browser__Test_Hardness I'm going to refactor this into a separate class which is going to be the only one responsible for the API Server
-    # @qa all the code below is going to be refactored to use the new Server__API__Send_SGraph_AI
-    def _start_api_server(self, saved_state=None):
+    # @qa this is now working
+    # @dev see what refactorings we can do this (also see what we should do with the saved state)
+    def start_api_server(self, saved_state=None):
         with self.server__send_graph_ai__api  as _:
             _.server__start()                             # server__start will start the server if needed
-            _.config__print()
-
-        # self.test_objs  = setup__send_user_lambda__test_client()
-        # api_port        = saved_state.api_port if saved_state else 0            # 0 = let Fast_API_Server pick random
-        #
-        # if api_port and self.api_server_port_open(api_port):                    # port alive from previous run — reuse
-        #     self.api_server = Fast_API_Server(app  = self.test_objs.fast_api__app ,
-        #                                       port = api_port                      )
-        #     return                                                              # skip start() — server already running
-        #
-        # self.api_server = Fast_API_Server(app  = self.test_objs.fast_api__app ,
-        #                                   port = api_port                      )
-        # self.api_server.start()
+            self.api_server__port = _.config.server__port
 
     def api_server_port_open(self, port):                                      # check if a port is already open
         #return port_is_open('localhost', port)
@@ -162,17 +153,17 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
 
 
 
-    def _build_ui(self, saved_state=None):
+    def build_ui(self, saved_state=None):
         if self.config.headless:                                                # CI mode — always fresh, use Temp_Folder
             self.ui_folder = Temp_Folder()
             self.ui_folder.__enter__()
             self.ui_serve_dir = self.ui_folder.path()
         else:                                                                   # debug mode — use stable .local-server folder
-            ui_content_hash   = self._ui_content_hash()
+            ui_content_hash   = self.ui_content_hash()
             stable_folder     = self._stable_build_folder()
             if (saved_state
                     and saved_state.ui_content_hash == ui_content_hash
-                    and saved_state.api_port        == self.api_server.port
+                    and saved_state.api_port        == self.api_server__port    # was  self.api_server.port
                     and folder_exists(stable_folder)):
                 self.ui_serve_dir = stable_folder                               # reuse cached — skip rebuild
                 return
@@ -205,13 +196,13 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         if self.config.headless:
             return
         state = Schema__Harness_State(
-            api_port        = self.api_server.port                             ,
-            ui_port         = self.ui_server.port                              ,
-            ui_build_folder = self.ui_serve_dir                                ,
-            ui_version      = self._current_ui_version()                       ,
-            ui_content_hash = self._ui_content_hash()                          ,
-            access_token    = self.access_token()                              ,
-            chrome_port     = 10070                                            )
+            api_port        = self.api_server__port                             ,           # was self.api_server.port
+            #ui_port         = self.ui_server.port                              ,
+            # ui_build_folder = self.ui_serve_dir                                ,
+            # ui_version      = self._current_ui_version()                       ,
+            ui_content_hash = self.ui_content_hash()                          ,            # @dev following on the comment I left on _ui_content_hash, not only that was not an efficient way to do this, we were calling it twice (see a better way to do this, since this value should not be recalculated here)
+            # access_token    = self.access_token()                              ,
+            chrome_port     = 10070                                            )            # todo: this should be a static cost/variable
         self.persistence.save(state)
 
     def _current_ui_version(self):                                              # read from the QA project version
@@ -230,7 +221,17 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         project_root = Path(__file__).parent.parent.parent                     # SG_Send__QA/
         return str(project_root / '.local-server')
 
-    def _ui_content_hash(self) -> str:                                         # md5 over UI source file paths + mtimes (first 8 chars)
+    # todo: this is a really bad way to do this since it requires the full browse of the folders and the calculation of the hashes
+    #       since all commits that pass increase the version, and the QA tests are importing the code, we should be able to just use
+
+    def ui_content_hash(self) -> str:                                         # md5 over UI source file paths + mtimes (first 8 chars)
+        content_ui__version       = version__sgraph_ai_app_send
+        content_ui__version__md5 = str_md5(content_ui__version)     # returns hashlib.md5(text.encode()).hexdigest()
+        content_ui__version__hash = content_ui__version__md5[:8]                                                      # todo: for now make this compatible with previous hash logic)
+        return content_ui__version__hash
+        # @dev can you map out the scenario where we add a couple more hashes and version numbers to each UI core manifest (which is then something that is created at build time on the CI for the __Send repo)
+
+        #return md5.hexdigest()[:8]
         try:
             import sgraph_ai_app_send__ui__user as _ui_pkg
             pkg_root = Path(_ui_pkg.__file__).parent

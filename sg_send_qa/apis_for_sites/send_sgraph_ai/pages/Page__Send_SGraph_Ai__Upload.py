@@ -145,9 +145,9 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
             with print_duration(action_name ="_load_saved_state"):
                 saved_state =  _._load_saved_state()
             with print_duration(action_name ="_start_api_server"):
-                _._start_api_server(saved_state)
+                _.start_api_server(saved_state)
             with print_duration(action_name ="_build_ui"):
-                _._build_ui(saved_state)
+                _.build_ui(saved_state)
             with print_duration(action_name ="_start_ui_server"):
                 _._start_ui_server(saved_state)
             with print_duration(action_name ="_create_browser"):
@@ -168,7 +168,7 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
             assert _.config.headless is True                                # this will disable the use of safe state
             assert _._load_saved_state() is None                            # confirm that save state is disabled by default
             with print_duration(action_name="start api server"):
-                _._start_api_server()
+                _.start_api_server()
             with print_duration(action_name="stop api server"):
                 _.api_server.stop()
 
@@ -186,7 +186,7 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
 
 
             with print_duration(action_name="start api server"):
-                _._start_api_server(saved_state=saved_state)
+                _.start_api_server(saved_state=saved_state)
             with print_duration(action_name="stop api server"):
                 _.api_server.stop()
 
