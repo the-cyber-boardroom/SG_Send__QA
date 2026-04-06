@@ -210,3 +210,4 @@ __marimo__/
 config/.env
 node_modules/
 .local-server/
+.local-servers/

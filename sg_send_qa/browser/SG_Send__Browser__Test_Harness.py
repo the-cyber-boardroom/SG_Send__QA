@@ -26,6 +26,7 @@ from osbot_utils.utils.Http                                                 impo
 from sg_send_qa.browser.SG_Send__Browser__Pages                             import SG_Send__Browser__Pages
 from sg_send_qa.browser.Schema__Browser_Test_Config                         import Schema__Browser_Test_Config
 from sg_send_qa.browser.Harness_State__Persistence                          import Harness_State__Persistence, Schema__Harness_State
+from sg_send_qa.local_servers.Server__API__Send_SGraph_AI import Server__API__Send_SGraph_AI
 from sg_send_qa.utils.QA_UI_Server                                          import build_ui_serve_dir, UI_VERSION, UI_VERSION_BASE
 from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import setup__send_user_lambda__test_client, Send__User_Lambda__Test_Objs
 
@@ -44,6 +45,8 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     sg_send         : SG_Send__Browser__Pages       = None                      # browser page primitives
     test_objs       : Send__User_Lambda__Test_Objs  = None                      # Send__User_Lambda__Test_Objs
     ui_serve_dir    : str                           = ''                        # resolved path to UI files (always full path)
+
+    server__send_graph_ai__api : Server__API__Send_SGraph_AI                    # @qa using default values (which should be ok)
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Lifecycle
@@ -137,17 +140,21 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     #          instead of adding more complexity to this SG_Send__Browser__Test_Hardness I'm going to refactor this into a separate class which is going to be the only one responsible for the API Server
     # @qa all the code below is going to be refactored to use the new Server__API__Send_SGraph_AI
     def _start_api_server(self, saved_state=None):
-        self.test_objs  = setup__send_user_lambda__test_client()
-        api_port        = saved_state.api_port if saved_state else 0            # 0 = let Fast_API_Server pick random
+        with self.server__send_graph_ai__api  as _:
+            _.server__start()                             # server__start will start the server if needed
+            _.config__print()
 
-        if api_port and self.api_server_port_open(api_port):                    # port alive from previous run — reuse
-            self.api_server = Fast_API_Server(app  = self.test_objs.fast_api__app ,
-                                              port = api_port                      )
-            return                                                              # skip start() — server already running
-
-        self.api_server = Fast_API_Server(app  = self.test_objs.fast_api__app ,
-                                          port = api_port                      )
-        self.api_server.start()
+        # self.test_objs  = setup__send_user_lambda__test_client()
+        # api_port        = saved_state.api_port if saved_state else 0            # 0 = let Fast_API_Server pick random
+        #
+        # if api_port and self.api_server_port_open(api_port):                    # port alive from previous run — reuse
+        #     self.api_server = Fast_API_Server(app  = self.test_objs.fast_api__app ,
+        #                                       port = api_port                      )
+        #     return                                                              # skip start() — server already running
+        #
+        # self.api_server = Fast_API_Server(app  = self.test_objs.fast_api__app ,
+        #                                   port = api_port                      )
+        # self.api_server.start()
 
     def api_server_port_open(self, port):                                      # check if a port is already open
         #return port_is_open('localhost', port)

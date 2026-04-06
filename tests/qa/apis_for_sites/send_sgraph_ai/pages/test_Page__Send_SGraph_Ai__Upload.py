@@ -369,13 +369,41 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
 
     # @qa now I'm going to try to wire up the Server__API__Send_SGraph_AI and see if we get the performance improvements
     def test_setup_and_teardown_headless__false(self):
+        with Page__Send_SGraph_Ai__Upload() as _:
+            with print_duration():
 
-        port_open = is_port_open('localhost', 50109)
-        print(f'port_open: {port_open}')
-        with print_duration():
-            with Page__Send_SGraph_Ai__Upload() as _:
                 assert _.headless(False)  is _
                 assert _.setup   ()       is _
+
+            server_port  = _.harness.server__send_graph_ai__api.config.server__port
+            assert is_port_open('localhost', server_port) is True
+
+            assert _.harness.server__send_graph_ai__api.config.obj() == __(fastapi__handler='sgraph_ai_app_send.lambda__user.lambda_function.lambda_handler__user:app',
+                                                                           health_check__api__path='/info/status',
+                                                                           health_check__api__last_status=True,
+                                                                           health_check__api__last_timestamp=__SKIP__,
+                                                                           health_check__api__last_response=__(name='osbot_fast_api_serverless',
+                                                                                                               version=__SKIP__,
+                                                                                                               status='operational',
+                                                                                                               environment='local'),
+                                                                           health_check__port__last_status=True,
+                                                                           health_check__port__last_timestamp=__SKIP__,
+                                                                           server__host='localhost',
+                                                                           server__is_fast_api=True,
+                                                                           server__online=True,
+                                                                           server__port=50001,
+                                                                           server__scheme='http',
+                                                                           server__process_id=__SKIP__,
+                                                                           server__started=True,
+                                                                           server__stopped=False)
+
+            # @qa ok so now first time the code executes we get
+            #           action took: 1.504 seconds
+            #     next execution is :
+            #           action took: 0.015 seconds
+            #     :) which is exactly what we want , with the full SG/Send server staying alive over executions at http://localhost:50001/info/status
+            #     with the config data stored here: modules/SG_Send__QA/.local-servers/server-configs/api__send-sgraph-ai.json
+
 
 
                 #assert _.teardown() is True
