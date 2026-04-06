@@ -1,27 +1,25 @@
-from typing import Type
-
-from osbot_utils.type_safe.Type_Safe                                import Type_Safe
-from osbot_utils.type_safe.primitives.domains.identifiers.Safe_Id   import Safe_Id
-from osbot_utils.type_safe.type_safe_core.decorators.type_safe      import type_safe
-from osbot_utils.utils.Files                                        import path_combine, create_folder, path_combine_safe, file_exists, file_delete
-from osbot_utils.utils.Json                                         import json_file_load, json_save_file, json_load_file
-
 import sg_send_qa
-from sgit_ai.safe_types.Safe_Str__File_Id import Safe_Str__File_Id
-from sgit_ai.safe_types.Safe_Str__File_Path import Safe_Str__File_Path
+from typing                                                                       import Type
+from osbot_utils.type_safe.Type_Safe                                              import Type_Safe
+from osbot_utils.type_safe.type_safe_core.decorators.type_safe                    import type_safe
+from osbot_utils.type_safe.primitives.domains.identifiers.Safe_Id                 import Safe_Id
+from osbot_utils.type_safe.primitives.domains.files.safe_str.Safe_Str__File__Path import Safe_Str__File__Path
+from osbot_utils.utils.Files                                                      import path_combine, create_folder, path_combine_safe, file_exists, file_delete
+from osbot_utils.utils.Json                                                       import json_save_file, json_load_file
 
 DEFAULT_FOLDER__QA__LOCAL_SERVERS  = '../.local-servers'
 DEFAULT_FOLDER__QA__SERVER_CONFIGS = 'server-configs'
 
 class QA__Local_Servers(Type_Safe):
+    base_folder : Safe_Str__File__Path  = sg_send_qa.path                        # this allows choosing another folder as root
 
-    def path__folder__base(self)  -> Safe_Str__File_Path:
-        return path_combine(sg_send_qa.path, DEFAULT_FOLDER__QA__LOCAL_SERVERS)
+    def path__folder__local_servers(self)  -> Safe_Str__File__Path:
+        return path_combine(self.base_folder, DEFAULT_FOLDER__QA__LOCAL_SERVERS)
 
-    def path__folder__server_configs(self) -> Safe_Str__File_Path:
-        return path_combine(self.path__folder__base(), DEFAULT_FOLDER__QA__SERVER_CONFIGS)
+    def path__folder__server_configs(self) -> Safe_Str__File__Path:
+        return path_combine(self.path__folder__local_servers(), DEFAULT_FOLDER__QA__SERVER_CONFIGS)
 
-    def path__file__server_config(self, server_id: Safe_Id ) -> Safe_Str__File_Path:
+    def path__file__server_config(self, server_id: Safe_Id ) -> Safe_Str__File__Path:
         server_config__file_name = f'{server_id}.json'
         server_config__file_path = path_combine_safe(self.path__folder__server_configs(), server_config__file_name)
         return server_config__file_path
@@ -65,6 +63,6 @@ class QA__Local_Servers(Type_Safe):
         return self.server_config__exists(server_id)
 
     def setup(self):
-        create_folder(self.path__folder__base   ())      # this will create the folders if they don't exist
+        create_folder(self.path__folder__local_servers   ())      # this will create the folders if they don't exist
         create_folder(self.path__folder__server_configs())
         return self

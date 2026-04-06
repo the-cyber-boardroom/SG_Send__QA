@@ -17,8 +17,8 @@ class test_QA__Local_Servers(TestCase):
 
     def test_path__folder__base(self):
         with self.qa_local_servers as _:
-            assert parent_folder_name(_.path__folder__base()) == 'SG_Send__QA'
-            assert folder_name       (_.path__folder__base()) == '.local-servers'
+            assert parent_folder_name(_.path__folder__local_servers()) == 'SG_Send__QA'
+            assert folder_name       (_.path__folder__local_servers()) == '.local-servers'
 
     def test_server_config__load(self):
         class Schema__An_Config(Type_Safe):
@@ -46,6 +46,6 @@ class test_QA__Local_Servers(TestCase):
     def test_setup(self):
         with self.qa_local_servers as _:
             assert _.setup()                                       is self.qa_local_servers
-            assert folder_exists(_.path__folder__base          ()) is True
+            assert folder_exists(_.path__folder__local_servers          ()) is True
             assert folder_exists(_.path__folder__server_configs()) is True
 
