@@ -51,14 +51,14 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
 
     def setup(self):                                                            # start everything — call from setUpClass
         saved_state = self._load_saved_state()
-        self._start_api_server(saved_state)
-        self._build_ui(saved_state)
-        self._start_ui_server(saved_state)
-        self._create_browser()
-        self._save_state()
-        if self.config.capture_stderr:
-            self.stderr = Stderr()
-            self.stderr.start()
+        self._start_api_server(saved_state)                                     # @qa next step is to wire up Server__API__Send_SGraph_AI here
+        # self._build_ui(saved_state)
+        # self._start_ui_server(saved_state)
+        # self._create_browser()
+        # self._save_state()
+        # if self.config.capture_stderr:
+        #     self.stderr = Stderr()
+        #     self.stderr.start()
         return self
 
     def teardown(self):                                                         # stop everything — call from tearDownClass
@@ -135,6 +135,7 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     # @dev as per the guidance this should be start_api_server not _start_api_server (i.e. there are very few cases where we should be prefixing methods with _ )
     # @dev @qa I also just noticed that there is only explict test for _start_api_server .
     #          instead of adding more complexity to this SG_Send__Browser__Test_Hardness I'm going to refactor this into a separate class which is going to be the only one responsible for the API Server
+    # @qa all the code below is going to be refactored to use the new Server__API__Send_SGraph_AI
     def _start_api_server(self, saved_state=None):
         self.test_objs  = setup__send_user_lambda__test_client()
         api_port        = saved_state.api_port if saved_state else 0            # 0 = let Fast_API_Server pick random

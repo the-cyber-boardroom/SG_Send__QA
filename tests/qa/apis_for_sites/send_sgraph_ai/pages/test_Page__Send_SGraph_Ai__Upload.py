@@ -100,36 +100,10 @@ from sg_send_qa.browser.Schema__Harness_State import Schema__Harness_State
 
 
 
-# @qa we should never have more than one class per file  and the name of the class marches the file name
-#     so I'm going to comment out all code above, and move that assert here
-class test_abc(TestCase):
-
-    def test_123(self):
-        port_open = is_port_open('localhost', 50109)
-        print(f'port_open: {port_open}')
-
-    def test_setup_and_teardown_headless__false(self):
-        port_open = is_port_open('localhost', 50109)
-        print(f'port_open: {port_open}')
-
-        with print_duration():
-            with Page__Send_SGraph_Ai__Upload() as _:
-                assert _.headless(False)  is _
-                assert _.setup   ()       is _
 
 class test_Page__Send_SGraph_Ai__Upload(TestCase):
     @classmethod
     def setUpClass(cls):
-        # @qa and @dev see if you have any idea why this is happening (which happened to me as I was working on test_setup_and_teardown_headless__false)
-        #       for example weird reason when I start the process inside method called test_Page__Send_SGraph_Ai__Upload_2
-        #       the python process stays alive on exit, and is still there when I execute test_abc
-        #       BUT as soon as run a method from test_Page__Send_SGraph_Ai__Upload (and I put a breakpoint on the line below)
-        #       that process is terminated!!
-        #       is this something in PyCharm? or in our code?  (this happens on both normal execution and debug
-        #
-        #    just to double check, I renamed the test_abc class to test_Page__Send_SGraph_Ai__Upload
-        #       and it started to have the same behavior (i.e. the process was stopped on the next execution
-        #       I'm going to try to write some tests to replicate this weird behaviour that I have not seen before
         cls.upload_page = Page__Send_SGraph_Ai__Upload()
 
     # @classmethod
@@ -393,6 +367,7 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
             # @qa at the moment when we execute this test we get the console message (which should had been captured)
             #     DevTools listening on ws://127.0.0.1:26945/devtools/browser/8cdf1bb7-6fe3-4ed3-aedc-d98a88de8134
 
+    # @qa now I'm going to try to wire up the Server__API__Send_SGraph_AI and see if we get the performance improvements
     def test_setup_and_teardown_headless__false(self):
 
         port_open = is_port_open('localhost', 50109)
@@ -401,6 +376,7 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
             with Page__Send_SGraph_Ai__Upload() as _:
                 assert _.headless(False)  is _
                 assert _.setup   ()       is _
+
 
                 #assert _.teardown() is True
                 # qa: ok as it stands the code above takes ~ 0.905 seconds
@@ -587,49 +563,3 @@ class test_Page__Send_SGraph_Ai__Upload__Integration(TestCase):
         assert self.page.harness         is not None, "harness must be set after setup()"
         assert self.page.sg_send         is not None, "sg_send must be set after setup()"
         assert self.page.config.headless is True,     "headless must default to True (CI safety)"
-
-
-class test_Debug_weird_process_Recycle(TestCase):
-
-
-    def test_star_process(self):
-        print()
-        api_port = 54321
-        print(f"[before] is port open {is_port_open(port=api_port, host='localhost')}")
-        state = Schema__Harness_State(api_port=api_port)
-        with SG_Send__Browser__Test_Harness() as _:
-
-            _.headless(False)
-            _._start_api_server(state)
-            print('port', _.api_server.port)
-
-            print(f"[after] is port open {is_port_open(port=api_port, host='localhost')}")
-
-            # @qa ok the code above is reliably returning:
-            #   [before] is port open False
-            #   port 54321
-            #   [after] is port open True
-            #
-            # but i can see the problem
-            #
-            # _start_api_server is using Fast_API_Server,
-            #    more specifically the Fast_API_Server.start() method, which is tied to the current thread
-            #     def start(self):
-            #         self.server = Server(config=self.config)
-            #
-            #         def run():
-            #             self.server.run()
-            #
-            #         self.thread = threading.Thread(target=run)
-            #         self.thread.start()
-            #         wait_for_port(host=FAST_API__HOST, port=self.port)
-            #         self.running = True
-            #         return True
-
-            # and this is not what we want, we need to start a subprocess like in the previous example I provided
-
-            # @qa ok so the solution is to wire on the SG_Send__Browser__Test_Hardness the use of the external process (which is what I'm going to do next)
-            # @librarian @architect, for future reference, this (wiring the subprocess.Popen) was the most important task from my last offline session, and that should have been the first thing that should had been implemented by the QA team
-            #                       since that is the performance force multiplier
-            #
-
