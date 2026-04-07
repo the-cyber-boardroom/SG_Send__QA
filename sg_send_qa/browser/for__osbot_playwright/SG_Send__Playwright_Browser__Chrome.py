@@ -6,6 +6,8 @@
 
 import platform
 
+from osbot_utils.helpers.duration.decorators.print_duration import print_duration
+
 from osbot_playwright.playwright.api.Playwright_Browser         import Playwright_Browser
 from osbot_playwright.playwright.api.Playwright_CLI             import Playwright_CLI
 from osbot_playwright.playwright.api.Playwright_Process         import Playwright_Process
@@ -13,12 +15,15 @@ from osbot_utils.utils.Misc                                     import random_po
 from osbot_playwright.playwright.api.Playwright_Browser__Chrome import Playwright_Browser__Chrome
 
 
-def chromium_executable_path():                                                 # resolve Chromium binary from playwright's own registry
-    from playwright.sync_api import sync_playwright                             # late import — avoids circular deps
-    pw   = sync_playwright().start()
-    path = pw.chromium.executable_path
-    pw.stop()
-    return path
+def chromium_executable_path():                                                         # resolve Chromium binary from playwright's own registry
+    with print_duration(action_name="load sync_playwright dependencies"):               # ~ 0.0 seconds
+        from playwright.sync_api import sync_playwright                                 # late import — avoids circular deps
+    with print_duration(action_name="chromium_executable_path -sync_playwright start"): # ~ 0.374 seconds
+        pw   = sync_playwright().start()
+        path = pw.chromium.executable_path
+    with print_duration(action_name="chromium_executable_path -sync_playwright stop"):  # ~ 0.004 seconds
+        pw.stop()
+        return path
 
 
 class SG_Send__Playwright_Process(Playwright_Process):                          # adds --no-sandbox on Linux (required for GH Actions / Docker)

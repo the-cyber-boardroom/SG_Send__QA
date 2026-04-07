@@ -2,20 +2,20 @@
 import pytest
 import requests
 from unittest                                                                    import TestCase
-
-from osbot_fast_api.utils.Fast_API_Server import Fast_API_Server
-from osbot_utils.helpers.duration.decorators.capture_duration import capture_duration
-from osbot_utils.helpers.duration.decorators.print_duration import print_duration
-from osbot_utils.testing.__ import __, __SKIP__, __BETWEEN__
-from osbot_utils.type_safe.Type_Safe                                             import Type_Safe
-from osbot_utils.utils.Http                                                      import is_port_open, wait_for_port_closed
-from osbot_utils.utils.Objects import base_types
-from osbot_utils.utils.Process                                                   import kill_process
-from sg_send_qa.apis_for_sites.send_sgraph_ai.pages.Page__Send_SGraph_Ai__Upload import Page__Send_SGraph_Ai__Upload
-from sg_send_qa.browser.SG_Send__Browser__Pages import SG_Send__Browser__Pages
-from sg_send_qa.browser.SG_Send__Browser__Test_Harness import SG_Send__Browser__Test_Harness
-from sg_send_qa.browser.Schema__Browser_Test_Config                              import Schema__Browser_Test_Config
+from osbot_fast_api.utils.Fast_API_Server                                         import Fast_API_Server
+from osbot_utils.helpers.duration.decorators.capture_duration                     import capture_duration
+from osbot_utils.helpers.duration.decorators.print_duration                       import print_duration
+from osbot_utils.testing.__                                                       import __, __SKIP__, __BETWEEN__
+from osbot_utils.type_safe.Type_Safe                                              import Type_Safe
+from osbot_utils.utils.Http                                                       import is_port_open, wait_for_port_closed
+from osbot_utils.utils.Objects                                                    import base_types
+from osbot_utils.utils.Process                                                    import kill_process
+from sg_send_qa.apis_for_sites.send_sgraph_ai.pages.Page__Send_SGraph_Ai__Upload  import Page__Send_SGraph_Ai__Upload
+from sg_send_qa.browser.SG_Send__Browser__Pages                                   import SG_Send__Browser__Pages
+from sg_send_qa.browser.SG_Send__Browser__Test_Harness                            import SG_Send__Browser__Test_Harness
+from sg_send_qa.browser.Schema__Browser_Test_Config                               import Schema__Browser_Test_Config
 from sg_send_qa.browser.Schema__Harness_State import Schema__Harness_State
+from sg_send_qa.browser.for__osbot_playwright.SG_Send__Playwright_Browser__Chrome import chromium_executable_path, SG_Send__Playwright_Browser__Chrome
 
 
 # @qa we don't need this class (see comment on next class
@@ -374,6 +374,49 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
 
                 assert _.headless(False)  is _
                 assert _.setup   ()       is _
+
+
+                # @qa let's continue here the discovery of why it takes ~850ms to open the first page (i.e. conntect the browser)
+                #     since there are no process to start (Chromium is already up) this should be faster
+                url = _.sg_send.url__for_path(path='404')
+                with print_duration(action_name = "first call"):             # 404 page
+                    #_.sg_send.open('404', wait_for_ready=False)             # ~ 0.933 seconds
+                    #_.sg_send.raw_page().goto(url)                          # ~ 0.979 seconds
+                    #_.sg_send.raw_page()                                    # ~ 0.751 seconds
+                    #_.sg_send.page()                                        # ~ 0.773 seconds
+                    #_.sg_send.page().page                                   # ~ 0.774 seconds
+                    #_.sg_send.qa_browser()                                  # ~ 0     seconds
+                    #_.sg_send.qa_browser().chrome()                         # ~ 0.385 seconds
+                    #_.sg_send.qa_browser().chrome().page()                  # ~ 0.752 seconds
+                    #chromium_executable_path()                              # ~ 0.236 seconds
+                    SG_Send__Playwright_Browser__Chrome()                    # ~ 0.267 seconds
+
+                    # @qa ok from the test above we can see that chromium_executable_path() is one of the bottlenecks
+                    # here is its code
+                    #               def chromium_executable_path():                                                         # resolve Chromium binary from playwright's own registry
+                    #                   with print_duration(action_name="load sync_playwright dependencies"):               # ~ 0.0 seconds
+                    #                       from playwright.sync_api import sync_playwright                                 # late import — avoids circular deps
+                    #                   with print_duration(action_name="chromium_executable_path -sync_playwright start"): # ~ 0.374 seconds
+                    #                       pw   = sync_playwright().start()
+                    #                       path = pw.chromium.executable_path
+                    #                   with print_duration(action_name="chromium_executable_path -sync_playwright stop"):  # ~ 0.004 seconds
+                    #                       pw.stop()
+                    #                       return path
+                    #
+                    # which is for every time we create an SG_Send__Playwright_Browser__Chrome object
+                    #   starting and stoping a full sync_playwright process
+                    #   just to calculate something that is doesn't change very often (the executable path of the local chromium)
+                    #   so the solution is to cache this value and make sure it is only called once
+
+
+
+                # with print_duration(action_name = "2nd call"):
+                #     _.sg_send.qa_browser().chrome().page()                   # ~ 549   seconds
+
+                return
+
+
+
 
             # @qa the self.create_browser() in SG_Send__Browser__Test_Harness.setup() did not add any duration (which makes sense since that just created the object),
             #     but opening up a page takes about 800ms, let's do that in parts here
