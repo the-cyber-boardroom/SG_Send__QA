@@ -31,6 +31,7 @@ from sg_send_qa.browser.SG_Send__Browser__Pages                             impo
 from sg_send_qa.browser.Schema__Browser_Test_Config                         import Schema__Browser_Test_Config
 from sg_send_qa.browser.Harness_State__Persistence                          import Harness_State__Persistence, Schema__Harness_State
 from sg_send_qa.local_servers.Server__API__Send_SGraph_AI import Server__API__Send_SGraph_AI
+from sg_send_qa.local_servers.Server__Http__Send_SGraph_AI import Server__Http__Send_SGraph_AI
 from sg_send_qa.utils.QA_UI_Server                                          import build_ui_serve_dir, UI_VERSION, UI_VERSION_BASE
 from sgraph_ai_app_send.lambda__user.testing.Send__User_Lambda__Test_Server import setup__send_user_lambda__test_client, Send__User_Lambda__Test_Objs
 from sgraph_ai_app_send.utils.Version import version__sgraph_ai_app_send
@@ -51,7 +52,8 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     test_objs       : Send__User_Lambda__Test_Objs  = None                      # Send__User_Lambda__Test_Objs
     ui_serve_dir    : str                           = ''                        # resolved path to UI files (always full path)
 
-    server__send_graph_ai__api : Server__API__Send_SGraph_AI                    # @qa using default values (which should be ok)
+    server__send_graph_ai__api  : Server__API__Send_SGraph_AI                    # @qa using default values (which should be ok)
+    server__send_graph_ai__http : Server__Http__Send_SGraph_AI
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Lifecycle
@@ -61,7 +63,7 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         saved_state = self._load_saved_state()
         self.start_api_server(saved_state)                                     #  @dev see what we need to do with this saved_state
         self.build_ui        (saved_state)                                     #  @qa next step is to see the impact of this _build_ui
-        #self._start_ui_server(saved_state)                                    #      and this
+        self.start_ui_server(saved_state)                                    #      and this
         # self._create_browser()
         self._save_state()
         # if self.config.capture_stderr:
@@ -173,12 +175,24 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         build_ui_serve_dir(api_url   = self.api_url()              ,
                            serve_dir = Path(self.ui_serve_dir)     )
 
-    def _start_ui_server(self, saved_state=None):
-        ui_port = saved_state.ui_port if saved_state and not self.config.headless else 0
-        self.ui_server = Temp_Web_Server(root_folder = self.ui_serve_dir   ,
-                                         host        = self.config.host    ,
-                                         port        = ui_port             )
-        self.ui_server.__enter__()
+    def start_ui_server(self, saved_state=None):
+        with self.server__send_graph_ai__http as _:
+            _.config.ui__serve_dir    = saved_state.ui_build_folder or self.ui_serve_dir
+            _.config.ui__content_hash = saved_state.ui_content_hash
+            if saved_state.ui_port:
+                _.config.server__port     = saved_state.ui_port                 # todo: @dev fix this setup workflow (since we shouldn't need to have all these checks here), namely around how the saved_sate is wired up
+            _.config__save()
+
+            if _.server__start():
+                saved_state.ui_port = _.config.server__port
+            else:
+                raise Exception("[in _start_ui_server] Failed to start server")
+
+        # ui_port = saved_state.ui_port if saved_state and not self.config.headless else 0
+        # self.ui_server = Temp_Web_Server(root_folder = self.ui_serve_dir   ,
+        #                                  host        = self.config.host    ,
+        #                                  port        = ui_port             )
+        # self.ui_server.__enter__()
 
     # def _start_ui_server(self, saved_state=None):
     #     ui_port   = saved_state.ui_port if saved_state and not self.config.headless else 0

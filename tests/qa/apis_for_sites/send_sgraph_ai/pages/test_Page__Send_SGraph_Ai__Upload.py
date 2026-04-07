@@ -375,6 +375,15 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
                 assert _.headless(False)  is _
                 assert _.setup   ()       is _
 
+            # qa ok, so with the latest changes we now have all this flow running in ~31m in SG_Send__Browser__Test_Harness
+            #
+            #           def setup(self):
+            #                   saved_state = self._load_saved_state()
+            #                   self.start_api_server(saved_state)
+            #                   self.build_ui        (saved_state)
+            #                   self.start_ui_server(saved_state)
+            #                   self._save_state()
+
             # @qa ok so with "self.build_ui(saved_state)"  on SG_Send__Browser__Test_Harness.setup()
             #       on first run we had ~ 0.792 seconds
             #       on next runs we had ~: 0.09 seconds     # but looking at the code we are still calling build_ui_serve_dir

@@ -66,13 +66,13 @@ class Harness_State__Persistence(Type_Safe):                                    
         return self
 
     def ports_available(self, state: Schema__Harness_State):                    # check if saved ports are free (not hijacked by another process)
-        api_free = not port_is_open('localhost', state.api_port)                # port should be FREE (server not running)
-        ui_free  = not port_is_open('localhost', state.ui_port)
+        api_free = not port_is_open(host='localhost', port=state.api_port)                # port should be FREE (server not running)
+        ui_free  = not port_is_open(host='localhost', port=state.ui_port)
         return api_free and ui_free
 
     def ports_in_use(self, state: Schema__Harness_State):                       # check if servers are still running (stale process detection)
-        api_alive = port_is_open('localhost', state.api_port)
-        ui_alive  = port_is_open('localhost', state.ui_port)
+        api_alive = port_is_open(host='localhost', port=state.api_port)
+        ui_alive  = port_is_open(host='localhost', port=state.ui_port)
         return api_alive or ui_alive
 
     def allocate_ports(self, existing_state=None):                              # allocate ports: reuse saved if free, else pick new

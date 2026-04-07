@@ -116,18 +116,16 @@ class Server__Base__Local(Type_Safe):                                           
             if self.server__configured_ok():
                 if self.server__should_start():
                     popen_args           = self.server__popen_args()
-                    new_process          = subprocess.Popen(popen_args            ,
-                                                            stderr     = subprocess.PIPE,
-                                                            stdout     = subprocess.PIPE,
-                                                            preexec_fn = os.setsid      )
+                    new_process          = subprocess.Popen(popen_args                     ,
+                                                            # stderr     = subprocess.PIPE,
+                                                            # stdout     = subprocess.PIPE,
+                                                            stderr     = subprocess.DEVNULL,            # note: this is needed for the static server, since the binding to localhost or 0.0.0.0 was failing without it
+                                                            stdout     = subprocess.DEVNULL,            #       for static hosting (was working ok for FastAPI)
+                                                            preexec_fn = os.setsid         )
                     _.server__process_id = new_process.pid
                     _.server__started    = True
                     _.server__stopped    = False
-                    # if self.wait_for__port__open():
-                    #     if self.wait_for__server():
-                    #         self.config__save()
-                    #         self.config__update()
-                    #         return True
+
                     if not self.wait_for__port__open():
                         return False
 

@@ -12,7 +12,7 @@ from sg_send_qa.browser.for__osbot_utils.Safe_Str__Url__Host                    
 class Schema__Server__Local__Config(Type_Safe):
     health_check__port__last_status    : bool                    = None
     health_check__port__last_timestamp : Timestamp_Now           = None
-    server__host                       : Safe_Str__Url__Host     = 'localhost'
+    server__host                       : Safe_Str__Url__Host     = '0.0.0.0'        #'localhost'        # note: this is needed for the static server, since the binding to localhost or 0.0.0.0 was failing without it
     server__online                     : bool                    = False
     server__port                       : Safe_UInt__Port         = None
     server__scheme                     : Safe_Id                 = 'http'
