@@ -367,7 +367,7 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
             # @qa at the moment when we execute this test we get the console message (which should had been captured)
             #     DevTools listening on ws://127.0.0.1:26945/devtools/browser/8cdf1bb7-6fe3-4ed3-aedc-d98a88de8134
 
-    # @qa ok now that Server__API__Send_SGraph_AI is working, next step is to look at the SG_Send__Browser__Test_Harness._build_ui
+    # @qa ok now lets look at the impact of _start_ui_server (and see if we need to also keep it alive)
     def test_setup_and_teardown_headless__false(self):
         with Page__Send_SGraph_Ai__Upload() as _:
             with print_duration():
