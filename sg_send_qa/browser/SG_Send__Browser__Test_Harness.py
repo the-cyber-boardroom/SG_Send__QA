@@ -16,6 +16,10 @@
 import hashlib
 from pathlib                                                                import Path
 from osbot_fast_api.utils.Fast_API_Server                                   import Fast_API_Server
+from osbot_utils.decorators.methods.cache_on_self import cache_on_self
+
+from osbot_utils.type_safe.primitives.domains.identifiers.Random_Guid import Random_Guid
+
 from osbot_utils.utils.Misc import str_md5
 
 from osbot_utils.type_safe.primitives.domains.network.safe_uint.Safe_UInt__Port import Safe_UInt__Port
@@ -39,18 +43,19 @@ from sgraph_ai_app_send.utils.Version import version__sgraph_ai_app_send
 UI_BUILD_FOLDER_FORMAT = 'sg_send_qa_ui_build_{version}'
 
 # [LIB-2026-04-01-012] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
-class SG_Send__Browser__Test_Harness(Type_Safe):                                # manages API server + UI server + browser lifecycle
+class   SG_Send__Browser__Test_Harness(Type_Safe):                                # manages API server + UI server + browser lifecycle
     config          : Schema__Browser_Test_Config                               # session configuration
     persistence     : Harness_State__Persistence                                # load/save state across runs
 
     api_server      : Fast_API_Server               = None                      # @dev todo: with the new mode to start the api server, do we still need this? specially here on QA which should really be looking at he behaviour of the API (only execption I can think is if we need direct access to the SG/Send api inner objects |  FastAPI on stable port (in-memory backend)
     api_server__port: Safe_UInt__Port               = None                      #
     ui_folder       : Temp_Folder                   = None                      # temp dir with built static files (or cached)
-    ui_server       : Temp_Web_Server               = None                      # static file server on stable port
+    #ui_server       : Temp_Web_Server               = None                      # static file server on stable port
     stderr          : Stderr                        = None                      # stderr capture (Chrome + server logs)
     sg_send         : SG_Send__Browser__Pages       = None                      # browser page primitives
     test_objs       : Send__User_Lambda__Test_Objs  = None                      # Send__User_Lambda__Test_Objs
     ui_serve_dir    : str                           = ''                        # resolved path to UI files (always full path)
+    ui_server__port : Safe_UInt__Port               = None
 
     server__send_graph_ai__api  : Server__API__Send_SGraph_AI                    # @qa using default values (which should be ok)
     server__send_graph_ai__http : Server__Http__Send_SGraph_AI
@@ -62,24 +67,24 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     def setup(self):                                                            # start everything — call from setUpClass
         saved_state = self._load_saved_state()
         self.start_api_server(saved_state)                                     #  @dev see what we need to do with this saved_state
-        self.build_ui        (saved_state)                                     #  @qa next step is to see the impact of this _build_ui
-        self.start_ui_server(saved_state)                                    #      and this
-        # self._create_browser()
+        self.build_ui        (saved_state)
+        self.start_ui_server(saved_state)                                      #      and this
+        self.create_browser()                                                 # next step is to see the performance impact of connecting the browser
         self._save_state()
-        # if self.config.capture_stderr:
-        #     self.stderr = Stderr()
-        #     self.stderr.start()
+        if self.config.capture_stderr:
+            self.stderr = Stderr()
+            self.stderr.start()
         return self
 
     def teardown(self):                                                         # stop everything — call from tearDownClass
         if self.stderr:
             self.stderr.stop()
-        if self.ui_server:
-            self.ui_server.__exit__(None, None, None)
-        if self.ui_folder and self.config.headless:                             # only delete build folder in CI mode
-            self.ui_folder.__exit__(None, None, None)                           # debug mode keeps the cached build
-        if self.api_server:
-            self.api_server.stop()
+        # if self.ui_server:
+        #     self.ui_server.__exit__(None, None, None)
+        # if self.ui_folder and self.config.headless:                             # only delete build folder in CI mode
+        #     self.ui_folder.__exit__(None, None, None)                           # debug mode keeps the cached build
+        # if self.api_server:
+        #     self.api_server.stop()
         if self.config.headless and self.sg_send:
             self.sg_send.qa_browser().stop()
         return self
@@ -88,8 +93,10 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     # Accessors
     # ═══════════════════════════════════════════════════════════════════════════
 
+    @cache_on_self
     def access_token(self) -> str:                                              # the auto-generated access token
-        return self.test_objs.access_token
+        return Random_Guid()                                                    # when running in memory this can be any value
+        return self.test_objs.access_token                                      # @dev refactor these test_objs for one that works with the local server/process we just started
 
     def headless(self, value=True):                                             # note: call before .setup()
         self.config.headless = value
@@ -99,7 +106,7 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
         return f"http://{self.config.host}:{self.api_server__port }/"
 
     def ui_url(self) -> str:                                                    # e.g. http://localhost:63960/
-        return f"http://{self.config.host}:{self.ui_server.port}/"
+        return f"http://{self.config.host}:{self.ui_server__port }/"
 
     # ═══════════════════════════════════════════════════════════════════════════
     # Util methods
@@ -111,7 +118,7 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
             current_token = None
             current_url   = _.url()
 
-            if str(self.ui_server.port) in current_url:                         # already on the right origin
+            if str(self.ui_server__port) in current_url:                         # already on the right origin
                 try:
                     current_token = _.invoke__javascript(                        # check localStorage directly
                         "localStorage.getItem('sgraph-send-token');")
@@ -185,6 +192,7 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
 
             if _.server__start():
                 saved_state.ui_port = _.config.server__port
+                self.ui_server__port = _.config.server__port
             else:
                 raise Exception("[in _start_ui_server] Failed to start server")
 
@@ -202,9 +210,10 @@ class SG_Send__Browser__Test_Harness(Type_Safe):                                
     #                                      port        = ui_port             )
     #     self.ui_server.__enter__()
 
-    def _create_browser(self):
-        self.sg_send = SG_Send__Browser__Pages(headless    = self.config.headless  ,
-                                               target_port = self.ui_server.port   )
+    def create_browser(self):
+        with self.config as _:
+            self.sg_send = SG_Send__Browser__Pages(headless    = _.headless             ,
+                                                   target_port = self.ui_server__port   )
 
     def _save_state(self):
         if self.config.headless:

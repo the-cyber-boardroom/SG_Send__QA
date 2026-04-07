@@ -151,7 +151,7 @@ class Page__Send_SGraph_Ai__Upload(Type_Safe):
             with print_duration(action_name ="_start_ui_server"):
                 _.start_ui_server(saved_state)
             with print_duration(action_name ="_create_browser"):
-                _._create_browser()
+                _.create_browser()
             with print_duration(action_name ="_save_state"):
                 _._save_state()
             with print_duration(action_name ="capture_stderr"):

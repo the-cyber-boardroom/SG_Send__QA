@@ -375,7 +375,33 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
                 assert _.headless(False)  is _
                 assert _.setup   ()       is _
 
-            # qa ok, so with the latest changes we now have all this flow running in ~31m in SG_Send__Browser__Test_Harness
+            # @qa the self.create_browser() in SG_Send__Browser__Test_Harness.setup() did not add any duration (which makes sense since that just created the object),
+            #     but opening up a page takes about 800ms, let's do that in parts here
+
+                with print_duration(action_name = "open qa page (1st)"):    # open QA page (first time)
+                    _.sg_send.page__qa_setup()                              # ~ 0.933 seconds
+
+                with print_duration(action_name = "open 404 page"):         # open a 404 page
+                    _.sg_send.open("404", wait_for_ready=False)             # ~ 0.053 seconds
+
+                with print_duration(action_name = "open qa page (2nd)"):    # open QA page (second time)
+                    _.sg_send.page__qa_setup()                              # ~ 0.043 seconds
+
+                with print_duration(action_name = "open root page (1st)"):  # open root '/' (first time)
+                    _.sg_send.page__root()                                  # ~ 0.105 seconds
+
+                with print_duration(action_name = "open qa page (3rd)"):    # open QA page (third time)
+                    _.sg_send.page__qa_setup()                              # ~ 0.044 seconds
+
+                with print_duration(action_name = "open root page (2nd)"):  # open root '/' (second time)
+                    _.sg_send.page__root()                                  # ~ 0.095 seconds
+
+                # qa: analysis of the data above, ok so we can see from the above data that there is about an
+                #     ~850ms overhead on the first call, which we need to figure out what is causing it
+
+            # note that the code above is nicely reusing the pre-existent chromium and SG/Send API+UI processes
+
+            # @qa ok, so with the latest changes we now have all this flow running in ~31m in SG_Send__Browser__Test_Harness
             #
             #           def setup(self):
             #                   saved_state = self._load_saved_state()
