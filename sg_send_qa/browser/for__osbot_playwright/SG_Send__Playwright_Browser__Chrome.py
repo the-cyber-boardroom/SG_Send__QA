@@ -13,17 +13,9 @@ from osbot_playwright.playwright.api.Playwright_CLI             import Playwrigh
 from osbot_playwright.playwright.api.Playwright_Process         import Playwright_Process
 from osbot_utils.utils.Misc                                     import random_port
 from osbot_playwright.playwright.api.Playwright_Browser__Chrome import Playwright_Browser__Chrome
+from sg_send_qa.local_servers.QA__Local_Browser import QA__Local_Browser
 
 
-def chromium_executable_path():                                                         # resolve Chromium binary from playwright's own registry
-    with print_duration(action_name="load sync_playwright dependencies"):               # ~ 0.0 seconds
-        from playwright.sync_api import sync_playwright                                 # late import — avoids circular deps
-    with print_duration(action_name="chromium_executable_path -sync_playwright start"): # ~ 0.374 seconds
-        pw   = sync_playwright().start()
-        path = pw.chromium.executable_path
-    with print_duration(action_name="chromium_executable_path -sync_playwright stop"):  # ~ 0.004 seconds
-        pw.stop()
-        return path
 
 
 class SG_Send__Playwright_Process(Playwright_Process):                          # adds --no-sandbox on Linux (required for GH Actions / Docker)
@@ -66,13 +58,16 @@ class SG_Send__Playwright_Process(Playwright_Process):                          
 
 class SG_Send__Playwright_Browser__Chrome(Playwright_Browser__Chrome):
 
+    #qa_local_browser : QA__Local_Browser                                      # todo: refactor this to be part of the OSBot_Playwright codebase (and be a Type_Safe class)
+
     def __init__(self, port=None, headless=True):
         Playwright_Browser.__init__(self)                                       # skip Playwright_Browser__Chrome.__init__, call grandparent
         self._browser           = None
         self.debug_port         = port or random_port()
         self.headless           = headless
         self.browser_name       = 'chromium'
-        self.browser_exec_path  = chromium_executable_path()
+        #self.browser_exec_path  = chromium_executable_path()
+        self.browser_exec_path  = QA__Local_Browser().chromium_executable_path()
         self.playwright_process = SG_Send__Playwright_Process(                  # use our process class (adds --no-sandbox on Linux)
                                       browser_path = self.browser_exec_path ,
                                       debug_port   = self.debug_port        ,

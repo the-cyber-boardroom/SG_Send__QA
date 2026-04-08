@@ -3,6 +3,8 @@ import pytest
 import requests
 from unittest                                                                    import TestCase
 from osbot_fast_api.utils.Fast_API_Server                                         import Fast_API_Server
+from playwright.sync_api import PlaywrightContextManager
+
 from osbot_utils.helpers.duration.decorators.capture_duration                     import capture_duration
 from osbot_utils.helpers.duration.decorators.print_duration                       import print_duration
 from osbot_utils.testing.__                                                       import __, __SKIP__, __BETWEEN__
@@ -14,8 +16,7 @@ from sg_send_qa.apis_for_sites.send_sgraph_ai.pages.Page__Send_SGraph_Ai__Upload
 from sg_send_qa.browser.SG_Send__Browser__Pages                                   import SG_Send__Browser__Pages
 from sg_send_qa.browser.SG_Send__Browser__Test_Harness                            import SG_Send__Browser__Test_Harness
 from sg_send_qa.browser.Schema__Browser_Test_Config                               import Schema__Browser_Test_Config
-from sg_send_qa.browser.Schema__Harness_State import Schema__Harness_State
-from sg_send_qa.browser.for__osbot_playwright.SG_Send__Playwright_Browser__Chrome import chromium_executable_path, SG_Send__Playwright_Browser__Chrome
+from sg_send_qa.browser.for__osbot_playwright.SG_Send__Playwright_Browser__Chrome import SG_Send__Playwright_Browser__Chrome
 
 
 # @qa we don't need this class (see comment on next class
@@ -370,7 +371,7 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
     # @qa ok now lets look at the impact of _start_ui_server (and see if we need to also keep it alive)
     def test_setup_and_teardown_headless__false(self):
         with Page__Send_SGraph_Ai__Upload() as _:
-            with print_duration():
+            with print_duration(action_name = "setup and execution"):
 
                 assert _.headless(False)  is _
                 assert _.setup   ()       is _
@@ -379,17 +380,59 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
                 # @qa let's continue here the discovery of why it takes ~850ms to open the first page (i.e. conntect the browser)
                 #     since there are no process to start (Chromium is already up) this should be faster
                 url = _.sg_send.url__for_path(path='404')
-                with print_duration(action_name = "first call"):             # 404 page
-                    #_.sg_send.open('404', wait_for_ready=False)             # ~ 0.933 seconds
-                    #_.sg_send.raw_page().goto(url)                          # ~ 0.979 seconds
-                    #_.sg_send.raw_page()                                    # ~ 0.751 seconds
-                    #_.sg_send.page()                                        # ~ 0.773 seconds
-                    #_.sg_send.page().page                                   # ~ 0.774 seconds
-                    #_.sg_send.qa_browser()                                  # ~ 0     seconds
-                    #_.sg_send.qa_browser().chrome()                         # ~ 0.385 seconds
-                    #_.sg_send.qa_browser().chrome().page()                  # ~ 0.752 seconds
-                    #chromium_executable_path()                              # ~ 0.236 seconds
-                    SG_Send__Playwright_Browser__Chrome()                    # ~ 0.267 seconds
+                with print_duration(action_name = "first call"):              # 404 page
+                    # _.sg_send.open('404', wait_for_ready=False)             # ~ 0.933 seconds
+                    # _.sg_send.raw_page().goto(url)                          # ~ 0.979 seconds
+                    # _.sg_send.raw_page()                                    # ~ 0.751 seconds
+                    # _.sg_send.page()                                        # ~ 0.773 seconds
+                    # _.sg_send.page().page                                   # ~ 0.774 seconds
+                    # _.sg_send.qa_browser()                                  # ~ 0     seconds
+                    # _.sg_send.qa_browser().chrome()                         # ~ 0.385 seconds
+                    # _.sg_send.qa_browser().chrome().page()                  # ~ 0.752 seconds
+                    # chromium_executable_path()                              # ~ 0.236 seconds
+                    # SG_Send__Playwright_Browser__Chrome()                   # ~ 0.267 seconds
+
+                    # (all stats above where before refactoring of chromium_executable_path), the ones below are after
+                    # SG_Send__Playwright_Browser__Chrome()                                 # ~ 0.004 seconds
+                    # _.sg_send.qa_browser().chrome()                                       # ~ 0.006 seconds
+                    # _.sg_send.qa_browser().chrome().page()                                # ~ 0.577 seconds
+                    #_.sg_send.qa_browser().chrome().browser()                              # ~ 0.593 seconds
+                    #_.sg_send.qa_browser().chrome().playwright()                           # ~ 0.225 seconds
+                    # _.sg_send.qa_browser().chrome().playwright_context_manager()          # ~ 0.005 seconds
+                    #_.sg_send.qa_browser().chrome().playwright_context_manager().start()    # ~ 0.211 seconds
+                    # PlaywrightContextManager().start()                                      # ~ 0.225 seconds
+                    # @qa so there is not much we can do here since this is inside the Playwright code base
+
+                    # @dev if we call this twice, we get the error "playwright._impl._errors.Error: It looks like you are using Playwright Sync API inside the asyncio loop."
+                    #           PlaywrightContextManager().start()
+                    #           PlaywrightContextManager().start()
+                    #       which is a good clue for the case where we want to be able to keep a copy of this context over multiple test classes executions (so that we only pay the cost of this connection once)
+                    #       this connection to a running chrome is something we should add to a singleton that we need to create with the revised test_objs class and setup
+
+                    # now back to
+                    _.sg_send.qa_browser().chrome().playwright()                           # ~ 0.225 seconds
+
+                with print_duration(action_name = "second call"):
+                    #_.sg_send.qa_browser().chrome().playwright()                           # ~ 0.0 seconds (it is cached)
+                    _.sg_send.qa_browser().chrome().browser()                               # ~ 0.395 seconds (with  0.392 seconds comming from Playwright_Browser.browser_via_cdp)
+
+                with print_duration(action_name = "third call"):
+                    #_.sg_send.qa_browser().chrome().browser()                               # ~ 0.0 seconds
+                    _.sg_send.qa_browser().chrome().pages()                                 # ~ 0.0 seconds
+                    _.sg_send.qa_browser().chrome().page ()                                 # ~ 0.0 seconds
+
+                    #_.sg_send.qa_browser().open(url)                                        # ~ 0.095 seconds
+                    #_.sg_send.open('/404', wait_for_ready=False)                            # ~ 0.091 seconds
+                    #_.sg_send.open('', wait_for_ready=False)                               # ~ 0.088 seconds
+                    _.sg_send.open('', wait_for_ready=True)                                # ~ 0.124 seconds
+
+
+
+                    # @qa ok, so from the data above we can see that the main overhead that we have is
+                    #           a) the playwright sync object creation
+                    #           b) the browser_via_cdp action
+                    #     after that we are having ~90ms to load a 404 and ~150ms to load the full UI (which has quite a good number of imports)
+
 
                     # @qa ok from the test above we can see that chromium_executable_path() is one of the bottlenecks
                     # here is its code

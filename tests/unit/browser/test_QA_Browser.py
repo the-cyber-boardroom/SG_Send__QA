@@ -5,13 +5,13 @@
 from unittest                                                                                       import TestCase
 from osbot_utils.utils.Files                                                                        import file_exists
 from sg_send_qa.browser.QA_Browser                                                                  import QA_Browser, DEFAULT_BROWSER_PORT, DEFAULT_HEADLESS
-from sg_send_qa.browser.for__osbot_playwright.SG_Send__Playwright_Browser__Chrome                   import chromium_executable_path
+from sg_send_qa.browser.for__osbot_playwright.chromium_executable_path import chromium_executable_path
 
 
 class test_QA_Browser(TestCase):                                                # Unit tests — no browser needed
 
     def test_chromium_executable_path(self):                                    # finds the playwright-installed Chromium
-        path = chromium_executable_path()
+        path = chromium_executable_path()                                       # todo: refactor out this test
         assert 'chrom' in path.lower()
         assert file_exists(path)
 
