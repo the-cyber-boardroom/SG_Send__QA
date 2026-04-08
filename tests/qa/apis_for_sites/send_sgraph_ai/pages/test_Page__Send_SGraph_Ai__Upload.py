@@ -368,6 +368,52 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
             # @qa at the moment when we execute this test we get the console message (which should had been captured)
             #     DevTools listening on ws://127.0.0.1:26945/devtools/browser/8cdf1bb7-6fe3-4ed3-aedc-d98a88de8134
 
+    def test_setup_and_teardown_headless__false__using_singleton__qa_browser(self):
+        with Page__Send_SGraph_Ai__Upload() as _:                               # first object
+            with print_duration(action_name = "setup and execution"):           # ~ 0.031 seconds
+
+                assert _.headless(False)  is _
+                assert _.setup   ()       is _
+
+            with print_duration(action_name = "invoke qa_browser singleton"):   # ~ 0.571 seconds
+                _.sg_send.qa_browser()
+
+            with print_duration(action_name = "open page"):
+                _.sg_send.open('404', wait_for_ready=False)                     # 0.061 seconds
+
+        # @qa so above we confirm that _.sg_send.qa_browser() is the one we want to capture
+
+        # now all this work without errors (note that at the moment we can't mix headless and non-headless modes , or we get back our async error)
+        with Page__Send_SGraph_Ai__Upload() as _:
+            _.headless(False)
+            _.setup   ()
+
+            _.sg_send.qa_browser()
+
+        with SG_Send__Browser__Pages() as _:
+            _.headless = False
+            _.qa_browser()
+
+        # @qa and running these again, now gives use the performance we want
+
+        with Page__Send_SGraph_Ai__Upload() as _:                               # first object
+            with print_duration(action_name = "setup and execution"):           # ~ 0.036 seconds
+
+                assert _.headless(False)  is _
+                assert _.setup   ()       is _
+
+            with print_duration(action_name = "invoke qa_browser singleton"):   # ~ 0.0 seconds
+                _.sg_send.qa_browser()
+
+            with print_duration(action_name = "open 404 page"):
+                _.sg_send.open('404', wait_for_ready=False)                     # ~ 0.054 seconds
+
+            with print_duration(action_name = "open root page"):
+                _.sg_send.open('', wait_for_ready=True)                         # ~ 0.084 seconds
+
+        # @qa i.e. ~36ms to setup, ~54ms to the 404 page and ~84ms to the main root page
+
+
     # @qa ok now lets look at the impact of _start_ui_server (and see if we need to also keep it alive)
     def test_setup_and_teardown_headless__false(self):
         with Page__Send_SGraph_Ai__Upload() as _:
@@ -377,7 +423,7 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
                 assert _.setup   ()       is _
 
 
-                # @qa let's continue here the discovery of why it takes ~850ms to open the first page (i.e. conntect the browser)
+                # @qa let's continue here the discovery of why it takes ~850ms to open the first page (i.e. connect the browser)
                 #     since there are no process to start (Chromium is already up) this should be faster
                 url = _.sg_send.url__for_path(path='404')
                 with print_duration(action_name = "first call"):              # 404 page

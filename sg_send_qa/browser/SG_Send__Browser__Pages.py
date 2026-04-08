@@ -13,7 +13,7 @@ from osbot_utils.type_safe.primitives.domains.web.safe_str.Safe_Str__Url__Server
 from osbot_utils.utils.Http                                                      import url_join_safe
 from osbot_utils.utils.Misc                                                      import str_to_base64
 from sg_send_qa.browser.JS_Query__Shadow_DOM                                     import JS_Query__Shadow_DOM
-from sg_send_qa.browser.QA_Browser                                               import QA_Browser
+from sg_send_qa.browser.QA_Browser import QA_Browser, qa_browser__headless, qa_browser
 from sg_send_qa.browser.Schema__Browse_Page                                      import Schema__Browse_Page
 from sg_send_qa.browser.Schema__Download_Page                                    import Schema__Download_Page
 from sg_send_qa.browser.Schema__Gallery_Page                                     import Schema__Gallery_Page
@@ -34,8 +34,12 @@ class SG_Send__Browser__Pages(Type_Safe):
     # ═══════════════════════════════════════════════════════════════════════════
 
     @cache_on_self
-    def qa_browser(self):
-        return QA_Browser(headless=self.headless)
+    def qa_browser(self):                               # @dev note that at the moment we can't mix headless and non-headless modes , or we get back our async error
+        if self.headless:
+            return qa_browser__headless()
+        else:
+            return qa_browser()
+        #return QA_Browser(headless=self.headless)
 
     def chrome(self):                                                           # the Chrome browser wrapper
         return self.qa_browser().chrome()

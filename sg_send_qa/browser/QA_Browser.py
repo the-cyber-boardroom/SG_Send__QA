@@ -54,3 +54,28 @@ class QA_Browser(Type_Safe):                                                    
     def stop(self) -> bool:                                                     # stop browser and cleanup
         result       = self.chrome().stop_playwright_and_process()
         return result
+
+# @dev todo: see if there is a better way to do this (so that we don't have two methods here)
+
+_qa_browser            = None
+_qa_browser__headless = None
+
+def qa_browser() -> QA_Browser:                         # returns singleton
+    global _qa_browser
+
+    if _qa_browser is None:
+        browser = QA_Browser()
+        browser.chrome().browser()                      # trigger the expensive creation and connection
+        _qa_browser = browser
+
+    return _qa_browser
+
+def qa_browser__headless() -> QA_Browser:               # returns singleton
+    global _qa_browser__headless
+
+    if _qa_browser__headless is None:
+        browser = QA_Browser(headless=True)
+        browser.chrome().browser()                      # trigger the expensive creation and connection
+        _qa_browser__headless = browser
+
+    return _qa_browser__headless
