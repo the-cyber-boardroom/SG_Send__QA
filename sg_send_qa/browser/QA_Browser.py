@@ -28,9 +28,9 @@ class QA_Browser(Type_Safe):                                                    
     def page(self) -> Playwright_Page:                                          # get or create the active page
         return self.chrome().page()
 
-    def open(self, url: str) -> Playwright_Page:                                # navigate and return the page
+    def open(self, url: str, **kwargs) -> Playwright_Page:                                # navigate and return the page
         page = self.page()
-        page.open(url)
+        page.open(url, **kwargs)
         return page
 
     def url(self) -> str:                                                       # current page URL

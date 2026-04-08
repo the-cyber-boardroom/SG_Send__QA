@@ -38,7 +38,7 @@ class SG_Send__Playwright_Process(Playwright_Process):                          
                       f'--remote-debugging-port={self.debug_port}'              ,
                       f'--user-data-dir={browser_data_folder}'                  ,
                       '--use-mock-keychain'                                     ,
-                      '--no-sandbox'                                            ]   # ← the fix
+                      '--no-sandbox'                                            ]
 
             if self.headless:
                 params.append('--headless')
