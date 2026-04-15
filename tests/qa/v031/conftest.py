@@ -10,7 +10,6 @@ import time
 
 import httpx
 import pytest
-from playwright.sync_api import sync_playwright
 
 from sg_send_qa.utils.QA_Screenshot_Capture import ScreenshotCapture
 from sg_send_qa.utils.QA_Transfer_Helper    import QA_Transfer_Helper
@@ -110,11 +109,9 @@ def ui_url(ui_server):
 # Playwright
 # ---------------------------------------------------------------------------
 
-@pytest.fixture(scope="session")
-def playwright_instance():
-    with sync_playwright() as p:
-        yield p
-
+# playwright_instance is provided by tests/conftest.py (session-scoped, shared
+# across tests/qa/v030/, tests/qa/v031/, tests/smoke/, and tests/integration/
+# to avoid "Event loop is closed" / "inside asyncio loop" errors)
 
 @pytest.fixture(scope="session")
 def browser(playwright_instance):

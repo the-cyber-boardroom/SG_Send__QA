@@ -14,6 +14,7 @@ from osbot_playwright.playwright.api.Playwright_Process         import Playwrigh
 from osbot_utils.utils.Misc                                     import random_port
 from osbot_playwright.playwright.api.Playwright_Browser__Chrome import Playwright_Browser__Chrome
 from sg_send_qa.local_servers.QA__Local_Browser import QA__Local_Browser
+from sg_send_qa.browser import shared_playwright_state          # shared instance set by conftest.py fixture
 
 
 
@@ -56,6 +57,26 @@ class SG_Send__Playwright_Process(Playwright_Process):                          
             return super().start_process()                                      # macOS/Windows — use parent (no sandbox issue)
 
 
+class _Shared_Playwright_Context_Manager:                                       # thin wrapper that reuses an already-running Playwright instance
+    """Returned by playwright_context_manager() when a shared instance exists.
+
+    Mimics the sync_playwright() context-manager protocol so that
+    Playwright_Browser.playwright() (which calls .start()) works correctly
+    without starting a second asyncio event loop.
+    """
+    def __init__(self, p):
+        self._p = p
+
+    def start(self):
+        return self._p                                                          # return the existing instance; do NOT call .start() on it
+
+    def __enter__(self):
+        return self._p
+
+    def __exit__(self, *_):
+        pass                                                                    # never stop the shared instance
+
+
 class SG_Send__Playwright_Browser__Chrome(Playwright_Browser__Chrome):
 
     #qa_local_browser : QA__Local_Browser                                      # todo: refactor this to be part of the OSBot_Playwright codebase (and be a Type_Safe class)
@@ -73,3 +94,15 @@ class SG_Send__Playwright_Browser__Chrome(Playwright_Browser__Chrome):
                                       debug_port   = self.debug_port        ,
                                       headless     = self.headless          )
         self.playwright_cli     = Playwright_CLI()
+
+    def playwright_context_manager(self):                                       # reuse shared instance from conftest.py if available
+        if shared_playwright_state.instance is not None:
+            return _Shared_Playwright_Context_Manager(shared_playwright_state.instance)
+        from playwright.sync_api import sync_playwright
+        return sync_playwright()
+
+    def stop_playwright_and_process(self):                                      # don't stop shared playwright instance
+        if shared_playwright_state.instance is not None:                        # shared instance is owned by conftest.py — only stop the Chrome process
+            self.playwright_process.stop_process()
+            return self.playwright_process.process_running() is False
+        return super().stop_playwright_and_process()                            # owned by us — stop both playwright and process

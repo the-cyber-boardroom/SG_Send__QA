@@ -52,7 +52,12 @@ class QA_Browser(Type_Safe):                                                    
             return False
 
     def stop(self) -> bool:                                                     # stop browser and cleanup
-        result       = self.chrome().stop_playwright_and_process()
+        result = self.chrome().stop_playwright_and_process()
+        import sg_send_qa.browser.QA_Browser as _module                        # reset global singleton so next user gets fresh browser
+        if _module._qa_browser is self:
+            _module._qa_browser = None
+        if _module._qa_browser__headless is self:
+            _module._qa_browser__headless = None
         return result
 
 # @dev todo: see if there is a better way to do this (so that we don't have two methods here)

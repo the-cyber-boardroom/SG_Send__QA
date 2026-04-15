@@ -184,14 +184,18 @@ class   SG_Send__Browser__Test_Harness(Type_Safe):                              
 
     def start_ui_server(self, saved_state=None):
         with self.server__send_graph_ai__http as _:
-            _.config.ui__serve_dir    = saved_state.ui_build_folder or self.ui_serve_dir
-            _.config.ui__content_hash = saved_state.ui_content_hash
-            if saved_state.ui_port:
-                _.config.server__port     = saved_state.ui_port                 # todo: @dev fix this setup workflow (since we shouldn't need to have all these checks here), namely around how the saved_sate is wired up
+            if saved_state is not None:                                         # debug mode — reuse persisted state where possible
+                _.config.ui__serve_dir    = saved_state.ui_build_folder or self.ui_serve_dir
+                _.config.ui__content_hash = saved_state.ui_content_hash
+                if saved_state.ui_port:
+                    _.config.server__port = saved_state.ui_port
+            else:                                                               # CI / headless mode — always fresh
+                _.config.ui__serve_dir = self.ui_serve_dir
             _.config__save()
 
             if _.server__start():
-                saved_state.ui_port = _.config.server__port
+                if saved_state is not None:
+                    saved_state.ui_port = _.config.server__port
                 self.ui_server__port = _.config.server__port
             else:
                 raise Exception("[in _start_ui_server] Failed to start server")

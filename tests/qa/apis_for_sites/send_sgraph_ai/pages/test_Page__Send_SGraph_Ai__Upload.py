@@ -177,85 +177,16 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
                 #assert _.harness.ui_server   .obj() == __()     # not a Type_Safe class        # @dev fix in OSBot_Utils
                 #assert _.harness.stderr      .obj() == __()     # not a Type_Safe class
                 assert _.harness.sg_send      .obj() == __(headless=True, target_port=__SKIP__, target_server='http://localhost')
-                # @qa the assert below is a great example of the power of .obj() since it really provices a nice way to see what is going on
-                #       note that I added some __SKIP__ to make the test less verbose in a couple cases
-                #       also we need to have this in our test suite, but on this test the non Fast_API variables are more interesting and useful
-                assert _.harness.test_objs    .obj() == __(fast_api=__(send_config=__(storage_mode='memory', s3_bucket=None),
-                                                                       transfer_service=__(storage_fs=__(content_data=__()),
-                                                                                           TRANSFER_ID_PATTERN=None),
-                                                                       presigned_service=__(transfer_service=__(storage_fs=__(content_data=__()),
-                                                                                                                TRANSFER_ID_PATTERN=None),
-                                                                                            s3=None,
-                                                                                            s3_bucket='',
-                                                                                            s3_prefix='',
-                                                                                            storage_mode='memory'),
-                                                                       admin_service_client=None,
-                                                                       early_access_service=__(n8n_webhook_url='',
-                                                                                               n8n_webhook_secret=''),
-                                                                       vault_service=__(storage_fs=__(content_data=__()),
-                                                                                        _manifest_cache=__()),
-                                                                       vault_zip_service=__(vault_service=__(storage_fs=__(content_data=__()),
-                                                                                                             _manifest_cache=__()),
-                                                                                            storage_fs=__(content_data=__())),
-                                                                       vault_presigned_service=__(vault_service=__(storage_fs=__(content_data=__()),
-                                                                                                                   _manifest_cache=__()),
-                                                                                                  s3=None,
-                                                                                                  s3_bucket='',
-                                                                                                  s3_prefix='',
-                                                                                                  storage_mode='memory'),
-                                                                       config=__(enable_cors=True,
-                                                                                 enable_api_key=False,
-                                                                                 default_routes=False,
-                                                                                 base_path='/',
-                                                                                 add_admin_ui=False,
-                                                                                 docs_offline=True,
-                                                                                 name='SGraph Send',
-                                                                                 version=__SKIP__,
-                                                                                 description='SGraph Send _ Zero-Knowledge Encrypted '
-                                                                                             'File Sharing'),
-                                                                       server_id=__SKIP__,
-                                                                       mcp= __SKIP__),
-                                                                       fast_api__app='FastAPI',
-                                                       fast_api__client=__(async_backend=__(backend='asyncio',
-                                                                                            backend_options=__()),
-                                                                           app='FastAPI',
-                                                                           app_state=__(),
-                                                                           _base_url=__(_uri_reference=['http',
-                                                                                                        '',
-                                                                                                        'testserver',
-                                                                                                        None,
-                                                                                                        '',
-                                                                                                        None,
-                                                                                                        None]),
-                                                                           _auth=None,
-                                                                           _params=__(_dict=__()),
-                                                                           _headers=__(_list=__SKIP__,
-                                                                                       _encoding='ascii'),
-                                                                           _cookies=__(jar=__(_policy=__SKIP__,
-                                                                                              _cookies_lock=None,
-                                                                                              _cookies=__())),
-                                                                           _timeout=__(connect=5.0, read=5.0, write=5.0, pool=5.0),
-                                                                           follow_redirects=True,
-                                                                           max_redirects=20,
-                                                                           _event_hooks=__(request=[], response=[]),
-                                                                           _trust_env=True,
-                                                                           _default_encoding='utf-8',
-                                                                           _state=1,
-                                                                           _transport=__(app='FastAPI',
-                                                                                         raise_server_exceptions=True,
-                                                                                         root_path='',
-                                                                                         portal_factory='_portal_factory',
-                                                                                         app_state=__(),
-                                                                                         client=['testclient', 50000]),
-                                                                           _mounts=__()),
-                                                       fast_api_server=None,
-                                                       server_url='',
-                                                       access_token=__SKIP__,
-                                                       write_key=__SKIP__)
-                # @qa note that the code above will be MUCH more readable once it is correctly formatted and aligned
-                # @qa now let take a look at where is the problem with "_.harness.api_server  .obj()" which is causing the recursive loop
-
-                assert type(_.harness.api_server) is Fast_API_Server        # let's start by confirming the class we are working with
+                # @qa new subprocess architecture: test_objs and api_server are None
+                # test_objs was used in the old in-process FastAPI architecture (setup__send_user_lambda__test_client)
+                # In the subprocess arch the server is an external process — test_objs is never populated
+                assert _.harness.test_objs   is None                               # subprocess arch: no in-process test client
+                assert _.harness.api_server  is None                               # subprocess arch: api_server replaced by server__send_graph_ai__api
+                # The new subprocess servers are the live objects to assert against
+                from sg_send_qa.local_servers.Server__API__Send_SGraph_AI  import Server__API__Send_SGraph_AI
+                from sg_send_qa.local_servers.Server__Http__Send_SGraph_AI import Server__Http__Send_SGraph_AI
+                assert type(_.harness.server__send_graph_ai__api ) is Server__API__Send_SGraph_AI
+                assert type(_.harness.server__send_graph_ai__http) is Server__Http__Send_SGraph_AI
                 # with _.harness.api_server as fast_api_server:                # let's move to a more relevant context
                 #     assert fast_api_server.obj() == __(app       = __SKIP__,
                 #                                        port      = __SKIP__,
