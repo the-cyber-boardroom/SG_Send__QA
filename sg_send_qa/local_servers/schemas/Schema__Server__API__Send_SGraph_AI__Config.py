@@ -2,7 +2,7 @@ from osbot_utils.type_safe.primitives.domains.python.safe_str.Safe_Str__Python__
 from osbot_utils.type_safe.primitives.domains.network.safe_uint.Safe_UInt__Port                 import Safe_UInt__Port
 from sg_send_qa.local_servers.schemas.Schema__Server__Local__Fast_API__Config                   import Schema__Server__Local__Fast_API__Config
 from sgraph_ai_app_send.lambda__user.lambda_function.lambda_handler__user                       import run
-from tests.qa.local_servers.schemas.safe_str.Safe_Str__Python__FastAPI_Handler import Safe_Str__Python__FastAPI_Handler
+from sg_send_qa.local_servers.schemas.safe_str.Safe_Str__Python__FastAPI_Handler import Safe_Str__Python__FastAPI_Handler
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # Concrete Config Schemas — project-specific defaults
