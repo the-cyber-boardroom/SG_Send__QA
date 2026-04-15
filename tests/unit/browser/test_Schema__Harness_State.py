@@ -10,12 +10,12 @@ class test_Schema__Harness_State(TestCase):                                     
 
     def test__init____defaults(self):
         with Schema__Harness_State() as _:
-            assert _.api_port        == 0
-            assert _.ui_port         == 0
-            assert _.ui_build_folder == ''
-            assert _.ui_version      == ''
-            assert _.access_token    == ''
-            assert _.chrome_port     == 0
+            assert _.api_port        is None   # None default (not 0) — only set when server actually starts
+            assert _.ui_port         is None
+            assert _.ui_build_folder is None
+            assert _.ui_version      is None
+            assert _.access_token    is None
+            assert _.chrome_port     is None
 
     def test__init____with_values(self):
         with Schema__Harness_State(api_port=54321, ui_port=63960, access_token='test-token') as _:

@@ -13,11 +13,13 @@ class test_Server__Base__Local__Fast_API(TestCase):
             assert base_types(_) == [Server__Base__Local, Type_Safe, object]
 
     def test_server__popen_args(self):
+        import sys
         with Server__Base__Local__Fast_API() as _:
             _.config.fastapi__handler = 'my_app.module:app'
             _.config.server__port     = 9999
             args = _.server__popen_args()
-            assert args[0:3]  == ['poetry', 'run', 'uvicorn']
+            assert args[0]    == sys.executable                # uses same Python as test runner
+            assert args[1:3]  == ['-m', 'uvicorn']
             assert 'my_app.module:app' in args
             assert '9999'              in args
 

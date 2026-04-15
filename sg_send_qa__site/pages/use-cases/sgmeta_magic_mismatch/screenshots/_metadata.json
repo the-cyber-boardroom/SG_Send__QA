@@ -7,14 +7,17 @@
     {
       "method": "test_api_created_transfer_decrypts_with_correct_filename",
       "doc": "API-created transfer should display with correct filename after decryption.\n\n        With the 7-byte magic bug, metadata extraction failed and filename was lost.\n        With the 6-byte fix, the filename 'sgmeta-regression.txt' is correctly\n        extracted from the SGMETA envelope and displayed in the viewer.\n        ",
-      "screenshots": []
+      "screenshots": [
+        "01_sgmeta_regression"
+      ]
     }
   ],
   "screenshots": [
     {
       "name": "01_sgmeta_regression",
-      "path": "sg_send_qa__site/pages/use-cases/sgmeta_magic_mismatch/screenshots/01_sgmeta_regression.png",
-      "description": "SGMETA regression test \u2014 filename check"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/sgmeta_magic_mismatch/screenshots/01_sgmeta_regression.png",
+      "description": "SGMETA regression test \u2014 filename check",
+      "has_masks": true
     }
   ]
 }

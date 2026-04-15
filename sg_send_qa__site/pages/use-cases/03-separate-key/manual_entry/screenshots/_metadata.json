@@ -28,25 +28,19 @@
     {
       "method": "test_valid_transfer_id_resolves",
       "doc": "Entering a valid transfer ID resolves and shows the file.",
-      "screenshots": []
+      "screenshots": [
+        "04_valid_id_resolved"
+      ]
     },
     {
       "method": "test_hash_navigation_to_download",
       "doc": "Navigating directly to /en-gb/download/#id/key auto-decrypts (P1).",
-      "screenshots": []
+      "screenshots": [
+        "05_direct_hash_nav"
+      ]
     }
   ],
   "screenshots": [
-    {
-      "name": "04_valid_id_resolved",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/04_valid_id_resolved.png",
-      "description": "Valid transfer ID resolved"
-    },
-    {
-      "name": "05_direct_hash_nav",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/05_direct_hash_nav.png",
-      "description": "Direct hash navigation to download"
-    },
     {
       "name": "01_entry_form",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/01_entry_form.png",
@@ -64,6 +58,18 @@
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/03_bogus_token_error.png",
       "description": "Error after bogus token",
       "has_masks": false
+    },
+    {
+      "name": "04_valid_id_resolved",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/04_valid_id_resolved.png",
+      "description": "Valid transfer ID resolved",
+      "has_masks": true
+    },
+    {
+      "name": "05_direct_hash_nav",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/manual_entry/screenshots/05_direct_hash_nav.png",
+      "description": "Direct hash navigation to download",
+      "has_masks": true
     }
   ]
 }

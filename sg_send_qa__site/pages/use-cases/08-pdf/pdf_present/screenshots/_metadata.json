@@ -7,12 +7,16 @@
     {
       "method": "test_pdf_lightbox_opens",
       "doc": "Clicking the PDF thumbnail opens the lightbox without error.",
-      "screenshots": []
+      "screenshots": [
+        "01_pdf_lightbox"
+      ]
     },
     {
       "method": "test_present_button_visible_for_pdf",
       "doc": "A 'Present' button appears in the lightbox when viewing a PDF.",
-      "screenshots": []
+      "screenshots": [
+        "02_present_button"
+      ]
     },
     {
       "method": "test_present_button_click_enters_fullscreen",
@@ -22,12 +26,18 @@
     {
       "method": "test_f_shortcut_triggers_present",
       "doc": "The 'f' keyboard shortcut triggers present / fullscreen mode.",
-      "screenshots": []
+      "screenshots": [
+        "05_before_f_shortcut",
+        "06_after_f_shortcut"
+      ]
     },
     {
       "method": "test_s_key_triggers_save",
       "doc": "Pressing 's' when a file is selected triggers save/download.",
-      "screenshots": []
+      "screenshots": [
+        "01_file_selected",
+        "02_download_triggered"
+      ]
     },
     {
       "method": "test_j_key_moves_selection_down",
@@ -42,34 +52,46 @@
   ],
   "screenshots": [
     {
+      "name": "02_s_key_pressed",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/02_s_key_pressed.png",
+      "description": "'s' key pressed (no download dialog)",
+      "has_masks": false
+    },
+    {
       "name": "01_pdf_lightbox",
-      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/01_pdf_lightbox.png",
-      "description": "PDF opened in lightbox"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/01_pdf_lightbox.png",
+      "description": "PDF opened in lightbox",
+      "has_masks": false
     },
     {
       "name": "02_present_button",
-      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/02_present_button.png",
-      "description": "Present button in PDF lightbox"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/02_present_button.png",
+      "description": "Present button in PDF lightbox",
+      "has_masks": false
     },
     {
       "name": "05_before_f_shortcut",
-      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/05_before_f_shortcut.png",
-      "description": "Before 'f' shortcut"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/05_before_f_shortcut.png",
+      "description": "Before 'f' shortcut",
+      "has_masks": false
     },
     {
       "name": "06_after_f_shortcut",
-      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/06_after_f_shortcut.png",
-      "description": "After 'f' shortcut"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/06_after_f_shortcut.png",
+      "description": "After 'f' shortcut",
+      "has_masks": false
     },
     {
       "name": "01_file_selected",
-      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/01_file_selected.png",
-      "description": "File selected in browse"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/01_file_selected.png",
+      "description": "File selected in browse",
+      "has_masks": true
     },
     {
-      "name": "02_s_key_pressed",
-      "path": "sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/02_s_key_pressed.png",
-      "description": "'s' key pressed (no download dialog)"
+      "name": "02_download_triggered",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/08-pdf/pdf_present/screenshots/02_download_triggered.png",
+      "description": "Download triggered by 's' key",
+      "has_masks": true
     }
   ]
 }

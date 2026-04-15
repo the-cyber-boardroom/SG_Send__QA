@@ -78,55 +78,55 @@
   "screenshots": [
     {
       "name": "01_upload_page",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_upload_page.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_upload_page.png",
       "description": "Upload page loaded",
       "has_masks": false
     },
     {
       "name": "01_file_selected",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_file_selected.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_file_selected.png",
       "description": "File selected \u2014 delivery step",
       "has_masks": false
     },
     {
       "name": "02_share_step",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/02_share_step.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/02_share_step.png",
       "description": "Share mode step",
       "has_masks": false
     },
     {
       "name": "03_mode_selected",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/03_mode_selected.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/03_mode_selected.png",
       "description": "Combined link selected",
       "has_masks": false
     },
     {
       "name": "04_upload_done",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/04_upload_done.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/04_upload_done.png",
       "description": "Upload complete \u2014 link shown",
       "has_masks": true
     },
     {
       "name": "05_download_page",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/05_download_page.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/05_download_page.png",
       "description": "Download page \u2014 awaiting decrypt",
       "has_masks": true
     },
     {
       "name": "06_decrypted",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/06_decrypted.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/06_decrypted.png",
       "description": "Content decrypted and visible",
       "has_masks": true
     },
     {
       "name": "07_link_format",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/07_link_format.png",
-      "description": "Link verified: http://localhost:29114/en-gb/browse/#63d80cf0c2f7/qx_pe7t6Rc20RurYZ5CKgz9ALuAJ8T",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/07_link_format.png",
+      "description": "Link verified: http://localhost:50002/en-gb/browse/#ec7dfc327716/Z6Zwe9OAoNeOUekBmxZlBYRrQZCq93",
       "has_masks": true
     },
     {
       "name": "01_footer",
-      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_footer.png",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/upload__single_file/screenshots/01_footer.png",
       "description": "Footer showing version",
       "has_masks": false
     }

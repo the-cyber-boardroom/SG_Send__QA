@@ -49,9 +49,7 @@
     {
       "method": "test_upload_and_browse_tree_renders",
       "doc": "SM-010: Upload zip \u2192 browse \u2192 file tree renders (catches SGMETA/zipTree regressions).",
-      "screenshots": [
-        "sm010_browse_tree"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_sgmeta_stripped_from_download",
@@ -63,16 +61,12 @@
     {
       "method": "test_plr_auto_opens_page_json",
       "doc": "SM-012: Upload zip with _page.json \u2192 PLR auto-opens and renders layout.",
-      "screenshots": [
-        "sm012_plr_rendered"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_entry_form_resolves_transfer",
       "doc": "SM-013: Entry form \u2014 enter tid/key \u2192 browse opens (catches entry form regressions).",
-      "screenshots": [
-        "sm013_entry_form_resolved"
-      ]
+      "screenshots": []
     },
     {
       "method": "test_zip_download_is_valid",
@@ -83,6 +77,24 @@
     }
   ],
   "screenshots": [
+    {
+      "name": "sm010_browse_tree",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm010_browse_tree.png",
+      "description": "Browse tree rendered",
+      "has_masks": true
+    },
+    {
+      "name": "sm012_plr_rendered",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm012_plr_rendered.png",
+      "description": "PLR auto-opened",
+      "has_masks": true
+    },
+    {
+      "name": "sm013_entry_form_resolved",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm013_entry_form_resolved.png",
+      "description": "Entry form resolved to browse",
+      "has_masks": true
+    },
     {
       "name": "sm001_browse_loads",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm001_browse_loads.png",
@@ -120,27 +132,9 @@
       "has_masks": false
     },
     {
-      "name": "sm010_browse_tree",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm010_browse_tree.png",
-      "description": "Browse tree rendered",
-      "has_masks": true
-    },
-    {
       "name": "sm011_download_clean",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm011_download_clean.png",
       "description": "Download \u2014 SGMETA check",
-      "has_masks": true
-    },
-    {
-      "name": "sm012_plr_rendered",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm012_plr_rendered.png",
-      "description": "PLR auto-opened",
-      "has_masks": true
-    },
-    {
-      "name": "sm013_entry_form_resolved",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/_smoke/smoke_send/screenshots/sm013_entry_form_resolved.png",
-      "description": "Entry form resolved to browse",
       "has_masks": true
     },
     {

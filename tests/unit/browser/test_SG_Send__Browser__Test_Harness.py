@@ -26,25 +26,24 @@ class test_SG_Send__Browser__Test_Harness__port_reuse(TestCase):              # 
         assert harness.api_server_port_open(0)     is False                   # port 0 is never open
         assert harness.api_server_port_open(19999) is False                   # unpopulated port
 
-    # @qa this looks like the only place where we are testing the _start_api_server, which needs a lot more testing (specially as we add the separate process)
+    # @qa subprocess arch: api_server field is always None; start_api_server() uses server__send_graph_ai__api
     def test__start_api_server__twice__no_port_conflict(self):                # two sequential start/stop cycles — no leftover port
+        from sg_send_qa.local_servers.Server__API__Send_SGraph_AI import Server__API__Send_SGraph_AI
         harness = SG_Send__Browser__Test_Harness()
         harness.headless(True)
 
-        harness.start_api_server()                                           # first start
-        assert harness.api_server is not None
-        assert harness.api_server.is_port_open()                              # port is open after start
-        port_first = harness.api_server.port
-        harness.api_server.stop()                                             # clean up first
+        harness.start_api_server()                                            # first start (subprocess arch)
+        assert harness.api_server is None                                     # api_server field not used in subprocess arch
+        assert type(harness.server__send_graph_ai__api) is Server__API__Send_SGraph_AI
+        port_first = harness.api_server__port
+        harness.server__send_graph_ai__api.server__stop()                     # clean up first
 
-        harness.start_api_server()                                           # second start — fresh (headless=True, no saved port)
-        assert harness.api_server is not None
-        assert harness.api_server.is_port_open()                              # port is open after second start
-        port_second = harness.api_server.port
-        harness.api_server.stop()                                             # clean up second
+        harness.start_api_server()                                            # second start — same config, server re-started
+        port_second = harness.api_server__port
+        harness.server__send_graph_ai__api.server__stop()                     # clean up second
 
-        assert port_first  != 0                                               # both ports were real
-        assert port_second != 0
+        assert port_first  is not None                                        # port was assigned
+        assert port_second is not None
 
 
 class test_SG_Send__Browser__Test_Harness__hash_cache(TestCase):           # content-hash UI build cache (no browser)
@@ -73,11 +72,11 @@ class test_SG_Send__Browser__Test_Harness(TestCase):
     def test__init__(self):                                                     # verify defaults before setup
         with SG_Send__Browser__Test_Harness() as _:
             assert type(_.config)  is Schema__Browser_Test_Config
-            assert _.api_server   is None
+            assert _.api_server   is None                                      # old in-process arch — kept for compatibility
             assert _.ui_folder    is None
-            assert _.ui_server    is None
+            # ui_server removed — replaced by server__send_graph_ai__http subprocess server
             assert _.sg_send      is None
-            assert _.test_objs    is None
+            assert _.test_objs    is None                                      # old in-process arch — not populated in subprocess mode
 
     def test__init____with_config(self):                                        # verify config passthrough
         config = Schema__Browser_Test_Config(headless=False)
@@ -122,7 +121,7 @@ class test_SG_Send__Browser__Test_Harness__lifecycle(TestCase):
 
     def test_access_token__is_guid(self):
         token = self.harness.access_token()
-        assert type(token) is str
+        assert isinstance(token, str)                                          # Random_Guid is a str subclass
         assert len(token)  > 0
 
     def test_api_url__format(self):

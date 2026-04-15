@@ -290,8 +290,8 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
             with capture_duration() as duration__teardown:
                 _.teardown()
 
-            assert duration__setup.seconds      < 2                                     # note: on my osx laptop , on battery
-            assert duration__teardown.seconds   < 0.5
+            assert duration__setup.seconds      < 5                                     # subprocess arch: startup slower than in-process (esp. CI)
+            assert duration__teardown.seconds   < 2                                     # subprocess arch: teardown includes stopping Chrome process
 
 
             # assert duration__teardown           < 0.5                                 # @dev add support for this pattern to OSBot_Utils
@@ -299,6 +299,8 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
             # @qa at the moment when we execute this test we get the console message (which should had been captured)
             #     DevTools listening on ws://127.0.0.1:26945/devtools/browser/8cdf1bb7-6fe3-4ed3-aedc-d98a88de8134
 
+    @pytest.mark.skipif(not __import__('os').environ.get('DISPLAY'),
+                        reason="headless=False tests need a display server (not available in CI)")
     def test_setup_and_teardown_headless__false__using_singleton__qa_browser(self):
         with Page__Send_SGraph_Ai__Upload() as _:                               # first object
             with print_duration(action_name = "setup and execution"):           # ~ 0.031 seconds
@@ -346,6 +348,8 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
 
 
     # @qa ok now lets look at the impact of _start_ui_server (and see if we need to also keep it alive)
+    @pytest.mark.skipif(not __import__('os').environ.get('DISPLAY'),
+                        reason="headless=False tests need a display server (not available in CI)")
     def test_setup_and_teardown_headless__false(self):
         with Page__Send_SGraph_Ai__Upload() as _:
             with print_duration(action_name = "setup and execution"):

@@ -60,9 +60,11 @@ class Server__Base__Local__Fast_API(Server__Base__Local):                       
         return True                             # todo: @dev add checks to make sure all vars valued to safely create the process are correctly set up (see how the __Static was implemented)
 
     def server__popen_args(self):
+        import sys
         with self.config as _:
-            return ['poetry', 'run', 'uvicorn'                  ,
+            return [sys.executable, '-m', 'uvicorn'             ,   # use same Python that's running the tests
                     _.fastapi__handler                          ,
+                    '--host'                    , _.server__host     ,
                     '--port'                    , str(_.server__port),
                     '--log-level'               , 'info'            ,
                     '--timeout-graceful-shutdown', '0'               ]

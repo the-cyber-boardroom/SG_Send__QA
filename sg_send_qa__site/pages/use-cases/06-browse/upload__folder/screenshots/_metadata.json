@@ -10,51 +10,34 @@
       "screenshots": [
         "01_upload_page",
         "02_file_selected",
-        "03_share_step"
+        "03_share_step",
+        "04_upload_done",
+        "05_download_gallery"
       ]
     },
     {
       "method": "test_gallery_thumbnail_grid",
       "doc": "Create a zip upload via API, open gallery, verify thumbnail grid.",
-      "screenshots": []
+      "screenshots": [
+        "06_gallery_thumbnails"
+      ]
     },
     {
       "method": "test_browse_view_folder_tree",
       "doc": "Open browse view for the zip; verify folder tree is present.",
-      "screenshots": []
+      "screenshots": [
+        "07_browse_view"
+      ]
     },
     {
       "method": "test_mode_switch_preserves_hash",
       "doc": "Gallery \u2194 browse mode switching preserves the hash fragment.",
-      "screenshots": []
+      "screenshots": [
+        "08_switched_to_browse"
+      ]
     }
   ],
   "screenshots": [
-    {
-      "name": "04_upload_done",
-      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/04_upload_done.png",
-      "description": "Upload complete \u2014 link shown"
-    },
-    {
-      "name": "05_download_gallery",
-      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/05_download_gallery.png",
-      "description": "Gallery view after zip download"
-    },
-    {
-      "name": "06_gallery_thumbnails",
-      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/06_gallery_thumbnails.png",
-      "description": "Gallery thumbnail grid"
-    },
-    {
-      "name": "07_browse_view",
-      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/07_browse_view.png",
-      "description": "Browse view with folder tree"
-    },
-    {
-      "name": "08_switched_to_browse",
-      "path": "sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/08_switched_to_browse.png",
-      "description": "Switched to browse view"
-    },
     {
       "name": "01_upload_page",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/01_upload_page.png",
@@ -71,6 +54,36 @@
       "name": "03_share_step",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/03_share_step.png",
       "description": "Share mode step",
+      "has_masks": false
+    },
+    {
+      "name": "04_upload_done",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/04_upload_done.png",
+      "description": "Upload complete \u2014 link shown",
+      "has_masks": true
+    },
+    {
+      "name": "05_download_gallery",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/05_download_gallery.png",
+      "description": "Gallery view after zip download",
+      "has_masks": true
+    },
+    {
+      "name": "06_gallery_thumbnails",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/06_gallery_thumbnails.png",
+      "description": "Gallery thumbnail grid",
+      "has_masks": false
+    },
+    {
+      "name": "07_browse_view",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/07_browse_view.png",
+      "description": "Browse view with folder tree",
+      "has_masks": true
+    },
+    {
+      "name": "08_switched_to_browse",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/06-browse/upload__folder/screenshots/08_switched_to_browse.png",
+      "description": "Switched to browse view",
       "has_masks": false
     }
   ]

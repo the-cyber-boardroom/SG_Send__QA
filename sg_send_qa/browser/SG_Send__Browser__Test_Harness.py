@@ -95,8 +95,13 @@ class   SG_Send__Browser__Test_Harness(Type_Safe):                              
 
     @cache_on_self
     def access_token(self) -> str:                                              # the auto-generated access token
-        return Random_Guid()                                                    # when running in memory this can be any value
-        return self.test_objs.access_token                                      # @dev refactor these test_objs for one that works with the local server/process we just started
+        import os
+        # Server validates against SGRAPH_SEND__ACCESS_TOKEN (internal name); fall back to SG_SEND_ACCESS_TOKEN
+        env_token = (os.environ.get('SGRAPH_SEND__ACCESS_TOKEN', '') or
+                     os.environ.get('SG_SEND_ACCESS_TOKEN', ''))
+        if env_token:
+            return env_token                                                    # server validates against env var — must match
+        return str(Random_Guid())                                               # no env var → server allows all (local dev mode)
 
     def headless(self, value=True):                                             # note: call before .setup()
         self.config.headless = value

@@ -7,69 +7,87 @@
     {
       "method": "test_viewer_page_loads",
       "doc": "Single-file viewer loads without errors.",
-      "screenshots": []
+      "screenshots": [
+        "01_viewer_loaded"
+      ]
     },
     {
       "method": "test_markdown_content_displayed",
       "doc": "Markdown file content is decrypted and displayed.",
-      "screenshots": []
+      "screenshots": [
+        "02_content"
+      ]
     },
     {
       "method": "test_share_button_present",
       "doc": "Share button is present and toggles the share panel.",
-      "screenshots": []
+      "screenshots": [
+        "03_before_share"
+      ]
     },
     {
       "method": "test_copy_url_contains_key",
       "doc": "The share URL shown in the panel contains the key (hash fragment).",
-      "screenshots": []
+      "screenshots": [
+        "05_url_with_key"
+      ]
     },
     {
       "method": "test_save_locally_button_present",
       "doc": "Save locally button is present in the viewer.",
-      "screenshots": []
+      "screenshots": [
+        "06_save_button"
+      ]
     },
     {
       "method": "test_short_url_v_route",
       "doc": "Short URL /en-gb/v/ works the same as /en-gb/view/.",
-      "screenshots": []
+      "screenshots": [
+        "07_short_url_v"
+      ]
     }
   ],
   "screenshots": [
-    {
-      "name": "01_viewer_loaded",
-      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/01_viewer_loaded.png",
-      "description": "Single file viewer loaded"
-    },
-    {
-      "name": "02_content",
-      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/02_content.png",
-      "description": "Decrypted markdown content"
-    },
-    {
-      "name": "03_before_share",
-      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/03_before_share.png",
-      "description": "Before share panel"
-    },
     {
       "name": "04_share_panel",
       "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/04_share_panel.png",
       "description": "Share panel opened"
     },
     {
+      "name": "01_viewer_loaded",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/01_viewer_loaded.png",
+      "description": "Single file viewer loaded",
+      "has_masks": true
+    },
+    {
+      "name": "02_content",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/02_content.png",
+      "description": "Decrypted markdown content",
+      "has_masks": true
+    },
+    {
+      "name": "03_before_share",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/03_before_share.png",
+      "description": "Before share panel",
+      "has_masks": true
+    },
+    {
       "name": "05_url_with_key",
-      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/05_url_with_key.png",
-      "description": "URL input with key"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/05_url_with_key.png",
+      "description": "URL input with key",
+      "has_masks": true
     },
     {
       "name": "06_save_button",
-      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/06_save_button.png",
-      "description": "Save locally button"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/06_save_button.png",
+      "description": "Save locally button",
+      "has_masks": true
     },
     {
       "name": "07_short_url_v",
-      "path": "sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/07_short_url_v.png",
-      "description": "Short /v/ route loads viewer"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/07-viewer/download__viewer/screenshots/07_short_url_v.png",
+      "description": "Short /v/ route loads viewer",
+      "has_masks": true
     }
   ]
 }
