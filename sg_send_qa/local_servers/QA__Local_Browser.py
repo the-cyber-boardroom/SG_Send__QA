@@ -26,6 +26,7 @@ class QA__Local_Browser(Type_Safe):
         return Schema__Local_Browser__Config.from_json(file_data)
 
     def browser_config__update(self):
+        self.qa_local_servers.setup()                                                           # idempotent: ensure .local-servers/ exists before write
         kwargs                       = dict(chromium_executable_path = chromium_executable_path())
         browser_config               = Schema__Local_Browser__Config(**kwargs)
         file__browser_config         = self.path__file__browser_config()

@@ -54,7 +54,7 @@ class QA__Local_Servers(Type_Safe):
                             server_id    : Safe_Id  ,
                             server_config: Type_Safe
                        ) -> bool:
-
+        self.setup()                                                                            # idempotent: ensure .local-servers/server-configs/ exists before write
         server_config__file_path     = self.path__file__server_config(server_id)
         json_data                    = server_config.json()
         json_save_file(python_object = json_data                ,
