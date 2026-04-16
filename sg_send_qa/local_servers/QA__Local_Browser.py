@@ -5,7 +5,7 @@ from osbot_utils.utils.Files                                                    
 from osbot_utils.type_safe.Type_Safe                                                import Type_Safe
 from sg_send_qa.browser.for__osbot_playwright.chromium_executable_path              import chromium_executable_path
 from sg_send_qa.local_servers.QA__Local_Servers                                     import QA__Local_Servers
-from sgit_ai.safe_types.Safe_Str__File_Path                                         import Safe_Str__File_Path
+from osbot_utils.type_safe.primitives.domains.files.safe_str.Safe_Str__File__Path   import Safe_Str__File__Path as Safe_Str__File_Path
 
 
 LOCAL_BROWSER__FILE_NAME__BROWSER_CONFIG = 'browser-config.json'
