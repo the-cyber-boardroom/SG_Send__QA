@@ -6,7 +6,7 @@ auto_generated: true
 
 # Friendly Token
 
-> Test source at commit [`2a0f9775`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/2a0f9775) · v0.2.31
+> Test source at commit [`93519e38`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/93519e38) · v0.2.47
 
 UC-03: Friendly Token — Simple Token share mode (P0).
 
@@ -30,7 +30,7 @@ Flow:
 | `friendly_token_format` | Verify the friendly token matches the word-word-NNNN pattern. | 3 |
 | `friendly_token_resolves_in_new_tab` | Upload with Simple Token, then open the token in a new browser tab. | 4 |
 | `friendly_token_no_key_in_url_after_decrypt` | After decryption, the friendly token remains in the URL (by design). | 4 |
-| `_01__friendly_token_upload_and_resolve` | Upload with Simple Token mode, then resolve the friendly token in a new tab. | 5 |
+| `_01__friendly_token_upload_and_resolve` |  | 5 |
 | `_02__friendly_token_format` | Verify the friendly token matches the word-word-NNNN pattern. | 3 |
 | `_03__friendly_token_resolves_in_new_tab` | Upload with Simple Token, then open the token in a new browser tab. | 4 |
 | `_04__friendly_token_no_key_in_url_after_decrypt` | After decryption, the friendly token remains in the URL (by design). | 4 |
@@ -45,7 +45,7 @@ URL after decrypt: http://localhost:10062/en-gb/browse/#terra-chain-5022
 
 ### 05 Token Captured
 
-Token: radar-harbor-4767
+Token: scroll-scale-5962
 
 ![05 Token Captured](screenshots/05_token_captured.png)
 
@@ -58,7 +58,7 @@ Token: radar-harbor-4767
 
 ### 06 Token Resolved
 
-Token 'radar-harbor-4767' resolved
+Token 'scroll-scale-5962' resolved
 
 ![06 Token Resolved](screenshots/06_token_resolved.png)
 
@@ -71,7 +71,7 @@ Token 'radar-harbor-4767' resolved
 
 ### 05 Token Resolved
 
-Token 'sweep-cocoa-8947'
+Token 'spoke-draft-4118'
 
 ![05 Token Resolved](screenshots/05_token_resolved.png)
 
@@ -123,7 +123,7 @@ Upload complete
 
 ### 05 Hash After Decrypt
 
-URL after decrypt: http://localhost:60426//en-gb/browse/#oak-lotus-0431
+URL after decrypt: http://localhost:50002//en-gb/browse/#stone-topaz-1748
 
 ![05 Hash After Decrypt](screenshots/05_hash_after_decrypt.png)
 
@@ -161,20 +161,19 @@ pytestmark = pytest.mark.p0
 
 SAMPLE_CONTENT = "Friendly token test — UC-03."
 TOKEN_PATTERN  = re.compile(r"\b[a-z]+-[a-z]+-\d{4}\b")
-
+# [LIB-2026-04-01-047] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 _BASE  = Path(__file__).parent.parent.parent.parent.parent / "sg_send_qa__site" / "pages" / "use-cases"
-_GROUP = "02-upload-share"
+_GROUP = "02-upload-share"          # [LIB-2026-04-01-048] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 _UC    = "friendly_token"
 
 
-class test_Friendly_Token(TestCase):
-    """Validate the Simple Token (friendly token) share mode end-to-end."""
+class test_Friendly_Token(TestCase):        # Validate the Simple Token (friendly token) share mode end-to-end.
 
     @classmethod
     def setUpClass(cls):
         cls.harness = SG_Send__Browser__Test_Harness().headless(True).setup()
         cls.sg_send = cls.harness.sg_send
-        cls.harness.set_access_token()
+        cls.harness.set_access_token()              # [LIB-2026-04-01-049] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 
     @classmethod
     def tearDownClass(cls):
@@ -191,44 +190,41 @@ class test_Friendly_Token(TestCase):
             shots_dir   = shots_dir,
         )
 
+    # [LIB-2026-04-01-050] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
     def _upload_with_simple_token(self, shots, filename="token-test.txt"):
         """Upload a file with Simple Token mode and return the friendly token string."""
         self.sg_send.page__root()
-        self.sg_send.upload__set_file(filename, SAMPLE_CONTENT.encode())
-        shots.capture(self.sg_send.raw_page(), "01_file_selected", "File selected (delivery step active)")
+        self.sg_send.upload__set_file(filename, SAMPLE_CONTENT.encode())        # [LIB-2026-04-01-051] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
+        shots.capture(self.sg_send.raw_page(), "01_file_selected", "File selected (delivery step active)")          # [LIB-2026-04-01-052] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 
-        self.sg_send.upload__click_next()
+        self.sg_send.upload__click_next()                               # [LIB-2026-04-01-053] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
         self.sg_send.upload__select_share_mode("token")
         shots.capture(self.sg_send.raw_page(), "02_simple_token_selected", "Simple Token selected")
-
-        self.sg_send.upload__click_next()
-        self.sg_send.upload__wait_for_complete()
+        self.sg_send.upload__click_next()                               # [LIB-2026-04-01-054] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
+        self.sg_send.upload__wait_for_complete()                        # [LIB-2026-04-01-055] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
         shots.capture(self.sg_send.raw_page(), "03_upload_complete", "Upload complete")
 
-        return self.sg_send.upload__get_friendly_token()
+        return self.sg_send.upload__get_friendly_token()                # [LIB-2026-04-01-056] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
 
-    def test__01__friendly_token_upload_and_resolve(self):
-        """Upload with Simple Token mode, then resolve the friendly token in a new tab."""
+    def test__01__friendly_token_upload_and_resolve(self):      # Upload with Simple Token mode, then resolve the friendly token in a new tab.
+        # [LIB-2026-04-01-057] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
         shots         = self._shots("test__01__friendly_token_upload_and_resolve",
-                                    self.test__01__friendly_token_upload_and_resolve.__doc__)
-        friendly_token = self._upload_with_simple_token(shots)
-
-        assert friendly_token, "No friendly token found after upload"
-        assert TOKEN_PATTERN.search(friendly_token), \
-            f"Token does not match word-word-NNNN pattern: {friendly_token!r}"
-        shots.capture(self.sg_send.raw_page(), "05_token_captured",
-                      f"Token: {friendly_token}")
+                                    self.test__01__friendly_token_upload_and_resolve.__doc__)       # [LIB-2026-04-01-058] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
+        friendly_token = self._upload_with_simple_token(shots)                                      # [LIB-2026-04-01-059] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
+        assert friendly_token                       , "No friendly token found after upload"
+        assert TOKEN_PATTERN.search(friendly_token) , f"Token does not match word-word-NNNN pattern: {friendly_token!r}"
+        shots.capture(self.sg_send.raw_page(), "05_token_captured", f"Token: {friendly_token}")
 
         # Resolve in new page
         new_page = self.sg_send.raw_page().context.new_page()
+        # [LIB-2026-04-01-060] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
         try:
-            from tests.qa.v030.browser_helpers import goto, wait_for_download_states
+            from tests.qa.v030.browser_helpers import goto, wait_for_download_states            # [LIB-2026-04-01-061] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
             goto(new_page, f"{self.harness.ui_url()}/en-gb/browse/#{friendly_token}")
-            wait_for_download_states(new_page, ["complete", "error"])
+            wait_for_download_states(new_page, ["complete", "error"])                           # [LIB-2026-04-01-062] see: team/roles/librarian/harvests/2026/04/01__dc_offline_dev__comment-harvest.md
             shots.capture(new_page, "06_token_resolved", f"Token '{friendly_token}' resolved")
             resolve_text = new_page.text_content("body") or ""
-            assert "not found" not in resolve_text.lower(), \
-                f"Token resolution failed — 'not found' error. Token: {friendly_token}"
+            assert "not found" not in resolve_text.lower(), f"Token resolution failed — 'not found' error. Token: {friendly_token}"
         finally:
             new_page.close()
         shots.save_metadata()

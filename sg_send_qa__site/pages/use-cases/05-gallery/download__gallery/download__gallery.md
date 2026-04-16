@@ -26,11 +26,11 @@ Test flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `gallery_page_loads` | Gallery page loads without errors for an image-heavy zip. | 0 |
-| `view_mode_buttons_present` | View mode buttons (compact/grid/large) are present in gallery. | 0 |
-| `action_buttons_present` | Copy Link, Email, Save locally, Print buttons are present. | 0 |
-| `info_panel_toggle` | Info button toggles the info panel showing transfer metadata. | 0 |
-| `lightbox_opens_on_thumbnail` | Clicking a thumbnail opens the lightbox. | 0 |
+| `gallery_page_loads` | Gallery page loads without errors for an image-heavy zip. | 1 |
+| `view_mode_buttons_present` | View mode buttons (compact/grid/large) are present in gallery. | 1 |
+| `action_buttons_present` | Copy Link, Email, Save locally, Print buttons are present. | 1 |
+| `info_panel_toggle` | Info button toggles the info panel showing transfer metadata. | 1 |
+| `lightbox_opens_on_thumbnail` | Clicking a thumbnail opens the lightbox. | 1 |
 | `lightbox_arrow_navigation` | Arrow buttons navigate between images in the lightbox. | 0 |
 
 ## Screenshots
@@ -41,11 +41,25 @@ Gallery view loaded
 
 ![01 Gallery Loaded](screenshots/01_gallery_loaded.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![01 Gallery Loaded — masked](screenshots/01_gallery_loaded__deterministic.png)
+
+</details>
+
 ### 02 View Controls
 
 View mode controls
 
 ![02 View Controls](screenshots/02_view_controls.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![02 View Controls — masked](screenshots/02_view_controls__deterministic.png)
+
+</details>
 
 ### 03 Action Buttons
 
@@ -53,17 +67,38 @@ Gallery action buttons
 
 ![03 Action Buttons](screenshots/03_action_buttons.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![03 Action Buttons — masked](screenshots/03_action_buttons__deterministic.png)
+
+</details>
+
 ### 04 Before Info
 
 Before info panel toggle
 
 ![04 Before Info](screenshots/04_before_info.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![04 Before Info — masked](screenshots/04_before_info__deterministic.png)
+
+</details>
+
 ### 06 Before Lightbox
 
 Gallery before lightbox
 
 ![06 Before Lightbox](screenshots/06_before_lightbox.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![06 Before Lightbox — masked](screenshots/06_before_lightbox__deterministic.png)
+
+</details>
 
 ---
 

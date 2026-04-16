@@ -28,22 +28,10 @@ Test flow:
 | `entry_form_shown_without_hash` | Navigating to /en-gb/download/ with no hash shows the entry form. | 1 |
 | `entry_form_has_decrypt_button` | Entry form has a Decrypt & Download (or similar) button. | 1 |
 | `bogus_token_shows_error` | Entering a bogus token shows an error (not a crash). | 1 |
-| `valid_transfer_id_resolves` | Entering a valid transfer ID resolves and shows the file. | 0 |
-| `hash_navigation_to_download` | Navigating directly to /en-gb/download/#id/key auto-decrypts (P1). | 0 |
+| `valid_transfer_id_resolves` | Entering a valid transfer ID resolves and shows the file. | 1 |
+| `hash_navigation_to_download` | Navigating directly to /en-gb/download/#id/key auto-decrypts (P1). | 1 |
 
 ## Screenshots
-
-### 04 Valid Id Resolved
-
-Valid transfer ID resolved
-
-![04 Valid Id Resolved](screenshots/04_valid_id_resolved.png)
-
-### 05 Direct Hash Nav
-
-Direct hash navigation to download
-
-![05 Direct Hash Nav](screenshots/05_direct_hash_nav.png)
 
 ### 01 Entry Form
 
@@ -81,6 +69,32 @@ Error after bogus token
 <summary>Deterministic view (non-dynamic areas only)</summary>
 
 ![03 Bogus Token Error — masked](screenshots/03_bogus_token_error__deterministic.png)
+
+</details>
+
+### 04 Valid Id Resolved
+
+Valid transfer ID resolved
+
+![04 Valid Id Resolved](screenshots/04_valid_id_resolved.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![04 Valid Id Resolved — masked](screenshots/04_valid_id_resolved__deterministic.png)
+
+</details>
+
+### 05 Direct Hash Nav
+
+Direct hash navigation to download
+
+![05 Direct Hash Nav](screenshots/05_direct_hash_nav.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![05 Direct Hash Nav — masked](screenshots/05_direct_hash_nav__deterministic.png)
 
 </details>
 

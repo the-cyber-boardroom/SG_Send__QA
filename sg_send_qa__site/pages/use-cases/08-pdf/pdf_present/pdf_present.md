@@ -6,7 +6,7 @@ auto_generated: true
 
 # Pdf Present
 
-> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
+> Test source at commit [`8af49ff0`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/8af49ff0) · v0.2.49
 
 UC-06 (P2): PDF lightbox — Present mode and 'f' fullscreen shortcut.
 
@@ -30,15 +30,28 @@ block deployment if failing.
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `pdf_lightbox_opens` | Clicking the PDF thumbnail opens the lightbox without error. | 0 |
-| `present_button_visible_for_pdf` | A 'Present' button appears in the lightbox when viewing a PDF. | 0 |
+| `pdf_lightbox_opens` | Clicking the PDF thumbnail opens the lightbox without error. | 1 |
+| `present_button_visible_for_pdf` | A 'Present' button appears in the lightbox when viewing a PDF. | 1 |
 | `present_button_click_enters_fullscreen` | Clicking the Present button enters full-screen / presentation mode. | 0 |
-| `f_shortcut_triggers_present` | The 'f' keyboard shortcut triggers present / fullscreen mode. | 0 |
-| `s_key_triggers_save` | Pressing 's' when a file is selected triggers save/download. | 0 |
+| `f_shortcut_triggers_present` | The 'f' keyboard shortcut triggers present / fullscreen mode. | 2 |
+| `s_key_triggers_save` | Pressing 's' when a file is selected triggers save/download. | 2 |
 | `j_key_moves_selection_down` | 'j' key moves file selection down in browse view. | 0 |
 | `k_key_moves_selection_up` | 'k' key moves file selection up in browse view. | 0 |
 
 ## Screenshots
+
+### 02 S Key Pressed
+
+'s' key pressed (no download dialog)
+
+![02 S Key Pressed](screenshots/02_s_key_pressed.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![02 S Key Pressed — masked](screenshots/02_s_key_pressed__deterministic.png)
+
+</details>
 
 ### 01 Pdf Lightbox
 
@@ -46,11 +59,25 @@ PDF opened in lightbox
 
 ![01 Pdf Lightbox](screenshots/01_pdf_lightbox.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![01 Pdf Lightbox — masked](screenshots/01_pdf_lightbox__deterministic.png)
+
+</details>
+
 ### 02 Present Button
 
 Present button in PDF lightbox
 
 ![02 Present Button](screenshots/02_present_button.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![02 Present Button — masked](screenshots/02_present_button__deterministic.png)
+
+</details>
 
 ### 05 Before F Shortcut
 
@@ -58,11 +85,25 @@ Before 'f' shortcut
 
 ![05 Before F Shortcut](screenshots/05_before_f_shortcut.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![05 Before F Shortcut — masked](screenshots/05_before_f_shortcut__deterministic.png)
+
+</details>
+
 ### 06 After F Shortcut
 
 After 'f' shortcut
 
 ![06 After F Shortcut](screenshots/06_after_f_shortcut.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![06 After F Shortcut — masked](screenshots/06_after_f_shortcut__deterministic.png)
+
+</details>
 
 ### 01 File Selected
 
@@ -70,11 +111,25 @@ File selected in browse
 
 ![01 File Selected](screenshots/01_file_selected.png)
 
-### 02 S Key Pressed
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
 
-'s' key pressed (no download dialog)
+![01 File Selected — masked](screenshots/01_file_selected__deterministic.png)
 
-![02 S Key Pressed](screenshots/02_s_key_pressed.png)
+</details>
+
+### 02 Download Triggered
+
+Download triggered by 's' key
+
+![02 Download Triggered](screenshots/02_download_triggered.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![02 Download Triggered — masked](screenshots/02_download_triggered__deterministic.png)
+
+</details>
 
 ---
 
@@ -284,6 +339,7 @@ class TestBrowseSKeyShortcut:
         browse_url = f"{ui_url}/en-gb/browse/#{tid}/{key_b64}"
         goto(page, browse_url)
         expect(page.locator("body")).not_to_be_empty(timeout=10_000)
+        page.wait_for_timeout(1_500)   # allow JS to decrypt and render the tree
         return tid, key_b64
 
     def test_s_key_triggers_save(self, page, ui_url, transfer_helper, screenshots):
@@ -325,7 +381,10 @@ class TestBrowseSKeyShortcut:
         if file_items.count() < 2:
             pytest.skip("Not enough files to test j/k navigation")
 
-        file_items.first.click()
+        first_item = file_items.first
+        if not first_item.is_visible(timeout=5_000):
+            pytest.skip("File items not visible — browse tree did not render (possible collapsed folder)")
+        first_item.click()
         screenshots.capture(page, "03_first_selected", "First file selected")
 
         page.keyboard.press("j")
@@ -343,7 +402,10 @@ class TestBrowseSKeyShortcut:
             pytest.skip("Not enough files to test j/k navigation")
 
         # Go to the second item first
-        file_items.first.click()
+        first_item = file_items.first
+        if not first_item.is_visible(timeout=5_000):
+            pytest.skip("File items not visible — browse tree did not render (possible collapsed folder)")
+        first_item.click()
         page.keyboard.press("j")
         screenshots.capture(page, "05_second_selected", "Second file selected")
 

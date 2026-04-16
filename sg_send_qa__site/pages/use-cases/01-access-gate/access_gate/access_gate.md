@@ -6,7 +6,7 @@ auto_generated: true
 
 # Access Gate
 
-> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
+> Test source at commit [`8af49ff0`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/8af49ff0) · v0.2.49
 
 Automated browser test for the **access gate** workflow.
 
@@ -24,12 +24,6 @@ Automated browser test for the **access gate** workflow.
 
 ## Screenshots
 
-### 02 After Token
-
-After entering access token
-
-![02 After Token](screenshots/02_after_token.png)
-
 ### 03 Wrong Token
 
 Wrong token response
@@ -42,29 +36,12 @@ After entering access token
 
 ![02 After Token](screenshots/02_after_token.png)
 
-### 02 After Token
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
 
-After entering access token
+![02 After Token — masked](screenshots/02_after_token__deterministic.png)
 
-![02 After Token](screenshots/02_after_token.png)
-
-### 02 After Token
-
-After entering access token
-
-![02 After Token](screenshots/02_after_token.png)
-
-### 02 After Token
-
-After entering access token
-
-![02 After Token](screenshots/02_after_token.png)
-
-### 02 After Token
-
-After entering access token
-
-![02 After Token](screenshots/02_after_token.png)
+</details>
 
 ### 01 Landing
 
@@ -136,22 +113,15 @@ class TestAccessGate:
         self._load_upload_page(page, ui_url)
         screenshots.capture(page, "01_landing", "Landing page (may show gate or upload zone)")
 
-        # CR-002: prefer data-testid; fall back to ID for older UI versions
+        # Use explicit IDs — the combined selector with .first can hit the language
+        # dropdown button which appears before #access-token-submit in the DOM.
+        # See bugs/test__bug__generic_button_opens_language_dropdown.py for details.
         gate_input = page.locator('[data-testid="access-gate-input"], #access-token-input').first
         if gate_input.is_visible(timeout=3_000):
             gate_input.fill(send_server.access_token)
-            page.locator('[data-testid="access-gate-submit"], #access-token-submit').first.click()
+            page.locator('#access-token-submit').click()
             page.wait_for_selector("body[data-ready]", timeout=10_000)
             page.wait_for_timeout(800)
-
-            # Verify no unexpected UI is overlaying the page (e.g. language dropdown)
-            page_text = page.text_content("body") or ""
-            unexpected_dropdown = any(lang in page_text for lang in [
-                "Deutsch", "Italiano", "Polski",
-            ])
-            assert not unexpected_dropdown, \
-                "Language dropdown is open — see bugs/test__bug__generic_button_opens_language_dropdown.py"
-
             screenshots.capture(page, "02_after_token", "After entering access token")
 
         # Upload zone should now be visible
@@ -172,7 +142,7 @@ class TestAccessGate:
         gate_input = page.locator('[data-testid="access-gate-input"], #access-token-input').first
         if gate_input.is_visible(timeout=3_000):
             gate_input.fill("wrong-token-12345-xxxxx")
-            page.locator('[data-testid="access-gate-submit"], #access-token-submit').first.click()
+            page.locator('#access-token-submit').click()
             page.wait_for_timeout(1_000)
             screenshots.capture(page, "03_wrong_token", "Wrong token response")
 

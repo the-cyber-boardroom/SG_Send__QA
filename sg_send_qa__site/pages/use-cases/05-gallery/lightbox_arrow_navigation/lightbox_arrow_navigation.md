@@ -6,7 +6,7 @@ auto_generated: true
 
 # Lightbox Arrow Navigation
 
-> Test source at commit [`978647d4`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/978647d4) · v0.2.47
+> Test source at commit [`d7917483`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/d7917483) · v0.2.51
 
 Arrow buttons navigate between images in the lightbox.
 

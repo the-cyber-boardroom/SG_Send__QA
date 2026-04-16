@@ -6,7 +6,7 @@ auto_generated: true
 
 # Separate Key
 
-> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
+> Test source at commit [`8af49ff0`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/8af49ff0) · v0.2.49
 
 UC-05: Separate Key share mode (P0).
 
@@ -26,9 +26,9 @@ Flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `separate_key_decrypt_via_api` | Create a transfer via API, open link without key, enter key manually. | 0 |
-| `wrong_key_shows_error` | Enter an incorrect key and verify an error message appears. | 0 |
-| `separate_key_ui_flow` | Full UI flow: upload with Separate Key mode, extract link + key, verify. | 0 |
+| `separate_key_decrypt_via_api` | Create a transfer via API, open link without key, enter key manually. | 4 |
+| `wrong_key_shows_error` | Enter an incorrect key and verify an error message appears. | 1 |
+| `separate_key_ui_flow` | Full UI flow: upload with Separate Key mode, extract link + key, verify. | 2 |
 
 ## Screenshots
 
@@ -38,11 +38,25 @@ Download page — ready state, key input visible
 
 ![01 Ready State](screenshots/01_ready_state.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![01 Ready State — masked](screenshots/01_ready_state__deterministic.png)
+
+</details>
+
 ### 02 Transfer Info
 
 Transfer info displayed before key entry
 
 ![02 Transfer Info](screenshots/02_transfer_info.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![02 Transfer Info — masked](screenshots/02_transfer_info__deterministic.png)
+
+</details>
 
 ### 03 Key Entered
 
@@ -50,11 +64,25 @@ Encryption key entered
 
 ![03 Key Entered](screenshots/03_key_entered.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![03 Key Entered — masked](screenshots/03_key_entered__deterministic.png)
+
+</details>
+
 ### 04 Decrypted
 
 Content decrypted with separate key
 
 ![04 Decrypted](screenshots/04_decrypted.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![04 Decrypted — masked](screenshots/04_decrypted__deterministic.png)
+
+</details>
 
 ### 05 Wrong Key Error
 
@@ -62,17 +90,38 @@ Error message after wrong key
 
 ![05 Wrong Key Error](screenshots/05_wrong_key_error.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![05 Wrong Key Error — masked](screenshots/05_wrong_key_error__deterministic.png)
+
+</details>
+
 ### 06 Separate Key Selected
 
 Separate Key mode selected
 
 ![06 Separate Key Selected](screenshots/06_separate_key_selected.png)
 
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![06 Separate Key Selected — masked](screenshots/06_separate_key_selected__deterministic.png)
+
+</details>
+
 ### 07 Separate Key Done
 
 Upload complete — link and key shown separately
 
 ![07 Separate Key Done](screenshots/07_separate_key_done.png)
+
+<details>
+<summary>Deterministic view (non-dynamic areas only)</summary>
+
+![07 Separate Key Done — masked](screenshots/07_separate_key_done__deterministic.png)
+
+</details>
 
 ---
 
@@ -202,11 +251,12 @@ class TestSeparateKey:
         page.goto(f"{ui_url}/en-gb/")
         page.wait_for_selector("body[data-ready]", timeout=10_000)
 
-        # Handle access gate
-        access_input = page.locator("input[type='text'], input[type='password']").first
+        # Handle access gate — use the specific submit ID, not button.first (which
+        # hits the language-dropdown button; see bugs/test__bug__generic_button_opens_language_dropdown.py)
+        access_input = page.locator("#access-token-input").first
         if access_input.is_visible(timeout=2000):
             access_input.fill(send_server.access_token)
-            page.locator("button").first.click()
+            page.locator("#access-token-submit").click()
             page.wait_for_selector("body[data-ready]", timeout=10_000)
 
         # Upload file

@@ -45,43 +45,43 @@
   "screenshots": [
     {
       "name": "01_file_selected",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/01_file_selected.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/01_file_selected.png",
       "description": "File selected (delivery step active)",
       "has_masks": false
     },
     {
       "name": "02_share_step",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/02_share_step.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/02_share_step.png",
       "description": "Share mode step",
       "has_masks": false
     },
     {
       "name": "03_mode_selected",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/03_mode_selected.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/03_mode_selected.png",
       "description": "Combined link selected",
       "has_masks": false
     },
     {
       "name": "04_upload_complete",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/04_upload_complete.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/04_upload_complete.png",
       "description": "Upload complete",
       "has_masks": true
     },
     {
       "name": "06_link_captured",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/06_link_captured.png",
-      "description": "Combined link: http://localhost:50002/en-gb/browse/#ecbd47c09dc1/S7f8E0rh9QvVQtZZfDw0o7DTOzjIE7",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/06_link_captured.png",
+      "description": "Combined link: http://localhost:50002/en-gb/browse/#5de6a3507579/H8kkHvCuEwp6g-Y27BUgk-nACzz1rI",
       "has_masks": true
     },
     {
       "name": "07_auto_decrypted",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/07_auto_decrypted.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/07_auto_decrypted.png",
       "description": "Auto-decrypted content",
       "has_masks": true
     },
     {
       "name": "01_api_created_decrypt",
-      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/01_api_created_decrypt.png",
+      "path": "/home/runner/work/SG_Send__QA/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/combined_link/screenshots/01_api_created_decrypt.png",
       "description": "Decrypted content from API-created transfer",
       "has_masks": true
     }

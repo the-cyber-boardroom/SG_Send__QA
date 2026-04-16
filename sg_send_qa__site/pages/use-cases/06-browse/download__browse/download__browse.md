@@ -6,7 +6,7 @@ auto_generated: true
 
 # Download  Browse
 
-> Test source at commit [`5274a75a`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/5274a75a) · v0.2.44
+> Test source at commit [`8af49ff0`](https://github.com/the-cyber-boardroom/SG_Send__QA/commit/8af49ff0) · v0.2.49
 
 UC-07: Browse view features (P1).
 
@@ -27,13 +27,13 @@ Test flow:
 
 | Method | Description | Screenshots |
 |--------|-------------|:-----------:|
-| `browse_page_loads` | Browse page loads without errors. | 0 |
-| `folder_tree_present` | Folder tree is rendered in the left panel. | 0 |
+| `browse_page_loads` | Browse page loads without errors. | 1 |
+| `folder_tree_present` | Folder tree is rendered in the left panel. | 1 |
 | `file_click_opens_preview` | Clicking a file in the tree opens a preview in the right panel. | 0 |
 | `share_tab_present` | Share tab shows URL, copy, and email actions. | 0 |
 | `info_tab_present` | Info tab shows file counts and encryption info. | 0 |
-| `save_locally_button_present` | Save locally button is present in browse view. | 0 |
-| `keyboard_navigation_j_k` | Keyboard j/k navigate through files in browse view (P2). | 0 |
+| `save_locally_button_present` | Save locally button is present in browse view. | 1 |
+| `keyboard_navigation_j_k` | Keyboard j/k navigate through files in browse view (P2). | 2 |
 
 ## Screenshots
 
@@ -168,6 +168,13 @@ class TestBrowseViewFeatures:
             kw in page_text.lower() for kw in ["browse", "folder", "file", "tree"]
         ), "Browse page shows error"
 
+    @pytest.mark.xfail(
+        strict=True,
+        reason=(
+            "BRW-001: v0.3.0 shows full zip paths in tree labels (e.g. 'docs/sub/extra.md'). "
+            "Fixed in v0.3.1 send-browse-v031.js. Remove this xfail once v0.3.1 is deployed."
+        ),
+    )
     def test_folder_tree_present(self, page, ui_url, transfer_helper, screenshots):
         """Folder tree is rendered in the left panel.
 
