@@ -18,7 +18,7 @@ class test_SG_Send__Browser__Pages__State(TestCase):                            
     @classmethod
     def page_setup(cls):
         cls.access_token = cls.harness.access_token()
-        cls.ui_server    = cls.harness.ui_server
+        cls.ui_server_port = cls.harness.ui_server__port
         with cls.sg_send as _:
             _.page__qa_setup()
             _.storage__clear()          # make sure it is clear
@@ -27,7 +27,7 @@ class test_SG_Send__Browser__Pages__State(TestCase):                            
     # ── Check page set ───────────────────────────────────────────────────────
     def test__page_setup(self):
         with self.sg_send.page() as _:
-            assert _.url() == f'http://localhost:{self.ui_server.port}/en-gb/'
+            assert _.url() == f'http://localhost:{self.ui_server_port}/en-gb/'
 
 
     # ── Check pages when storage is empty ───────────────────────────────────────────────────────

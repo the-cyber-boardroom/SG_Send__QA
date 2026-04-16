@@ -291,7 +291,7 @@ class test_Page__Send_SGraph_Ai__Upload(TestCase):
                 _.teardown()
 
             assert duration__setup.seconds      < 5                                     # subprocess arch: startup slower than in-process (esp. CI)
-            assert duration__teardown.seconds   < 2                                     # subprocess arch: teardown includes stopping Chrome process
+            assert duration__teardown.seconds   < 10                                    # subprocess arch: teardown stops Chrome + API server + HTTP server (2 × wait_for_port_closed)
 
 
             # assert duration__teardown           < 0.5                                 # @dev add support for this pattern to OSBot_Utils

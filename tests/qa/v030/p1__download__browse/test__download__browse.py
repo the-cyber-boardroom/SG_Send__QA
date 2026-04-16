@@ -58,6 +58,13 @@ class TestBrowseViewFeatures:
             kw in page_text.lower() for kw in ["browse", "folder", "file", "tree"]
         ), "Browse page shows error"
 
+    @pytest.mark.xfail(
+        strict=True,
+        reason=(
+            "BRW-001: v0.3.0 shows full zip paths in tree labels (e.g. 'docs/sub/extra.md'). "
+            "Fixed in v0.3.1 send-browse-v031.js. Remove this xfail once v0.3.1 is deployed."
+        ),
+    )
     def test_folder_tree_present(self, page, ui_url, transfer_helper, screenshots):
         """Folder tree is rendered in the left panel.
 

@@ -25,11 +25,21 @@ Usage examples:
 """
 
 import os
+import urllib.request
 
 import pytest
 
 from sg_send_qa.utils.QA_Screenshot_Capture import ScreenshotCapture
 from sg_send_qa.utils.QA_Transfer_Helper import QA_Transfer_Helper
+
+
+def _is_reachable(url: str, timeout: int = 5) -> bool:
+    """Return True if the URL responds within *timeout* seconds."""
+    try:
+        urllib.request.urlopen(url, timeout=timeout)
+        return True
+    except Exception:
+        return False
 
 # ── Target URL map ─────────────────────────────────────────────────────────────
 
@@ -115,6 +125,13 @@ def transfer_helper(api_url, access_token):
     if not access_token:
         return None
     return QA_Transfer_Helper(api_url=api_url, access_token=access_token)
+
+
+@pytest.fixture(autouse=True)
+def skip_if_target_unreachable(target):
+    """Skip any smoke test when the target environment is unreachable (sandboxed CI)."""
+    if not _is_reachable(target):
+        pytest.skip(f"Smoke target {target!r} is unreachable — skipping (sandboxed environment)")
 
 
 # ── Playwright ─────────────────────────────────────────────────────────────────

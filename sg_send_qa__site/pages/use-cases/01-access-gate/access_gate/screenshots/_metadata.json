@@ -24,39 +24,15 @@
   ],
   "screenshots": [
     {
-      "name": "02_after_token",
-      "path": "sg_send_qa__site/pages/use-cases/access_gate/screenshots/02_after_token.png",
-      "description": "After entering access token"
-    },
-    {
       "name": "03_wrong_token",
       "path": "sg_send_qa__site/pages/use-cases/access_gate/screenshots/03_wrong_token.png",
       "description": "Wrong token response"
     },
     {
       "name": "02_after_token",
-      "path": "sg_send_qa__site/pages/use-cases/access_gate/screenshots/02_after_token.png",
-      "description": "After entering access token"
-    },
-    {
-      "name": "02_after_token",
-      "path": "sg_send_qa__site/pages/use-cases/access_gate/screenshots/02_after_token.png",
-      "description": "After entering access token"
-    },
-    {
-      "name": "02_after_token",
-      "path": "sg_send_qa__site/pages/use-cases/access_gate/screenshots/02_after_token.png",
-      "description": "After entering access token"
-    },
-    {
-      "name": "02_after_token",
-      "path": "sg_send_qa__site/pages/use-cases/access_gate/screenshots/02_after_token.png",
-      "description": "After entering access token"
-    },
-    {
-      "name": "02_after_token",
-      "path": "sg_send_qa__site/pages/use-cases/access_gate/screenshots/02_after_token.png",
-      "description": "After entering access token"
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/01-access-gate/access_gate/screenshots/02_after_token.png",
+      "description": "After entering access token",
+      "has_masks": false
     },
     {
       "name": "01_landing",

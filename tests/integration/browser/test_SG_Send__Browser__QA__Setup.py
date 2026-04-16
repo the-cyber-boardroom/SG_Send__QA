@@ -17,7 +17,7 @@ class test_SG_Send__Browser__setup(TestCase):                            # Page 
 
     def test__page__qa_setup(self):
         with self.sg_send as _:
-            assert _.page__qa_setup().url() == f'http://localhost:{self.harness.ui_server.port}/_common/qa-setup.html'
+            assert _.page__qa_setup().url() == f'http://localhost:{self.harness.ui_server__port}/_common/qa-setup.html'
             assert _.title()                == 'QA Setup'
 
     def test__storage__dump(self):

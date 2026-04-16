@@ -79,12 +79,9 @@ class   SG_Send__Browser__Test_Harness(Type_Safe):                              
     def teardown(self):                                                         # stop everything — call from tearDownClass
         if self.stderr:
             self.stderr.stop()
-        # if self.ui_server:
-        #     self.ui_server.__exit__(None, None, None)
-        # if self.ui_folder and self.config.headless:                             # only delete build folder in CI mode
-        #     self.ui_folder.__exit__(None, None, None)                           # debug mode keeps the cached build
-        # if self.api_server:
-        #     self.api_server.stop()
+        if self.config.headless:                                                # CI mode: stop subprocess servers so they don't become stale
+            self.server__send_graph_ai__api.server__stop()
+            self.server__send_graph_ai__http.server__stop()
         if self.config.headless and self.sg_send:
             self.sg_send.qa_browser().stop()
         return self

@@ -93,19 +93,19 @@
     {
       "name": "05_token_captured",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_captured.png",
-      "description": "Token: glow-prism-4351",
+      "description": "Token: claim-walnut-3879",
       "has_masks": true
     },
     {
       "name": "06_token_resolved",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/06_token_resolved.png",
-      "description": "Token 'glow-prism-4351' resolved",
+      "description": "Token 'claim-walnut-3879' resolved",
       "has_masks": true
     },
     {
       "name": "05_token_resolved",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_token_resolved.png",
-      "description": "Token 'stamp-storm-5343'",
+      "description": "Token 'spell-cocoa-4089'",
       "has_masks": true
     },
     {
@@ -129,7 +129,7 @@
     {
       "name": "05_hash_after_decrypt",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/02-upload-share/friendly_token/screenshots/05_hash_after_decrypt.png",
-      "description": "URL after decrypt: http://localhost:50002//en-gb/browse/#spruce-quick-5752",
+      "description": "URL after decrypt: http://localhost:50002//en-gb/browse/#grace-maple-7837",
       "has_masks": true
     }
   ]

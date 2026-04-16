@@ -24,20 +24,13 @@
     {
       "method": "test_separate_key_ui_flow",
       "doc": "Full UI flow: upload with Separate Key mode, extract link + key, verify.",
-      "screenshots": []
+      "screenshots": [
+        "06_separate_key_selected",
+        "07_separate_key_done"
+      ]
     }
   ],
   "screenshots": [
-    {
-      "name": "06_separate_key_selected",
-      "path": "sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/06_separate_key_selected.png",
-      "description": "Separate Key mode selected"
-    },
-    {
-      "name": "07_separate_key_done",
-      "path": "sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/07_separate_key_done.png",
-      "description": "Upload complete \u2014 link and key shown separately"
-    },
     {
       "name": "01_ready_state",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/01_ready_state.png",
@@ -66,6 +59,18 @@
       "name": "05_wrong_key_error",
       "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/05_wrong_key_error.png",
       "description": "Error message after wrong key",
+      "has_masks": true
+    },
+    {
+      "name": "06_separate_key_selected",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/06_separate_key_selected.png",
+      "description": "Separate Key mode selected",
+      "has_masks": false
+    },
+    {
+      "name": "07_separate_key_done",
+      "path": "/home/user/SG_Send__QA/sg_send_qa__site/pages/use-cases/03-separate-key/separate_key/screenshots/07_separate_key_done.png",
+      "description": "Upload complete \u2014 link and key shown separately",
       "has_masks": true
     }
   ]

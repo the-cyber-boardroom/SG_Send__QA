@@ -120,11 +120,12 @@ class TestSeparateKey:
         page.goto(f"{ui_url}/en-gb/")
         page.wait_for_selector("body[data-ready]", timeout=10_000)
 
-        # Handle access gate
-        access_input = page.locator("input[type='text'], input[type='password']").first
+        # Handle access gate — use the specific submit ID, not button.first (which
+        # hits the language-dropdown button; see bugs/test__bug__generic_button_opens_language_dropdown.py)
+        access_input = page.locator("#access-token-input").first
         if access_input.is_visible(timeout=2000):
             access_input.fill(send_server.access_token)
-            page.locator("button").first.click()
+            page.locator("#access-token-submit").click()
             page.wait_for_selector("body[data-ready]", timeout=10_000)
 
         # Upload file

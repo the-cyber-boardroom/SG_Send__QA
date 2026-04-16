@@ -28,8 +28,8 @@ class test_SG_Send__Browser__Pages__Upload(TestCase):                           
     @classmethod
     def page_setup(cls):
         with cls.harness as _:
-            cls.access_token = _.set_access_token()
-            cls.ui_server    = _.ui_server
+            cls.access_token    = _.set_access_token()
+            cls.ui_server_port  = cls.harness.ui_server__port
 
     # ── Upload step-by-step ──────────────────────────────────────────────────
 
