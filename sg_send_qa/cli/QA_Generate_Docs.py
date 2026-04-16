@@ -165,7 +165,7 @@ class QA_Generate_Docs(Type_Safe):
             md += "|--------|-------------|:-----------:|\n"
             for t in tests:
                 method = t["method"].replace("test_", "")
-                doc    = t.get("doc", "").split("\n")[0]
+                doc    = (t.get("doc") or "").split("\n")[0]
                 count  = len(t.get("screenshots", []))
                 md += f"| `{method}` | {doc} | {count} |\n"
             md += "\n"
